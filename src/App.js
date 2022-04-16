@@ -28,8 +28,9 @@ function App() {
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
         <Routes>
-          <Route path="/">
-            <Route path="login" element={<Login />} />
+         
+        <Route path="/">
+            <Route path="/login" element={<Login />} />
             <Route
               index
               element={
@@ -38,7 +39,7 @@ function App() {
                 </RequireAuth>
               }
             />
-            <Route path="users">
+            <Route path="/users">
               <Route
                 index
                 element={
@@ -65,7 +66,7 @@ function App() {
               />
             </Route>
             
-            <Route path="products">
+            <Route path="/products">
               <Route
                 index
                 element={
@@ -103,7 +104,7 @@ function App() {
               
 
             </Route>
-            <Route path="calender">
+            <Route path="/calender">
               <Route
                 index
                 element={
@@ -114,7 +115,7 @@ function App() {
               />
             
             </Route>
-          </Route>
+            </Route>
         </Routes>
       </BrowserRouter>
     </div>
