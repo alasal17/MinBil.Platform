@@ -1,6 +1,14 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Dette projectet tilhører Sti Media DEV
+
+
+# Komme i gang:
+
+
+
+## Available Scripts
+
 
 ## Available Scripts
 
