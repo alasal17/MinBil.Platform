@@ -11,8 +11,8 @@ const firebaseConfig = {
   projectId: "minbil-v1",
   storageBucket: "minbil-v1.appspot.com",
   messagingSenderId: "667194415784",
-  appId: "1:667194415784:web:ea4b55202af52be714009d",
-  measurementId: "G-W4SB1523ZD"
+  appId: "1:667194415784:web:0a8098236a56b84e14009d",
+  measurementId: "G-103J6F7021"
 };
 
 const app = initializeApp(firebaseConfig);
