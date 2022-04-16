@@ -1,4 +1,4 @@
-import "./sales.scss";
+import "../single/single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";

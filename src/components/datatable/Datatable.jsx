@@ -33,7 +33,7 @@ const Datatable = ({pageTitle}) => {
 
     return () => {
       unsub();
-    };
+    }
   }, []);
 
   const handleDelete = async (id) => {

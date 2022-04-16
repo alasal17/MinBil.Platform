@@ -88,7 +88,7 @@ const Widget = ({ type }) => {
       const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
 
       const lastMonthQuery = query(
-        collection(db, data.query),
+        collection(db,  data.query),
         where("timeStamp", "<=", today),
         where("timeStamp", ">", lastMonth)
       );
@@ -107,7 +107,10 @@ const Widget = ({ type }) => {
           100
       );
     };
-    fetchData();
+    return () =>{
+      fetchData();
+    }
+    
   }, []);
 
   return (

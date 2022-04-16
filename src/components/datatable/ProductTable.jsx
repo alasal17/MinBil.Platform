@@ -40,7 +40,7 @@ const ProductTable = ({pageTitle}) => {
   }, []);
 
   const handleUpdate = async (id) => {
-
+    console.log(data.id)
 
     console.log(data);
     

@@ -53,6 +53,7 @@ const Single = () => {
               <img src={data.img} alt="" className="itemImg"/>
               <div className="details">
                 <h1 className="itemTitle">{data.displayName}</h1>
+                
                 <div className="detailItem">
                   <span className="itemKey">Email:</span>
                   <span className="itemValue">{data.email}</span>
@@ -63,9 +64,7 @@ const Single = () => {
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Adresse:</span>
-                  <span className="itemValue">
-                  {data.address}
-                  </span>
+                  <span className="itemValue">{data.address}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Land:</span>
