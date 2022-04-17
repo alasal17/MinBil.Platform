@@ -63,6 +63,7 @@
     ]
   },
   "devDependencies": {
-    "jest-watch-typeahead": "^0.6.5"
+    "jest-watch-typeahead": "^0.6.5",
+    "webpack-cli": "^4.9.2"
   }
 }

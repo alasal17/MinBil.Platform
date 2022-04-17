@@ -62,8 +62,8 @@
     .viewButton {
       padding: 2px 5px;
       border-radius: 5px;
-      color: darkblue;
-      border: 1px dotted rgba(0, 0, 139, 0.596);
+      color: rgb(21, 109, 52);
+      border: 1px dotted rgb(21, 109, 52);
       cursor: pointer;
     }
     
@@ -74,5 +74,15 @@
       border: 1px dotted rgba(220, 20, 60, 0.6);
       cursor: pointer;
     }
+
+    .updateButton {
+      padding: 2px 5px;
+      border-radius: 5px;
+      color: darkblue;
+      border: 1px dotted rgba(0, 0, 139, 0.596);
+      cursor: pointer;
+    }
+
+    
   }
 }

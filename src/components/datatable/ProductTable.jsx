@@ -25,14 +25,17 @@ const ProductTable = ({pageTitle}) => {
       (snapShot) => {
         let list = [];
         snapShot.docs.forEach((doc) => {
+          
           list.push({ id: doc.id, ...doc.data() });
+          
         });
         setData(list);
       },
       (error) => {
         console.log(error);
       }
-    );
+    )
+
 
     return () => {
       unsub();
@@ -40,7 +43,7 @@ const ProductTable = ({pageTitle}) => {
   }, []);
 
   const handleUpdate = async (id) => {
-    console.log(data.id)
+    console.log()
 
     console.log(data);
     
@@ -60,7 +63,7 @@ const ProductTable = ({pageTitle}) => {
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 250,
       renderCell: (params) => {
         return (
           <div className="cellAction">
@@ -80,7 +83,7 @@ const ProductTable = ({pageTitle}) => {
             <Link to="/products/update" style={{ textDecoration: "none" }}>
             <div
             
-              className="deleteButton"
+              className="updateButton"
               onClick={() => handleUpdate(params.row.id)}
             >
               Update 

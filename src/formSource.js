@@ -33,6 +33,12 @@ export const userInputs = [
       type: "Passord",
     },
     {
+      id: "roles",
+      label: "Rolle",
+      type: "text",
+      placeholder: "admin, reader, auther",
+    },
+    {
       id: "address",
       label: "Adresse",
       type: "text",

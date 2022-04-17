@@ -8,7 +8,7 @@ import {
   getDocs,
   deleteDoc,
   doc,
-  onSnapshot,
+  onSnapshot,query, where
 } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -38,7 +38,7 @@ const Datatable = ({pageTitle}) => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "users", id));
+      await deleteDoc(doc(db, "users", id).where("roles" != "admin"));
       setData(data.filter((item) => item.id !== id));
     } catch (err) {
       console.log(err);
@@ -53,19 +53,34 @@ const Datatable = ({pageTitle}) => {
       headerName: "Action",
       width: 200,
       renderCell: (params) => {
-        return (
-          <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
-              <div className="viewButton">Se detaljer</div>
-            </Link>
-            <div
-              className="deleteButton"
-              onClick={() => handleDelete(params.row.id)}
-            >
-              Slett 
+        if(params.row.roles == "admin"){
+          return (
+            <div className="cellAction">
+              <Link to="/users/test" style={{ textDecoration: "none" }}>
+                <div className="viewButton">Se detaljer</div>
+              </Link>
+              
             </div>
-          </div>
-        );
+          );
+
+        }
+        else{
+          return (
+            <div className="cellAction">
+              <Link to="/users/test" style={{ textDecoration: "none" }}>
+                <div className="viewButton">Se detaljer</div>
+              </Link>
+              <div
+                className="deleteButton"
+                onClick={() => handleDelete(params.row.id)}
+              >
+                Slett 
+              </div>
+            </div>
+          );
+
+        }
+      
       },
     },
   ];

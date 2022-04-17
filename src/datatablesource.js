@@ -40,6 +40,11 @@ export const userColumns = [
     headerName: "Telefon",
     width: 150,
   },
+  {
+    field: "roles",
+    headerName: "Rolle",
+    width: 150,
+  },
   
   {
     field: "status",
@@ -80,15 +85,22 @@ export const productsColumns = [
   {
     field: "description",
     headerName: "Beskrivelse",
-    width: 200,
+    width: 300,
   },  
   {
     field: "price",
     headerName: "Pris",
     width: 100,
-  },{
+  },
+  {
     field: "tags",
     headerName: "Stikk ord",
     width: 200,
   },
+  {
+    field: "time",
+    headerName: "varighet",
+    width: 150,
+  },
+  
 ];
