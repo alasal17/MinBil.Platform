@@ -1,20 +1,23 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { userColumns, userRows, productsColumns } from "../../datatablesource";
-import { Link } from "react-router-dom";
+import { userColumns } from "../../datatablesource";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   collection,
-  getDocs,
+  getDoc,
   deleteDoc,
   doc,
-  onSnapshot,query, where
+  onSnapshot
 } from "firebase/firestore";
+
 import { db } from "../../firebase";
 
-const Datatable = ({pageTitle}) => {
-  const [data, setData] = useState([]);
 
+const Datatable = ({pageTitle}, props) => {
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  
   useEffect(() => {
     // LISTEN (REALTIME)
     const unsub = onSnapshot(
@@ -46,19 +49,25 @@ const Datatable = ({pageTitle}) => {
   };
 
 
-
+  const viewDetails = async (id) => {
+    
+    const ref = doc(db, 'users', id);
+    const snapDoc = await getDoc(ref);
+    navigate('/users/test', {state:{data:snapDoc.data()}})   
+  }
+  
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
       width: 200,
       renderCell: (params) => {
-        if(params.row.roles == "admin"){
+        if(params.row.roles === "admin"){
           return (
             <div className="cellAction">
-              <Link to="/users/test" style={{ textDecoration: "none" }}>
-                <div className="viewButton">Se detaljer</div>
-              </Link>
+             
+                <div className="viewButton" onClick={() => viewDetails(params.row.id)}>Se detaljer</div>
+             
               
             </div>
           );
@@ -67,9 +76,9 @@ const Datatable = ({pageTitle}) => {
         else{
           return (
             <div className="cellAction">
-              <Link to="/users/test" style={{ textDecoration: "none" }}>
-                <div className="viewButton">Se detaljer</div>
-              </Link>
+             
+                <div className="viewButton" onClick={() => viewDetails(params.row.id)}>Se detaljer</div>
+             
               <div
                 className="deleteButton"
                 onClick={() => handleDelete(params.row.id)}

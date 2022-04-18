@@ -3,42 +3,15 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import List from "../../components/table/Table";
-import { useContext, useState,useEffect } from "react";
-import { auth, db, storage } from "../../firebase";
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc,
-  onSnapshot,
-} from "firebase/firestore";
+
+import {useLocation} from 'react-router-dom';
 
 const Single = () => {
-  const [data, setData] = useState([]);
+  const location = useLocation();
+  const data = location.state.data
 
-  useEffect(() => {
-    
 
-    // LISTEN (REALTIME)
-    const unsub = onSnapshot(
-      collection(db, "users"),
-      (snapShot) => {
-        let list = [];
-        snapShot.docs.map((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-        });
-        setData(list[0]);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
 
-    return () => {
-      unsub();
-    };
-  }, []);
-  
 
   return (
     <div className="single">

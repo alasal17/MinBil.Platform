@@ -106,12 +106,12 @@ const Widget = ({ type }) => {
         ((lastMonthData.docs.length - prevMonthData.docs.length) / prevMonthData.docs.length) *
           100
       );
-    };
+    
     return () =>{
       fetchData();
     }
     
-  }, []);
+  }}, []);
 
   return (
     <div className="widget">
