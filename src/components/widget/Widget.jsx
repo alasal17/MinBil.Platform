@@ -88,7 +88,7 @@ const Widget = ({ type }) => {
       const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
 
       const lastMonthQuery = query(
-        collection(db,  data.query),
+        collection(db, data.query),
         where("timeStamp", "<=", today),
         where("timeStamp", ">", lastMonth)
       );
@@ -106,19 +106,16 @@ const Widget = ({ type }) => {
         ((lastMonthData.docs.length - prevMonthData.docs.length) / prevMonthData.docs.length) *
           100
       );
-    
-    return () =>{
-      fetchData();
-    }
-    
-  }}, []);
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="widget">
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "kr"} {amount}
+          {data.isMoney && "$"} {amount}
         </span>
         <span className="link">{data.link}</span>
       </div>
