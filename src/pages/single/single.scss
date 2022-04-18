@@ -1,6 +1,7 @@
 .single {
   display: flex;
   width: 100%;
+  
   .singleContainer {
     flex: 6;
 
@@ -40,8 +41,10 @@
           }
 
           .details {
+            flex-direction: column;
+            align-items: normal;
             .itemTitle {
-              margin-bottom: 10px;
+              margin-bottom: 30px;
               color: #555;
             }
 
