@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import React from "react";
+=======
+import React from 'react';
+>>>>>>> Stashed changes
 import ReactDOM from "react-dom";
 import App from "./App";
 import { AuthContextProvider } from "./context/AuthContext";
