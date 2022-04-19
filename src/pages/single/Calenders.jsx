@@ -7,7 +7,7 @@ import { css } from "@emotion/react";
 const Calendars = () => {
 const API_KEY = "AIzaSyBMBMekMw0Ba-oVxgDmZ6_owmpfr0ilQ-s";
 let calendars = [
-  {calendarId: "smao1k7j2h80qrhdj7nch07210@group.calendar.google.com", color: "rgb(63, 191, 63)"}
+  {calendarId: "classroom117044278539894788928@group.calendar.google.com", color: "rgb(63, 191, 63)"}
 ];
 let styles = {
   //you can use object styles (no import required)
