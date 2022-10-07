@@ -22,7 +22,7 @@ const Sales = () => {
             <h1 className="title">Produkt informasjon</h1>
             <div className="item">
               <img
-                src={data.img}
+                src={data.photo_url}
                 alt="dd"
                 className="itemImg"
               />

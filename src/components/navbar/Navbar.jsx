@@ -79,8 +79,8 @@ const Navbar = () => {
 
               <img
               src={
-                data.img
-                  ? data.img
+                data.photo_url
+                  ? data.photo_url
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""

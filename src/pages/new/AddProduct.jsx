@@ -19,7 +19,7 @@ const AddProduct = ({ inputs, title}) => {
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const navigate = useNavigate()
-  const postsCollectionRef = collection(db, "products");
+  const postsCollectionRef = collection(db, "services");
   
   
   useEffect(() => {
@@ -53,7 +53,7 @@ const AddProduct = ({ inputs, title}) => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, img: downloadURL }));
+            setData((prev) => ({ ...prev, photo_url: downloadURL }));
           });
         }
       );
@@ -92,7 +92,7 @@ const AddProduct = ({ inputs, title}) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar img={data.img}/>
+        <Navbar img={data.photo_url}/>
         <div className="top">
           <h1>{title}</h1>
         </div>

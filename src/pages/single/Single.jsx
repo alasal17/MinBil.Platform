@@ -10,6 +10,7 @@ const Single = () => {
   const location = useLocation();
   const data = location.state.data
 
+  
 
 
 
@@ -23,9 +24,9 @@ const Single = () => {
             <div className="editButton">Endre</div>
             <h1 className="title">Informasjon</h1>
             <div className="item">
-              <img src={data.img} alt="" className="itemImg"/>
+              <img src={data.photo_url} alt="" className="itemImg"/>
               <div className="details">
-                <h1 className="itemTitle">{data.displayName}</h1>
+                <h1 className="itemTitle">{data.display_name}</h1>
                 
                 <div className="detailItem">
                   <span className="itemKey">Email:</span>
@@ -33,7 +34,7 @@ const Single = () => {
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Telefon:</span>
-                  <span className="itemValue">{data.phone}</span>
+                  <span className="itemValue">{data.phone_number}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Adresse:</span>

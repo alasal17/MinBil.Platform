@@ -7,15 +7,15 @@ export const userColumns = [
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.img} alt="avatar" />
+          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
           {params.row.username}
         </div>
       );
     },
   },
   {
-    field: "displayName",
-    headerName: "Full navn",
+    field: "display_name",
+    headerName: "Brukernavn",
     width: 200,
   },
   {
@@ -36,12 +36,12 @@ export const userColumns = [
   },
   
   {
-    field: "phone",
+    field: "phone_number",
     headerName: "Telefon",
     width: 150,
   },
   {
-    field: "roles",
+    field: "role",
     headerName: "Rolle",
     width: 150,
   },
@@ -65,14 +65,14 @@ export const userColumns = [
 export const productsColumns = [
   // { field: "id", headerName: "ID", width: 70 },
   {
-    field: "product",
-    headerName: "Produkt",
+    field: "services",
+    headerName: "Tjenester",
     width: 230,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.img} alt="avatar" />
-          {params.row.username}
+          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
+          {params.row.title}
         </div>
       );
     },
@@ -97,10 +97,55 @@ export const productsColumns = [
     headerName: "Stikk ord",
     width: 200,
   },
+
   {
-    field: "time",
-    headerName: "varighet",
+    field: "estimated_time",
+    headerName: "Varighet",
     width: 150,
   },
   
 ];
+
+export const employeesColums = [
+  // { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "employees",
+    headerName: "Ansette",
+    width: 230,
+    renderCell: (params) => {
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
+          {params.row.title}
+        </div>
+      );
+    },
+  },
+  {
+    field: "ful_name",
+    headerName: "Full navn",
+    width: 230,
+  },
+  {
+    field: "username",
+    headerName: "brukernavn",
+    width: 230,
+  },
+  {
+    field: "role",
+    headerName: "Rolle",
+    width: 300,
+  },  
+  {
+    field: "phone_number",
+    headerName: "Telefon",
+    width: 100,
+  },
+  {
+    field: "hired_date",
+    headerName: "Ansettelses dato",
+    width: 200,
+  }
+  
+];
+

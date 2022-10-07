@@ -4,14 +4,20 @@
 
 export const userInputs = [
     {
-      id: "username",
-      label: "Brukernavn",
+      id: "company",
+      label: "Bedriftsnavn",
       type: "text",
-      placeholder: "Ola_Nord",
+      placeholder: "Bil Service AS",
     },
     {
-      id: "displayName",
-      label: "Fornavn og etternavn",
+      id: "display_name",
+      label: "brukernavn",
+      type: "text",
+      placeholder: "BilService",
+    },
+    {
+      id: "full_name",
+      label: "Full Navn",
       type: "text",
       placeholder: "Ola Nordmann",
     },
@@ -22,7 +28,7 @@ export const userInputs = [
       placeholder: "olanordmann@gmail.com",
     },
     {
-      id: "phone",
+      id: "phone_number",
       label: "Telefon",
       type: "text",
       placeholder: "+47 234 67 089",
@@ -33,7 +39,7 @@ export const userInputs = [
       type: "Passord",
     },
     {
-      id: "roles",
+      id: "role",
       label: "Rolle",
       type: "text",
       placeholder: "admin, reader, auther",
@@ -75,15 +81,65 @@ export const userInputs = [
 
     {
       id: "tags",
-      label: "stikk ord",
+      label: "Stikk ord",
       type: "text",
       placeholder: "bilvask, polering, dekkskift,...",
+    },
+
+    {
+      id: "estimated_time",
+      label: "Varighet",
+      type: "text",
+      placeholder: "45",
     },
    
    
   ];
   
 
+  export const employeeInput = [
+    {
+      id: "usernane",
+      label: "Brukernavn",
+      type: "text",
+      placeholder: "OlaNordmann",
+    },
+    {
+      id: "ful_name",
+      label: "Full navn",
+      type: "text",
+      placeholder: "Ola Nordmann",
+    },
+    {
+      id: "full_name",
+      label: "Full Navn",
+      type: "text",
+      placeholder: "Ola Nordmann",
+    },
+    {
+      id: "role",
+      label: "Rolle",
+      type: "text",
+      placeholder: "Mekanikker",
+    },
+    {
+      id: "phone_number",
+      label: "Telefon number",
+      type: "text",
+      placeholder: "+47 234 67 089",
+    },
+    {
+      id: "password",
+      label: "Passord",
+      type: "Passord",
+    },
+    {
+      id: "hired_date",
+      label: "Ansatt siden",
+      type: "date",
+      placeholder: "01-01-1990",
+    }
+  ];
 
   export const productUpdate = [
     {

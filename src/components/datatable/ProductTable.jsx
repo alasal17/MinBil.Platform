@@ -10,24 +10,30 @@ import {
   doc,
   onSnapshot
 } from "firebase/firestore";
-import { db} from "../../firebase";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { db } from "../../firebase";
+export const auth = getAuth();
 
 const ProductTable = ({pageTitle}) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
- 
+  const auth = getAuth();
+  const user = auth.currentUser.uid;
 
   useEffect(() => {
     // LISTEN (REALTIME)
     const unsub = onSnapshot(
-      collection(db, "products"),
+      collection(db, "services"),
       (snapShot) => {
         let list = [];
         snapShot.docs.forEach((doc) => {
+       
+          if (doc.data().userID == user){
           
           list.push({ id: doc.id, ...doc.data() });
+          }
           
-        });
+        })
         setData(list);
       },
       (error) => {
@@ -48,14 +54,14 @@ const ProductTable = ({pageTitle}) => {
 
   const viewDetails = async (id) => {
     
-    const ref = doc(db, 'products', id);
+    const ref = doc(db, 'services', id);
     const snapDoc = await getDoc(ref);
     navigate('/products/test', {state:{data:snapDoc.data()}})   
   }
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "products", id));
+      await deleteDoc(doc(db, "services", id));
       setData(data.filter((item) => item.id !== id));
     } catch (err) {
       console.log(err);

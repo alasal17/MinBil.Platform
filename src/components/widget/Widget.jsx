@@ -19,8 +19,8 @@ const Widget = ({ type }) => {
       data = {
         title: "BRUKERE",
         isMoney: false,
-        link: "Se alle brukere",
         query:"users",
+        link: "Se alle brukere",
         icon: (
           <PersonOutlinedIcon
             className="icon"
@@ -64,7 +64,8 @@ const Widget = ({ type }) => {
     case "product":
       data = {
         title: "PRODUKTER",
-        query:"products",
+        query:"services",
+        where:"user == userID",
         link: "Se detaljer",
         icon: (
           <AccountBalanceWalletOutlinedIcon
