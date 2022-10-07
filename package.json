@@ -2,7 +2,7 @@
   "name": "minbil-v1",
   "version": "0.1.0",
   "engines": {
-    "node": "18.7,0"
+    "node": "18.x"
   },
   "private": true,
   "dependencies": {
