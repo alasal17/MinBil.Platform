@@ -20,7 +20,7 @@
     "async": "^3.2.3",
     "connect": "^3.7.0",
     "dependency": "0.0.1",
-    "devextreme": "19.1.15",
+    "devextreme": "21.1.5",
     "devextreme-react": "19.1.15",
     "express": "^4.17.3",
     "firebase": "^9.6.10",
