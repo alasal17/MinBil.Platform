@@ -22,7 +22,7 @@
     "firebase": "^9.6.10",
     "googleapis": "^100.0.0",
     "jake": "^10.8.2",
-    "nth-check": "^2.0.1",
+    "nth-check": ">=2.0.1",
     "on": "^1.3.0",
     "react": "17.0.2",
     "react-circular-progressbar": "^2.0.4",
