@@ -50,12 +50,11 @@
     "webpack-dev-middleware": "^5.3.3"
   },
   "scripts": {
-    "dev": "react-scripts start",
-    "start": "serve -s build",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "heroku-postbuild": "npm run build"
+    "heroku-prebuild": "npm install -g serve",
+       "devstart": "react-scripts start",
+       "start": "serve -s build",
+       "build": "react-scripts build",
+       "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
