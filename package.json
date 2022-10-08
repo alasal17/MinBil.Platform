@@ -50,7 +50,7 @@
     "webpack-dev-middleware": "^5.3.3"
   },
   "scripts": {
-    "heroku-prebuild": "npm install -g serve",
+    "heroku-prebuild": "npm install --legacy-peer-deps --save",
        "devstart": "react-scripts start",
        "start": "serve -s build",
        "build": "react-scripts build",
