@@ -24,7 +24,7 @@
     "jake": "^10.8.2",
     "nth-check": "^2.0.1",
     "on": "^1.3.0",
-    "react": "^16.14.0",
+    "react": "17.0.2",
     "react-circular-progressbar": "^2.0.4",
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.2",
