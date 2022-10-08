@@ -2,21 +2,17 @@
   "name": "minbil-v1",
   "version": "0.1.0",
   "engines": {
-    "node": "v18.7.0"
-  },"config": {
-   " legacy-peer-deps":true
+    "node": "18.x",
+    "npm": "8.x"
   },
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@ericz1803/react-google-calendar": "^4.2.1",
-    "@fullcalendar/daygrid": "^5.11.3",
-    "@fullcalendar/react": "^5.11.2",
     "@mui/icons-material": "^5.4.4",
     "@mui/material": "^5.4.4",
     "@mui/x-data-grid": "^5.5.1",
-    "@syncfusion/ej2-react-calendars": "^20.3.48",
+    
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^13.5.0",
@@ -25,8 +21,6 @@
     "async": "^3.2.3",
     "connect": "^3.7.0",
     "dependency": "0.0.1",
-    "devextreme": "^22.1.5",
-    "devextreme-react": "19.1.15",
     "express": "^4.17.3",
     "firebase": "^9.6.10",
     "googleapis": "^100.0.0",

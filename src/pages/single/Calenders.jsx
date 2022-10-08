@@ -194,15 +194,11 @@
 
 
 
-
-import Calendar from "@ericz1803/react-google-calendar";
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 
 
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 var CLIENT_ID = "109250490111-ci68ark2794o45ki6cdb6h5phdefpp59.apps.googleusercontent.com"
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]
@@ -357,17 +353,23 @@ getEvents(){
 }
   render() {
     return (
-      <div className="new">
-        <iframe
+      
+       
+   
+   <div className="new">
+       <Sidebar />
+       <div className="newContainer">
+         <Navbar />
+       <div>
+       <iframe
         src="https://calendar.google.com/calendar/embed?src=mnlbc4vk9vsouso942iti2geec%40group.calendar.google.com&ctz=America%2FMexico_City"
         style={{ border: "0" }}
-        width="800"
-        height="600"
+        width="100%"
+        height="700"
         frameborder="0"
         scrolling="no"
       ></iframe>
-   
-      </div>
+</div></div></div>
     )
   }
 }
