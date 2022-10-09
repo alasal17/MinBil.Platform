@@ -1,11 +1,13 @@
 {
   "name": "minbil-v1",
   "version": "0.1.0",
+  "engines": {
+    "node": "18.7.0"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "11.10.4",
     "@emotion/styled": "11.10.4",
-    
     "@mui/icons-material": "^5.10.6",
     "@mui/material": "^5.10.8",
     "@mui/x-data-grid": "^5.17.6",
@@ -32,7 +34,7 @@
     "recharts": "^2.1.14",
     "requires": "^1.0.2",
     "sass": "^1.49.9",
-    "serve": "14.0.1",
+    "serve": "^14.0.1",
     "sockjs": "^0.3.24",
     "typescript": "^4.6.3",
     "uuid": "9.0.0",
@@ -43,10 +45,10 @@
     "dev": "react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-postbuild": "npm run build"
-  },
+    },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -68,7 +70,7 @@
   "devDependencies": {
     "jest-watch-typeahead": "^0.6.5",
     "nth-check": ">=2.1.1",
-    "webpack-cli": "^4.9.2",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "webpack-cli": "^4.9.2"
   }
 }
