@@ -13,6 +13,7 @@ import {
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import React, { Component }  from 'react';
 
 const UpdateProducts = ({ inputs, title}) => {
   const [file, setFile] = useState("");

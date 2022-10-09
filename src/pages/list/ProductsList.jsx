@@ -2,6 +2,7 @@ import "./list.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
 import ProductTable from "../../components/datatable/ProductTable"
+import React, { Component }  from 'react';
 
 const ProductsList = ({pageTitle}) => {
   return (

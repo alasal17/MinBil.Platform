@@ -17,6 +17,8 @@ import { useContext } from "react";
 import { signOut } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import Calenders from "../../pages/single/Calenders"
+import React, { Component }  from 'react';
+
 const Sidebar = () => {
 
   const signUserOut = () => {

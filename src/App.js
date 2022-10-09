@@ -1,5 +1,5 @@
-import 'devextreme/dist/css/dx.common.css';
-import 'devextreme/dist/css/dx.light.css';
+// import 'devextreme/dist/css/dx.common.css';
+// import 'devextreme/dist/css/dx.light.css';
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 import List from "./pages/list/List";
@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/single/Calenders";
+import React, { Component }  from 'react';
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);

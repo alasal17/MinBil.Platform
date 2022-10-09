@@ -16,6 +16,7 @@ import {
   doc,
   onSnapshot,
 } from "firebase/firestore";
+import React, { Component }  from 'react';
 
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);

@@ -1,3 +1,6 @@
+import React, { Component }  from 'react';
+
+
 const DarkModeReducer = (state, action) => {
   switch (action.type) {
     case "LIGHT": {

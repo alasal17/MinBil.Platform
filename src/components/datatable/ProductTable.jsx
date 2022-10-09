@@ -12,6 +12,8 @@ import {
 } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../../firebase";
+import React, { Component }  from 'react';
+
 export const auth = getAuth();
 
 const ProductTable = ({pageTitle}) => {

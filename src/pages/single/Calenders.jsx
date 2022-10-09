@@ -198,7 +198,8 @@ import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 
 
-import React from "react";
+import React, { Component }  from 'react';
+
 
 var CLIENT_ID = "109250490111-ci68ark2794o45ki6cdb6h5phdefpp59.apps.googleusercontent.com"
 var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]

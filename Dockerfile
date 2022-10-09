@@ -1,11 +1,12 @@
-FROM node:18
+FROM node:16
 
+# Create app directory
+WORKDIR /app
 
-COPY package*.json ./
-
-RUN npm install
-
+COPY package.json .
+# RUN sudo apt install xsel
+RUN npm install --legacy-peer-deps
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm run dev" ]
+CMD [ "npm", "start" ]

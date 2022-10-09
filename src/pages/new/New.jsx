@@ -14,6 +14,7 @@ import { auth, db, storage } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
+import React, { Component }  from 'react';
 
 const New = ({ inputs, title}) => {
   const [file, setFile] = useState("");

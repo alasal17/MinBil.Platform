@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext"
+import React, { Component }  from 'react';
 
 const Login = () => {
   const [error, setError] = useState(false);
