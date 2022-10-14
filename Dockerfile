@@ -13,25 +13,25 @@
 
 
 
-# FROM node:16
+FROM node:16
 
 
-# COPY package*.json ./
-
-# RUN npm install 
-
-# COPY . .
-
-# EXPOSE 3000
-# CMD [ "npm run dev" ]
-
-FROM node:15.8.0-alpine3.10
-
-WORKDIR /app
-ADD server.js package.json ./
-
-RUN npm install -g npm@8.19.2 --force
-RUN npm install express --force
+COPY package*.json ./
 
 RUN npm install --legacy-peer-deps
-CMD node server.js
+
+COPY . .
+
+
+CMD [ "npm run dev" ]
+
+# FROM node:15.8.0-alpine3.10
+
+# WORKDIR /app
+# ADD server.js package.json ./
+
+# RUN npm install -g npm@8.19.2 --force
+# RUN npm install express --force
+
+# RUN npm install --legacy-peer-deps
+# CMD node server.js
