@@ -23,6 +23,7 @@
     "jake": "^10.8.2",
     "nth-check": "^2.0.1",
     "on": "^1.3.0",
+    "postcss-preset-env": "^7.8.2",
     "react": "^17.0.2",
     "react-circular-progressbar": "^2.0.4",
     "react-dom": "^17.0.2",
@@ -33,7 +34,6 @@
     "sass": "^1.49.9",
     "serve": "^13.0.2",
     "sockjs": "^0.3.24",
-   
     "typescript": "^4.6.3",
     "uuid": "^8.3.2",
     "via": "0.0.1",
@@ -43,9 +43,9 @@
     "dev": "react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm install  && npm run build"
   },
   "eslintConfig": {
     "extends": [
