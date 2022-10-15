@@ -34,4 +34,4 @@ RUN npm install -g serve --force
 COPY . .
 
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]
