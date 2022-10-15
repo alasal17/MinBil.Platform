@@ -16,7 +16,7 @@
 FROM node:16
 
 # Create app directory
-WORKDIR /usr/src/app
+
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -34,4 +34,4 @@ RUN npm install -g serve --force
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm start" ]
+CMD ["npm run dev"]
