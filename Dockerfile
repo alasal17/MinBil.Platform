@@ -17,11 +17,11 @@ FROM node:16
 
 # Create app directory
 
-
+WORKDIR /frontend
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY package.json ./
+COPY package.json /frontend
 
 
 RUN npm cache clear --force
@@ -33,5 +33,4 @@ RUN npm install -g serve --force
 # Bundle app source
 COPY . .
 
-EXPOSE 3000
-CMD ["npm run dev"]
+CMD ["npm", "run", "dev"]
