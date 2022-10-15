@@ -33,4 +33,5 @@ RUN npm install -g serve --force
 # Bundle app source
 COPY . .
 
+
 CMD ["npm", "run", "dev"]
