@@ -19,7 +19,7 @@ FROM node:16
 COPY package*.json ./
 
 RUN npm install --legacy-peer-deps
-
+RUN npm audit fix --force
 COPY . .
 
 
