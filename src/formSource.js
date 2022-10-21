@@ -111,12 +111,6 @@ export const userInputs = [
       placeholder: "Ola Nordmann",
     },
     {
-      id: "full_name",
-      label: "Full Navn",
-      type: "text",
-      placeholder: "Ola Nordmann",
-    },
-    {
       id: "role",
       label: "Rolle",
       type: "text",
