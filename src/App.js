@@ -2,6 +2,7 @@
 // import 'devextreme/dist/css/dx.light.css';
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
+import Register from "./pages/login/Register";
 import List from "./pages/list/List";
 import ProductsList from "./pages/list/ProductsList";
 import Sales from "./pages/sales/Sales";
@@ -10,13 +11,13 @@ import New from "./pages/new/New";
 import UpdateProducts from "./pages/new/UpdateProducts";
 import AddProduct from "./pages/new/AddProduct";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { productInputs, userInputs, productUpdate } from "./formSource";
+import { productInputs, employeeInput } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/single/Calenders";
-import React, { Component }  from 'react';
+import React  from 'react';
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -42,12 +43,12 @@ function App() {
                 </RequireAuth>
               }
             />
-            <Route path="/users">
+            <Route path="/employees">
               <Route
                 index
                 element={
                   <RequireAuth>
-                    <List pageTitle="Legg til en ny bruker"/>
+                    <List pageTitle="Legg til en ny ansatt"/>
                   </RequireAuth>
                 }
               />
@@ -63,7 +64,7 @@ function App() {
                 path="new"
                 element={
                   <RequireAuth>
-                    <New inputs={userInputs} title="Legg til ny bruker"/>
+                    <New inputs={employeeInput} title="Legg til ny ansatt"/>
                   </RequireAuth>
                 }
               />
@@ -118,6 +119,18 @@ function App() {
               />
             
             </Route>
+
+            {/* <Route path="/register">
+              <Route
+                index
+                element={
+                 
+                    <Register/>
+                 
+                }
+              />
+            
+            </Route> */}
             </Route>
         </Routes>
       </BrowserRouter>

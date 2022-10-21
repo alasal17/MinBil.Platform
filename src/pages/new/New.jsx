@@ -4,8 +4,7 @@ import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useEffect, useState } from "react";
 import {
-  addDoc,
-  collection,
+
   doc,
   serverTimestamp,
   setDoc,
@@ -14,7 +13,7 @@ import { auth, db, storage } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import React, { Component }  from 'react';
+import React  from 'react';
 
 const New = ({ inputs, title}) => {
   const [file, setFile] = useState("");

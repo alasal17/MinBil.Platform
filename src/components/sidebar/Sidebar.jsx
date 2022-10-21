@@ -15,9 +15,8 @@ import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext } from "react";
 import { signOut } from "firebase/auth";
-import { auth, db, storage } from "../../firebase";
-import Calenders from "../../pages/single/Calenders"
-import React, { Component }  from 'react';
+import { auth} from "../../firebase";
+import React from 'react';
 
 const Sidebar = () => {
 
@@ -48,7 +47,7 @@ const Sidebar = () => {
           </Link>
           <p className="title">LISTER</p>
           
-          <Link to="/users" style={{ textDecoration: "none" }}>
+          <Link to="/employees" style={{ textDecoration: "none" }}>
             <li>
               <PersonOutlineIcon className="icon" />
               <span>Ansatte</span>

@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import ProductTable from "../../components/datatable/ProductTable";
-import React, { Component }  from 'react';
+import React  from 'react';
 
 import {useLocation} from 'react-router-dom';
 const Sales = () => {

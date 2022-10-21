@@ -68,7 +68,7 @@ const Datatable = ({pageTitle}, props) => {
     const ref = doc(db, 'employees', id);
     console.log('No users')
     const snapDoc = await getDoc(ref);
-    navigate('/users/test', {state:{data:snapDoc.data()}})  
+    navigate('/employees/test', {state:{data:snapDoc.data()}})  
 
 
       
@@ -123,7 +123,7 @@ const Datatable = ({pageTitle}, props) => {
     <div className="datatable">
       <div className="datatableTitle">
         {pageTitle}
-        <Link to="/users/new" className="link">
+        <Link to="/employees/new" className="link">
         Legg til ny
         </Link>
       </div>

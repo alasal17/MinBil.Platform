@@ -6,14 +6,14 @@ import { useEffect, useState } from "react";
 import {
   addDoc,
   collection,
-  doc,
+
   serverTimestamp,
-  setDoc,
+
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import React, { Component }  from 'react';
+import React  from 'react';
 
 const UpdateProducts = ({ inputs, title}) => {
   const [file, setFile] = useState("");

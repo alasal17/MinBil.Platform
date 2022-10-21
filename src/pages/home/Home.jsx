@@ -5,7 +5,7 @@ import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
-import React, { Component }  from 'react';
+import React from 'react';
 
 const Home = () => {
   return (
@@ -14,7 +14,7 @@ const Home = () => {
       <div className="homeContainer">
         <Navbar />
         <div className="widgets">
-          <Widget type="user" />
+          <Widget type="employees" />
           <Widget type="product" />
           <Widget type="order" />
           <Widget type="earning" />

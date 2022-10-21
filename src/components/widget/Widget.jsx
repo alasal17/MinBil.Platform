@@ -8,7 +8,7 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
-import React, { Component }  from 'react';
+import React from 'react';
 
 const Widget = ({ type }) => {
   const [amount, setAmount] = useState(null);
@@ -16,11 +16,11 @@ const Widget = ({ type }) => {
   let data;
 
   switch (type) {
-    case "user":
+    case "employees":
       data = {
         title: "BRUKERE",
         isMoney: false,
-        query:"users",
+        query:"employees",
         link: "Se alle brukere",
         icon: (
           <PersonOutlinedIcon
@@ -64,9 +64,8 @@ const Widget = ({ type }) => {
       break;
     case "product":
       data = {
-        title: "PRODUKTER",
+        title: "TJENESTER",
         query:"services",
-        where:"user == userID",
         link: "Se detaljer",
         icon: (
           <AccountBalanceWalletOutlinedIcon

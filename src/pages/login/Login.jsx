@@ -1,19 +1,32 @@
 import { useContext, useState } from "react";
 import "./login.scss";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 import { auth } from "../../firebase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext"
-import React, { Component }  from 'react';
-
+import React from 'react';
+import {
+  collection,
+  getDoc,
+  deleteDoc,
+  doc,
+  onSnapshot
+} from "firebase/firestore";
+import { DataGrid } from "@mui/x-data-grid";
+import { employeesColums, userColumns } from "../../datatablesource";
+import Register from './Register'
+import { db } from "../../firebase";
 const Login = () => {
   const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const navigate = useNavigate();
+  const auth = getAuth();
+  const [data, setData] = useState([]);
   const navitage = useNavigate()
 
   const {dispatch} = useContext(AuthContext)
+
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -27,8 +40,11 @@ const Login = () => {
       })
       .catch((error) => {
         setError(true);
+        console.log(error);
       });
   };
+
+
 
   return (
     <div className="login">
@@ -42,10 +58,23 @@ const Login = () => {
           type="password"
           placeholder="password"
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="on"
         />
         <button type="submit">Login</button>
         {error && <span>Wrong email or password!</span>}
       </form>
+      <div className="datatable">
+      <div className="datatableTitle">
+      
+      {/* <Link
+                to="/register"
+                className="text-blue-600 hover:underline dark:text-blue-500"
+              >
+                Don't have an account? Register
+              </Link> */}
+      </div>
+   
+    </div>
     </div>
   );
 };
