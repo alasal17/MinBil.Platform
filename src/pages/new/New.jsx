@@ -3,14 +3,8 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import { useEffect, useState } from "react";
-import {
-
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import React  from 'react';
@@ -20,7 +14,9 @@ const New = ({ inputs, title}) => {
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const navigate = useNavigate()
-
+  const postsCollectionRef = collection(db, "employees");
+  
+  
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;
@@ -52,7 +48,7 @@ const New = ({ inputs, title}) => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, img: downloadURL }));
+            setData((prev) => ({ ...prev, photo_url: downloadURL }));
           });
         }
       );
@@ -60,6 +56,8 @@ const New = ({ inputs, title}) => {
     file && uploadFile();
   }, [file]);
 
+
+  
   console.log(data);
 
   const handleInput = (e) => {
@@ -69,17 +67,15 @@ const New = ({ inputs, title}) => {
     setData({ ...data, [id]: value });
   };
 
+
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      const res = await createUserWithEmailAndPassword(
-        auth,
-        data.email,
-        data.password
-      );
-      await setDoc(doc(db, "employees", res.user.uid), {
+      
+      await addDoc(postsCollectionRef, {
         ...data,
         timeStamp: serverTimestamp(),
+        userID:  auth.currentUser.uid,
       });
       navigate(-1)
     } catch (err) {
@@ -91,14 +87,15 @@ const New = ({ inputs, title}) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar />
+        <Navbar img={data.photo_url}/>
         <div className="top">
           <h1>{title}</h1>
         </div>
         <div className="bottom">
           <div className="left">
-            <img
+            <img 
               src={
+                
                 file
                   ? URL.createObjectURL(file)
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
@@ -116,8 +113,8 @@ const New = ({ inputs, title}) => {
                   type="file"
                   id="file"
                   onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
+                  style={{ display: "none" }}/>
+
               </div>
 
               {inputs.map((input) => (

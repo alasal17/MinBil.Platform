@@ -128,11 +128,7 @@ export const employeesColums = [
     headerName: "Full navn",
     width: 230,
   },
-  {
-    field: "username",
-    headerName: "brukernavn",
-    width: 230,
-  },
+  
   {
     field: "role",
     headerName: "Rolle",
@@ -147,7 +143,13 @@ export const employeesColums = [
     field: "hired_date",
     headerName: "Ansettelses dato",
     width: 200,
-  }
+  },
+  {
+    field: "email",
+    headerName: "E-post",
+    width: 100,
+  },
+
   
 ];
 

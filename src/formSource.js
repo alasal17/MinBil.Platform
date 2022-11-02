@@ -98,12 +98,7 @@ export const userInputs = [
   
 
   export const employeeInput = [
-    {
-      id: "usernane",
-      label: "Brukernavn",
-      type: "text",
-      placeholder: "OlaNordmann",
-    },
+    
     {
       id: "ful_name",
       label: "Full navn",
@@ -122,17 +117,19 @@ export const userInputs = [
       type: "text",
       placeholder: "+47 234 67 089",
     },
-    {
-      id: "password",
-      label: "Passord",
-      type: "Passord",
-    },
+   
     {
       id: "hired_date",
       label: "Ansatt siden",
       type: "date",
       placeholder: "01-01-1990",
-    }
+    },
+    {
+      id: "email",
+      label: "E-post",
+      type: "mail",
+      placeholder: "olanordmann@gmail.com",
+    },
   ];
 
   export const productUpdate = [

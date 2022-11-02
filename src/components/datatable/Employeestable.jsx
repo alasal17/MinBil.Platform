@@ -19,7 +19,7 @@ const Employeestable = ({pageTitle}, props) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const auth = getAuth();
-  const user = auth.currentUser.uid;
+  // const user = auth.currentUser.uid;
  
   useEffect(() => {
     // LISTEN (REALTIME)
@@ -33,11 +33,12 @@ const Employeestable = ({pageTitle}, props) => {
 
         
           snapShot.docs.forEach((doc) => {
-
-            if (doc.data().uid == user){
-        
-            list.push({ id: doc.id, ...doc.data() });
-            }
+           
+           
+            if(doc.data().userID === auth.currentUser.uid){
+              list.push({ id: doc.id, ...doc.data() });
+              
+          }
          
           });
         setData(list);
@@ -45,6 +46,7 @@ const Employeestable = ({pageTitle}, props) => {
 
       (error) => {
         console.log(error);
+        
       }
     );
 
@@ -56,7 +58,7 @@ const Employeestable = ({pageTitle}, props) => {
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, "employees", id));
-      setData(data.filter((item) => item.id !== id));
+      setData(data.filter((item) => item.id === id));
     } catch (err) {
       console.log(err);
     }
@@ -68,7 +70,7 @@ const Employeestable = ({pageTitle}, props) => {
     const ref = doc(db, 'employees', id);
     console.log('No users')
     const snapDoc = await getDoc(ref);
-    navigate('/employees/test', {state:{data:snapDoc.data()}})  
+    navigate(`/employees/${id}`, {state:{data:snapDoc.data()}})  
 
 
       
@@ -83,8 +85,7 @@ const Employeestable = ({pageTitle}, props) => {
       renderCell: (params) => {
       
 
-          if(params.row.role === "admin" && user === params.row.uid){
-            return (
+         
               
               <div className="cellAction">
                   <h3>Din bruker</h3>
@@ -92,13 +93,11 @@ const Employeestable = ({pageTitle}, props) => {
                
                 
               </div>
-            );
-  
-          }
+           
        
 
         
-        else{
+   
           return (
             <div className="cellAction">
              
@@ -113,7 +112,7 @@ const Employeestable = ({pageTitle}, props) => {
             </div>
           );
 
-        }
+       
       
       },
     },
