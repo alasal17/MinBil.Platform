@@ -11,7 +11,7 @@ import {
   onSnapshot
 } from "firebase/firestore";
 import React, { Component }  from 'react';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
 export const auth = getAuth();
 
@@ -19,7 +19,7 @@ const Employeestable = ({pageTitle}, props) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const auth = getAuth();
-  // const user = auth.currentUser.uid;
+  
  
   useEffect(() => {
     // LISTEN (REALTIME)

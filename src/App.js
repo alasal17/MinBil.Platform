@@ -2,8 +2,8 @@
 // import 'devextreme/dist/css/dx.light.css';
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
-import Register from "./pages/login/Register";
-import List from "./pages/list/List";
+// import Register from "./pages/login/Register";
+import EmployeestableList from "./pages/list/EmployeestableList";
 import ProductsList from "./pages/list/ProductsList";
 import Sales from "./pages/sales/Sales";
 import Single from "./pages/single/Single";
@@ -48,7 +48,7 @@ function App() {
                 index
                 element={
                   <RequireAuth>
-                    <List pageTitle="Legg til en ny ansatt"/>
+                    <EmployeestableList pageTitle="Legg til en ny ansatt"/>
                   </RequireAuth>
                 }
               />
