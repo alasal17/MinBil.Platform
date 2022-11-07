@@ -5,33 +5,54 @@ import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
-import ListOutlinedIcon from "@mui/icons-material/ListOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useState,useEffect } from "react";
-import { auth, db, storage } from "../../firebase";
+import { db, useAuth} from "../../firebase";
+import { AuthContext, AuthContextProvider } from "../../context/AuthContext";
+
 import {
   collection,
-  getDocs,
-  deleteDoc,
-  doc,
+  getDoc,
   onSnapshot,
+  doc,
+  where,
+  query
 } from "firebase/firestore";
-import React, { Component }  from 'react';
+import React  from 'react';
+
+
+
 
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);
-  const [data, setData] = useState([]);
-  
+  const [data, setData] = useState({});
+  const {currentUser} = useContext(AuthContext)
+
+
+ 
   useEffect(() => {
     // LISTEN (REALTIME)
+   
     const unsub = onSnapshot(
-      collection(db, "users"),
+      query(collection(db, "users"), where("uid", "==", currentUser.uid)),
       (snapShot) => {
-        let list = [];
+    
+
+                
+      
+        
         snapShot.docs.map((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-        });
-        setData(list[0]);
+          setData({uid:doc.data().uid, display_name: doc.data().display_name, photo_url:doc.data().photo_url});
+               
+            
+          });
+          
+            
+          
+       
+        
+        
+      
       },
       (error) => {
         console.log(error);
@@ -41,7 +62,11 @@ const Navbar = () => {
     return () => {
       unsub();
     };
-  }, []);
+  }, );
+
+
+
+
   return (
     <div className="navbar">
       <div className="wrapper">
@@ -72,7 +97,8 @@ const Navbar = () => {
             <div className="counter">2</div>
           </div>
           <div className="item">
-            <ListOutlinedIcon className="icon" />
+            {data.display_name}
+            {/* <ListOutlinedIcon className="icon" /> */}
           </div>
          
             <div className="item">

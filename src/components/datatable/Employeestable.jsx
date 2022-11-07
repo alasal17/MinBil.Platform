@@ -1,6 +1,6 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { employeesColums, employeeInput } from "../../datatablesource";
+import { employeesColums } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -10,7 +10,7 @@ import {
   doc,
   onSnapshot
 } from "firebase/firestore";
-import React, { Component }  from 'react';
+import React  from 'react';
 import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
 export const auth = getAuth();
@@ -53,7 +53,7 @@ const Employeestable = ({pageTitle}, props) => {
     return () => {
       unsub();
     }
-  }, []);
+  },);
 
   const handleDelete = async (id) => {
     try {
