@@ -162,4 +162,27 @@ export const userInputs = [
    
    
   ];
+
+  export const eventInput = [
+    
+    {
+      id: "title",
+      label: "Tittel",
+      type: "text",
+      placeholder: "Bilvask",
+    },
+    {
+      id: "price",
+      label: "Price",
+      type: "text",
+      placeholder: "1900",
+    },
+    {
+      id: "start",
+      label: "Start tid",
+      type: "text",
+      placeholder: "2022-11-08T13:00",
+    },
+   
+  ];
   

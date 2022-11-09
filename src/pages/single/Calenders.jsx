@@ -1,113 +1,71 @@
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
+import React, { Component } from 'react'
+import FullCalendar, { getDateMeta } from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import Swal from 'sweetalert2'
+import { Link, useNavigate } from "react-router-dom";
+import { getData } from "ajv/dist/compile/validate";
+import { useEffect, useState } from "react";
+import {
+  collection,
+  getDoc,
+  deleteDoc,
+  doc,
+  onSnapshot
+} from "firebase/firestore";
+import { getAuth} from "firebase/auth";
+import { db } from "../../firebase";
+export const auth = getAuth();
+function Calendars() {
+  const [data, setData] = useState([]);
 
+  const auth = getAuth();
 
-import React from 'react';
-
-
-var CLIENT_ID = process.env.CLIENT_ID;
-var DISCOVERY_DOCS = process.env.DISCOVERY_DOCS;
-var SCOPES = process.env.SCOPES;
-var gapi = window.gapi
-
-
-class Calendars extends React.Component {
-  constructor(props) {
-    super(props);
-    this.calendar = process.env.CALENDAR_ID;
-    this.getEvents = this.getEvents.bind(this);
-   
-    // this.handleClick = this.handleClick.bind(this);
-    this.state = {
-      API_KEY: process.env.GOOGLE_CAL_API_KEY,
-      calenderList:[],
-      events:''
-      
-    };
-    
-    
-  }
-  
-  componentDidMount = () => {
-    this.getEvents();
-    this.handleClick();
-    
-  }
-  
+  useEffect(() => {
+    // LISTEN (REALTIME)
  
-handleClick = () => {
-  gapi.load('client:auth2', () => {
-    console.log('loaded client')
-    
-    gapi.client.init({
-      apiKey: this.state.API_KEY,
-      clientId: CLIENT_ID,
-      discoveryDocs: DISCOVERY_DOCS,
-      scope: SCOPES,
-    })
-
-    gapi.client.load('calendar', 'v3', () => console.log('bam!'))
-    
-    gapi.auth2.getAuthInstance().signIn()
-    .then(() => {
-      
-
-     console.log("Test ", gapi.client.calendar.calendars)
-
-      // get events
-      gapi.client.calendar.events.list({
-        'calendarId': 'primary',
-        'timeMin': (new Date()).toISOString(),
-        'showDeleted': false,
-        'singleEvents': true,
-        'maxResults': 10,
-        'orderBy': 'startTime'
-      }).then(response => {
-        const events = response.result.items
-        
-        console.log('EVENTS: ', events)
-        // console.log('EVENTS: ', events['iCalUID'])
-        this.setState.calenderList.push(events)
-
-        console.log('LIST: ', this.state.calenderList)
-      })
-
-      return this.calenderList
-      
-    })
-  })
-}
-getEvents(){
   
-  let that = this;
-  function start() {
-    gapi.client.init({
-      'apiKey': process.env.GOOGLE_CAL_API_KEY
-    }).then(function() {
-      return gapi.client.request({
-        'path': `https://www.googleapis.com/calendar/v3/users/me/calendarList/${this.calendar}`,
-      })
-    }).then( (response) => {
-      let events = response.result.items
+    const unsub = onSnapshot(
       
-      this.setState({
-        events
+      collection(db, "events"),
+      (snapShot) => {
+        let list = [];
+
+        
+          snapShot.docs.forEach((doc) => {
+           
+           
+            if(doc.data().uid === auth.currentUser.uid){
+              list.push({ id: doc.id, ...doc.data() });
+              
+              
+          }
+         
+          });
+        setData(list);
       
-      }, ()=>{
-        this.event.setState(events)
-        console.log(that.state.events);
-       
-      })
-    }, function(reason) {
-      console.log(reason);
-    });
-  }
-  gapi.load('client', start)
-  console.log("Test")
-  console.log(this.events)
-  return this.state.events
-}
-  render() {
+      },
+
+      (error) => {
+        console.log(error);
+        
+      }
+    );
+
+    return () => {
+      unsub();
+    }
+  },);
+  
+  
+
+ 
+
+ 
+
+
     return (
       
        
@@ -117,17 +75,42 @@ getEvents(){
        <div className="newContainer">
          <Navbar />
        <div>
-       <iframe
-        src="https://calendar.google.com/calendar/embed?src=mnlbc4vk9vsouso942iti2geec%40group.calendar.google.com&ctz=America%2FMexico_City"
-        style={{ border: "0" }}
-        width="100%"
-        height="700"
-        frameBorder="0"
-        scrolling="no"
-      />
+       <div className="datatableTitle">
+        
+        <Link to="/calender/new" className="link">
+        Legg til ny
+        </Link>
+
+        
+
+      </div>
+       return <FullCalendar 
+                    defaultView="dayGridWeek" 
+                    plugins={[dayGridPlugin, interactionPlugin]}
+                    editable={true}
+                    
+                    eventClick={
+                      function(arg) {
+                    
+                        Swal.fire({
+                          titleText: arg.event.title,
+                          html: 'Pris: ' + arg.event.extendedProps.price + ' <br/> <br/>' + 'Start tid: ' +new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(arg.event.start),
+                         
+                     
+                          
+                          
+                          
+                        })
+                      }
+                    }
+                    events={data}
+                   
+                    
+                />
 </div></div></div>
     )
   }
-}
-export default Calendars;
 
+
+
+  export default Calendars;

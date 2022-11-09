@@ -11,13 +11,14 @@ import New from "./pages/new/New";
 import UpdateProducts from "./pages/new/UpdateProducts";
 import AddProduct from "./pages/new/AddProduct";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { productInputs, employeeInput } from "./formSource";
+import { productInputs, employeeInput, eventInput } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/single/Calenders";
 import React  from 'react';
+
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -114,6 +115,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <Calendars/>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="new"
+                element={
+                  <RequireAuth>
+                    <AddProduct inputs={eventInput} title="Legg til nytt event" />
                   </RequireAuth>
                 }
               />
