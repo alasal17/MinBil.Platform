@@ -43,7 +43,7 @@ const Navbar = () => {
         
         snapShot.docs.map((doc) => {
           setData({uid:doc.data().uid, display_name: doc.data().display_name, photo_url:doc.data().photo_url});
-               
+              
             
           });
           
