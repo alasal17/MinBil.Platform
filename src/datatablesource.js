@@ -62,8 +62,6 @@ export const userColumns = [
   },
 ];
 
-
-
 export const productsColumns = [
   // { field: "id", headerName: "ID", width: 70 },
   {
@@ -153,3 +151,49 @@ export const employeesColums = [
   
 ];
 
+export const eventsColumns = [
+  // { field: "id", headerName: "ID", width: 70 },
+  {
+    field: "events" || "services",
+    headerName: "Eventer",
+    width: 230,
+    renderCell: (params) => {
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
+          {params.row.title}
+        </div>
+      );
+    },
+  },
+  {
+    field: "title",
+    headerName: "Tittel",
+    width: 230,
+  },
+  {
+    field: "booked",
+    headerName: "Åpent",
+    width: 300,
+  },  
+  {
+    field: "price",
+    headerName: "Pris",
+    width: 100,
+  },
+  {
+    field: "services",
+    headerName: "Eventer",
+    width: 230,
+    renderCell: (params) => {
+      return (
+        <div className="cellWithImg">
+         <img className="cellImg" src={params.row.photo_url} alt="avatar" />
+          {params.row.title}
+        </div>
+      );
+    },
+  },
+  
+  
+];
