@@ -10,6 +10,7 @@ import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import UpdateProducts from "./pages/new/UpdateProducts";
 import AddProduct from "./pages/new/AddProduct";
+import AddEvent from "./pages/new/AddEvent";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { productInputs, employeeInput, eventInput } from "./formSource";
 import "./style/dark.scss";
@@ -18,6 +19,7 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/single/Calenders";
 import React  from 'react';
+
 
 
 function App() {
@@ -115,6 +117,7 @@ function App() {
                 element={
                   <RequireAuth>
                     <Calendars/>
+                   
                   </RequireAuth>
                 }
               />
@@ -122,7 +125,16 @@ function App() {
                 path="new"
                 element={
                   <RequireAuth>
-                    <AddProduct inputs={eventInput} title="Legg til nytt event" />
+                    <AddEvent inputs={eventInput} title="Legg til nytt event" />
+                  </RequireAuth>
+                }
+              />
+
+              <Route
+                path=":calenderId"
+                element={
+                  <RequireAuth>
+                    <Sales />
                   </RequireAuth>
                 }
               />

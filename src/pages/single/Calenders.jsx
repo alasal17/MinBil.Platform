@@ -17,9 +17,12 @@ import {
 } from "firebase/firestore";
 import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
+import EventList from "../list/EventList";
+
 export const auth = getAuth();
 function Calendars() {
   const [data, setData] = useState([]);
+  const dataColor = 'red';
 
   const auth = getAuth();
 
@@ -32,19 +35,31 @@ function Calendars() {
       collection(db, "events"),
       (snapShot) => {
         let list = [];
-
+       
         
           snapShot.docs.forEach((doc) => {
            
            
-            if(doc.data().uid === auth.currentUser.uid){
-              list.push({ id: doc.id, ...doc.data() });
+            if(doc.data().uid === auth.currentUser.uid ){
               
+              list.push({ id: doc.id, booked: doc.data().booked, price: doc.data().price, title:doc.data().title, start: (doc.data().start_date+'T'+ doc.data().start_time)});
+
+
+            
               
           }
+          if(doc.data().booked === false){
+           
+            
+        }
          
           });
         setData(list);
+        
+         
+  
+  
+        
       
       },
 
@@ -56,6 +71,8 @@ function Calendars() {
 
     return () => {
       unsub();
+      const timer = setTimeout(() => console.log('Initial timeout!'), 1000);
+      clearTimeout(timer)
     }
   },);
   
@@ -75,39 +92,24 @@ function Calendars() {
        <div className="newContainer">
          <Navbar />
        <div>
-       <div className="datatableTitle">
-        
-        <Link to="/calender/new" className="link">
-        Legg til ny
-        </Link>
-
-        
-
-      </div>
-       return <FullCalendar 
-                    defaultView="dayGridWeek" 
+     
+       <FullCalendar 
+                    defaultView="dayGridMonth"
                     plugins={[dayGridPlugin, interactionPlugin]}
                     editable={true}
                     
-                    eventClick={
-                      function(arg) {
                     
-                        Swal.fire({
-                          titleText: arg.event.title,
-                          html: 'Pris: ' + arg.event.extendedProps.price + ' <br/> <br/>' + 'Start tid: ' +new Intl.DateTimeFormat('en-US', {year: 'numeric', month: '2-digit',day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(arg.event.start),
-                         
-                     
-                          
-                          
-                          
-                        })
-                      }
-                    }
                     events={data}
+                    
+                    
+                        
+  
+                   
+                    
                    
                     
                 />
-</div></div></div>
+</div> <EventList/></div></div>
     )
   }
 

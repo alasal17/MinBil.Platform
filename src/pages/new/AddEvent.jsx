@@ -6,69 +6,64 @@ import { useEffect, useState } from "react";
 import {
   addDoc,
   collection,
-
+  onSnapshot,
   serverTimestamp,
 
 } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import React  from 'react';
+import { Object } from "via";
+
 
 const AddEvent = ({ inputs, title}) => {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState("https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg");
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "events");
-  
-  
+  const [isChecked, setIsChecked] = useState(false);
+  const color = '';
+  const [services, setService] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredContacts, setFilteredContacts] = useState([]);
+  const auth = getAuth();
+
   useEffect(() => {
-    const uploadFile = () => {
-      const name = new Date().getTime() + file.name;
-
-      console.log(name);
-      const storageRef = ref(storage, file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setPerc(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
+    const user = auth.currentUser.uid;
+    const serviceData = onSnapshot(
+      collection(db, "services"),
+      (snapShot) => {
+        let list = [];
+        snapShot.docs.forEach((doc) => {
+       
+          if (doc.data().userID === user){
+          
+          list.push({ id: doc.id, ...doc.data() });
           }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, photo_url: downloadURL }));
-          });
-        }
-      );
-    };
-    file && uploadFile();
-  }, [file]);
+          
+        })
+        setService(list);
+      
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+
+   
+  });
 
 
   
-  console.log(data);
+
 
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
+    
 
     setData({ ...data, [id]: value });
   };
@@ -79,15 +74,36 @@ const AddEvent = ({ inputs, title}) => {
     try {
       
       await addDoc(postsCollectionRef, {
+        
         ...data,
+        title:search,
+        price:filteredContacts.map((service) =>(service.price))[0],
+        estimated_time:filteredContacts.map((service) =>(service.estimated_time))[0],
+        tags:filteredContacts.map((service) =>(service.tags))[0],
+        booked: false,
+        photo_url:filteredContacts.map((service) =>(service.photo_url)),
         timeStamp: serverTimestamp(),
-        userID:  auth.currentUser.uid,
+        uid:  auth.currentUser.uid,
       });
+      console.log(auth.currentUser.uid)
       navigate(-1)
     } catch (err) {
       console.log(err);
     }
   };
+
+
+
+
+  useEffect(() => {
+    setFilteredContacts(
+      services.filter(
+        (service) =>
+        service.title.toLowerCase().includes(search.toLowerCase()) 
+      )
+    );
+  }, [search, services]);
+  
 
   return (
     <div className="new">
@@ -102,8 +118,8 @@ const AddEvent = ({ inputs, title}) => {
             <img 
               src={
                 
-                file
-                  ? URL.createObjectURL(file)
+                filteredContacts.map((service) =>(service.photo_url))
+                  ? filteredContacts.map((service) =>(service.photo_url))
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""
@@ -111,30 +127,28 @@ const AddEvent = ({ inputs, title}) => {
           </div>
           <div className="right">
             <form onSubmit={handleAdd}>
-              <div className="formInput">
-                <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-              </div>
+              
+              <div className="formInput" key={inputs.map((input) => input.id)}>
+              <label>Tittel</label>
+              <input id="title" type="text" onChange={(e) => setSearch(e.target.value)} />
+              <label>Price</label>
+              <input id="price" type="text"  placeholder="1000"  value={ filteredContacts.map((service) =>(service.price)) }/>
+              <label>Varighet</label>
+              <input id="estimated_time" type="text" value={filteredContacts.map((service) =>(service.estimated_time))}/>
+              <label>Tags</label>
+              <input id="tags" type="text" value={filteredContacts.map((service) =>(service.tags))}/>
 
-              {inputs.map((input) => (
-                <div className="formInput" key={input.id}>
-                  <label>{input.label}</label>
-                  <input
-                    id={input.id}
-                    type={input.type}
-                    placeholder={input.placeholder}
-                    onChange={handleInput}
-                  />
-                </div>
-              ))}
+              <label>Dato</label>
+              <input id="start_date" onChange={handleInput} type="date" />
+              <label>Klokkeslett</label>
+              <input id="start_time" onChange={handleInput} type="time" />
+            
+
+              </div>
+              
+    
+          
+              
               <button disabled={per !== null && per < 100} type="submit">
                 Send
               </button>
