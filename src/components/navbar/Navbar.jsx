@@ -7,14 +7,12 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useState,useEffect } from "react";
-import { db, useAuth} from "../../firebase";
-import { AuthContext, AuthContextProvider } from "../../context/AuthContext";
+import { db} from "../../firebase";
+import { AuthContext} from "../../context/AuthContext";
 
 import {
   collection,
-  getDoc,
   onSnapshot,
-  doc,
   where,
   query
 } from "firebase/firestore";
@@ -28,13 +26,13 @@ const Navbar = () => {
   const [data, setData] = useState({});
   const {currentUser} = useContext(AuthContext)
 
-
- 
+  
   useEffect(() => {
     // LISTEN (REALTIME)
    
     const unsub = onSnapshot(
-      query(collection(db, "users"), where("uid", "==", currentUser.uid)),
+      
+      query(collection(db, "company"), where("uid", "==", currentUser.uid)),
       (snapShot) => {
     
 
@@ -42,22 +40,18 @@ const Navbar = () => {
       
         
         snapShot.docs.map((doc) => {
-          setData({uid:doc.data().uid, display_name: doc.data().display_name, photo_url:doc.data().photo_url});
+          setData({uid:doc.data().uid, companyName: doc.data().companyName, companyLogo:doc.data().companyLogo});
               
             
           });
-          
-            
-          
-       
-        
-        
-      
+ 
       },
       (error) => {
         console.log(error);
       }
     );
+  
+  
 
     return () => {
       unsub();
@@ -97,7 +91,7 @@ const Navbar = () => {
             <div className="counter">2</div>
           </div>
           <div className="item">
-            {data.display_name}
+            {data.companyName}
             {/* <ListOutlinedIcon className="icon" /> */}
           </div>
          
@@ -106,8 +100,8 @@ const Navbar = () => {
 
               <img
               src={
-                data.photo_url
-                  ? data.photo_url
+                data.companyLogo
+                  ? data.companyLogo
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""
@@ -115,11 +109,9 @@ const Navbar = () => {
               />
 
        
-           
+              
           </div>
-
-         
-          
+              
         </div>
       </div>
     </div>

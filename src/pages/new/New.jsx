@@ -48,7 +48,7 @@ const New = ({ inputs, title}) => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, photo_url: downloadURL }));
+            setData((prev) => ({ ...prev, imageUrl: downloadURL }));
           });
         }
       );
@@ -74,8 +74,9 @@ const New = ({ inputs, title}) => {
       
       await addDoc(postsCollectionRef, {
         ...data,
-        timeStamp: serverTimestamp(),
-        userID:  auth.currentUser.uid,
+        status:'true',
+        createdAt: serverTimestamp(),
+        uid:  auth.currentUser.uid,
       });
       navigate(-1)
     } catch (err) {
@@ -87,7 +88,7 @@ const New = ({ inputs, title}) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar img={data.photo_url}/>
+        <Navbar img={data.imageUrl}/>
         <div className="top">
           <h1>{title}</h1>
         </div>

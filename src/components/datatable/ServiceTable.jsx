@@ -1,6 +1,6 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { productsColumns } from "../../datatablesource";
+import { servicesColumns } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -10,13 +10,13 @@ import {
   doc,
   onSnapshot
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
-import React, { Component }  from 'react';
+import React  from 'react';
 
 export const auth = getAuth();
 
-const ProductTable = ({pageTitle}) => {
+const ServiceTable = ({pageTitle}) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const auth = getAuth();
@@ -30,7 +30,7 @@ const ProductTable = ({pageTitle}) => {
         let list = [];
         snapShot.docs.forEach((doc) => {
        
-          if (doc.data().userID == user){
+          if (doc.data().uid === user){
           
           list.push({ id: doc.id, ...doc.data() });
           }
@@ -58,7 +58,7 @@ const ProductTable = ({pageTitle}) => {
     
     const ref = doc(db, 'services', id);
     const snapDoc = await getDoc(ref);
-    navigate('/products/test', {state:{data:snapDoc.data()}})   
+    navigate(`/service/${id}`, {state:{data:snapDoc.data()}})   
   }
 
   const handleDelete = async (id) => {
@@ -81,7 +81,7 @@ const ProductTable = ({pageTitle}) => {
             
               <div className="viewButton" onClick={() => viewDetails(params.row.id)}>Se detaljer</div>
             
-            <Link to="/products" style={{ textDecoration: "none" }}>
+            <Link to="/service" style={{ textDecoration: "none" }}>
             <div
             
               className="deleteButton"
@@ -91,7 +91,7 @@ const ProductTable = ({pageTitle}) => {
             </div>
             </Link>
 
-            <Link to="/products/update" style={{ textDecoration: "none" }}>
+            <Link to="/service/update" style={{ textDecoration: "none" }}>
             <div
             
               className="updateButton"
@@ -110,7 +110,7 @@ const ProductTable = ({pageTitle}) => {
     <div className="datatable">
       <div className="datatableTitle">
         {pageTitle}
-        <Link to="/products/new" className="link">
+        <Link to="/service/new-service" className="link">
         Legg til ny
         </Link>
 
@@ -120,7 +120,7 @@ const ProductTable = ({pageTitle}) => {
       <DataGrid
         className="datagrid"
         rows={data}
-        columns={productsColumns.concat(actionColumn)}
+        columns={servicesColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection
@@ -129,4 +129,4 @@ const ProductTable = ({pageTitle}) => {
   );
 };
 
-export default ProductTable;
+export default ServiceTable;

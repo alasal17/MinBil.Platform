@@ -2,7 +2,7 @@ import "../single/single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
-import ProductTable from "../../components/datatable/ProductTable";
+import ServiceTable from "../../components/datatable/ServiceTable";
 import React  from 'react';
 
 import {useLocation} from 'react-router-dom';
@@ -23,7 +23,7 @@ const Sales = () => {
             <h1 className="title">Produkt informasjon</h1>
             <div className="item">
               <img
-                src={data.photo_url}
+                src={data.imageUrl}
                 alt="dd"
                 className="itemImg"
               />
@@ -45,7 +45,7 @@ const Sales = () => {
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Varighet:</span>
-                  <span className="itemValue">{data.time}</span>
+                  <span className="itemValue">{data.estimatedTime}</span>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@ const Sales = () => {
         </div>
         <div className="bottom">
         <h1 className="title">Produkter</h1>
-        <ProductTable pageTitle="Legg til nytt produkt" />
+        <ServiceTable pageTitle="Legg til nytt tjeneste" />
         </div>
       </div>
     </div>

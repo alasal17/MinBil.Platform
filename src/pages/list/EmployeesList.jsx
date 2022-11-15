@@ -1,19 +1,19 @@
 import "./list.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
-import ProductTable from "../../components/datatable/ProductTable"
+import Employeestable from "../../components/datatable/Employeestable"
 import React from 'react';
 
-const ProductsList = ({pageTitle}) => {
+const EmployeesList = ({pageTitle}) => {
   return (
     <div className="list">
       <Sidebar/>
       <div className="listContainer">
         <Navbar/>
-        <ProductTable pageTitle={pageTitle} />
+        <Employeestable pageTitle={pageTitle}/>
       </div>
     </div>
   )
 }
 
-export default ProductsList
+export default EmployeesList

@@ -9,12 +9,14 @@ import { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import React from 'react';
+import { getAuth} from "firebase/auth";
 
 const Widget = ({ type }) => {
   const [amount, setAmount] = useState(null);
   const [diff, setDiff] = useState(null);
   let data;
-
+  
+ 
   switch (type) {
     case "employees":
       data = {
@@ -62,7 +64,9 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "product":
+    case "services":
+      
+    
       data = {
         title: "TJENESTER",
         query:"services",
@@ -80,40 +84,65 @@ const Widget = ({ type }) => {
       break;
     default:
       break;
-  }
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const today = new Date();
-      const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
-      const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
+  const today = new Date();
+  const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
+  const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
 
-      const lastMonthQuery = query(
+  useEffect(   () => {
+    async function fetchData() {
+     
+      const auth = getAuth();
+      
+      
+     
+      const lastMonthQuery = await query(
+      
         collection(db,  data.query),
-        where("timeStamp", "<=", today),
-        where("timeStamp", ">", lastMonth)
-      );
-      const prevMonthQuery = query(
-        collection(db, data.query),
-        where("timeStamp", "<=", lastMonth),
-        where("timeStamp", ">", prevMonth)
-      );
+        
+        where("createdAt", "<=", today),
+        where("createdAt", ">", lastMonth)
 
-      const lastMonthData = await getDocs(lastMonthQuery);
-      const prevMonthData = await getDocs(prevMonthQuery);
+    
+        
+      );
+      
+      const prevMonthQuery =  await query(
+        await  collection(db, data.query),
+          where("createdAt", "<=", lastMonth),
+          where("createdAt", ">", prevMonth)
 
-      setAmount(lastMonthData.docs.length);
+      );
+      console.log()
+      // await console.log(data)
+
+      const lastMonthData =  await getDocs(lastMonthQuery);
+      const prevMonthData =  await getDocs(prevMonthQuery);
+
+      setAmount(await lastMonthData.docs.length);
       setDiff(
-        ((lastMonthData.docs.length - prevMonthData.docs.length) / prevMonthData.docs.length) *
+         (( await lastMonthData.docs.length -  prevMonthData.docs.length) /  prevMonthData.docs.length) *
           100
       );
-    
-    return () =>{
-      fetchData();
-    }
-    
-  }}, []);
 
+      // console.log(lastMonthQuery.withConverter())
+      // // lastMonthData.docs.forEach( doc =>{
+      // //   console.log(doc.id, '=>', doc.data())
+      // // })
+      
+      
+  
+      return () => {
+        fetchData()}
+  };
+  fetchData()
+
+
+
+}, []);
+  
+  console.log()
   return (
     <div className="widget">
       <div className="left">
@@ -129,6 +158,7 @@ const Widget = ({ type }) => {
           {diff} %
         </div>
         {data.icon}
+        
       </div>
     </div>
   );

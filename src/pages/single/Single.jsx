@@ -25,9 +25,9 @@ const Single = () => {
             <div className="editButton">Endre</div>
             <h1 className="title">Informasjon</h1>
             <div className="item">
-              <img src={data.photo_url} alt="" className="itemImg"/>
+              <img src={data.imageUrl} alt="" className="itemImg"/>
               <div className="details">
-                <h1 className="itemTitle">{data.display_name}</h1>
+                <h1 className="itemTitle">{data.CEO}</h1>
                 
                 <div className="detailItem">
                   <span className="itemKey">Email:</span>
@@ -35,7 +35,7 @@ const Single = () => {
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Telefon:</span>
-                  <span className="itemValue">{data.phone_number}</span>
+                  <span className="itemValue">{data.phoneNumber}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Adresse:</span>

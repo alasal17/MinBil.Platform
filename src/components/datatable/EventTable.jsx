@@ -10,10 +10,9 @@ import {
   doc,
   onSnapshot
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../../firebase";
-import React, { Component }  from 'react';
-import { auth, storage } from "../../firebase";
+import React  from 'react';
+import { auth} from "../../firebase";
 
 
 const EventTable = ({pageTitle}) => {
@@ -64,7 +63,7 @@ const EventTable = ({pageTitle}) => {
     
     const ref = doc(db, 'events', id);
     const snapDoc = await getDoc(ref);
-    navigate('/calender/test', {state:{data:snapDoc.data()}})   
+    navigate(`/calender/${id}`, {state:{data:snapDoc.data()}})   
   }
 
   const handleDelete = async (id) => {
@@ -116,7 +115,7 @@ const EventTable = ({pageTitle}) => {
     <div className="datatable">
       <div className="datatableTitle">
         {pageTitle}
-        <Link to="/calender/new" className="link">
+        <Link to="/calender/new-event" className="link">
         Legg til ny
         </Link>
 

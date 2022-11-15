@@ -1,25 +1,22 @@
+
 import React from 'react';
 
-export const userColumns = [
+export const employeesColumns = [
   // { field: "id", headerName: "ID", width: 70 },
   {
-    field: "users",
-    headerName: "Bruker",
+    field: "employees",
+    headerName: "Ansatte",
     width: 230,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
-          {params.row.username}
+          <img className="cellImg" src={params.row.imageUrl} alt="avatar" />
+          {params.row.fulName}
         </div>
       );
     },
   },
-  {
-    field: "display_name",
-    headerName: "Brukernavn",
-    width: 200,
-  },
+
   {
     field: "email",
     headerName: "E-post",
@@ -32,13 +29,14 @@ export const userColumns = [
     width: 250,
   },
   {
-    field: "country",
-    headerName: "Land",
-    width: 100,
+    field: "hiredDate",
+    headerName: "Ansatt dato",
+    type: Date,
+    width: 200,
   },
   
   {
-    field: "phone_number",
+    field: "phoneNumber",
     headerName: "Telefon",
     width: 150,
   },
@@ -53,16 +51,34 @@ export const userColumns = [
     headerName: "Status",
     width: 100,
     renderCell: (params) => {
-      return (
-        <div className={`cellWithStatus ${params.row.status}`}>
-          {params.row.status}
-        </div>
-      );
+      if(params.row.status === 'true'){
+
+        return (
+          <div  className={`cellWithStatus ${params.row.status}`}>
+            True
+          </div>
+        )
+      }if (params.row.status !== 'true') {
+        <div  className={`cellWithStatus ${params.row.status}`}>
+            False
+          </div>
+        
+      } 
+      else{
+        return (
+          <div className={`cellWithStatus ${params.row.status}`}>
+            Ukjent
+          </div>
+          )
+          
+        
+      }
+      
     },
   },
 ];
 
-export const productsColumns = [
+export const servicesColumns = [
   // { field: "id", headerName: "ID", width: 70 },
   {
     field: "services",
@@ -71,7 +87,7 @@ export const productsColumns = [
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
+          <img className="cellImg" src={params.row.imageUrl} alt="avatar" />
           {params.row.title}
         </div>
       );
@@ -99,57 +115,39 @@ export const productsColumns = [
   },
 
   {
-    field: "estimated_time",
+    field: "estimatedTime",
     headerName: "Varighet",
     width: 150,
   },
-  
-];
-
-export const employeesColums = [
-  // { field: "id", headerName: "ID", width: 70 },
   {
-    field: "employees",
-    headerName: "Ansette",
-    width: 230,
+    field: "status",
+    headerName: "Status",
+    width: 100,
     renderCell: (params) => {
-      return (
-        <div className="cellWithImg">
-          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
-          {params.row.title}
-        </div>
-      );
+      if(params.row.status === true){
+
+        return (
+          <div  className={`cellWithStatus ${params.row.status}`}>
+            Active
+          </div>
+        )
+      }if(params.row.status !== true){
+        return (
+          <div  className={`cellWithStatus ${params.row.status}`}>
+            Ikke active
+          </div>
+        )
+
+      }else{
+        <div  className={`cellWithStatus ${params.row.status}`}>
+            Active
+          </div>
+      }
     },
   },
-  {
-    field: "ful_name",
-    headerName: "Full navn",
-    width: 230,
-  },
-  
-  {
-    field: "role",
-    headerName: "Rolle",
-    width: 300,
-  },  
-  {
-    field: "phone_number",
-    headerName: "Telefon",
-    width: 100,
-  },
-  {
-    field: "hired_date",
-    headerName: "Ansettelses dato",
-    width: 200,
-  },
-  {
-    field: "email",
-    headerName: "E-post",
-    width: 100,
-  },
-
   
 ];
+
 
 export const eventsColumns = [
   // { field: "id", headerName: "ID", width: 70 },

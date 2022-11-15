@@ -1,5 +1,70 @@
+import { useEffect, useState } from "react";
+import { productsColumns } from './datatablesource';
+import { Link, useNavigate } from "react-router-dom";
+import {
+  collection,
+  getDoc,
+  deleteDoc,
+  doc,
+  onSnapshot
+} from "firebase/firestore";
+import { db } from "./firebase";
 
-   
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+export const ProductsData = () => {
+
+  const [data, setData] = useState([]);
+  const navigate = useNavigate();
+  const auth = getAuth();
+  const user = auth.currentUser.uid;
+  const [services, setService] = useState([]);
+  const [search, setSearch] = useState("");
+  const [filteredContacts, setFilteredContacts] = useState([]);
+
+  useEffect(() => {
+    // LISTEN (REALTIME)
+    const unsub = onSnapshot(
+      collection(db, "services"),
+      (snapShot) => {
+        let list = [];
+        snapShot.docs.forEach((doc) => {
+       
+          if (doc.data().userID == user){
+          
+          list.push({ id: doc.id, ...doc.data() });
+          }
+          
+        })
+        setData(list);
+        console.log(data)
+        
+        
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+
+
+    return () => {
+      unsub();
+      
+    };
+  }, []);
+
+  useEffect(() => {
+    setFilteredContacts(
+      services.filter(
+        (service) =>
+        service.title.toLowerCase().includes(search.toLowerCase()) 
+      )
+    );
+  }, [search, services]);
+
+
+
+  
+};
 
 
 export const userInputs = [
@@ -58,7 +123,7 @@ export const userInputs = [
     },
   ];
   
-  export const productInputs = [
+  export const serviceInputs = [
     {
       id: "title",
       label: "Tittel",
@@ -75,32 +140,32 @@ export const userInputs = [
     {
       id: "price",
       label: "Pris",
-      type: "text",
+      type: "int",
       placeholder: "100",
     },
 
-    {
-      id: "tags",
-      label: "Stikk ord",
-      type: "text",
-      placeholder: "bilvask, polering, dekkskift,...",
-    },
+    // {
+    //   id: "tags",
+    //   label: "Stikk ord",
+    //   type: "options",
+    //   name:'tags',
+    //   placeholder: "bilvask, polering, dekkskift,...",
+    // },
 
     {
-      id: "estimated_time",
+      id: "estimatedTime",
       label: "Varighet",
-      type: "text",
+      type: "int",
       placeholder: "45",
     },
    
    
   ];
   
-
   export const employeeInput = [
     
     {
-      id: "ful_name",
+      id: "fulName",
       label: "Full navn",
       type: "text",
       placeholder: "Ola Nordmann",
@@ -112,14 +177,14 @@ export const userInputs = [
       placeholder: "Mekanikker",
     },
     {
-      id: "phone_number",
+      id: "phoneNumber",
       label: "Telefon number",
       type: "text",
-      placeholder: "+47 234 67 089",
+      placeholder: "23467089",
     },
    
     {
-      id: "hired_date",
+      id: "hiredDate",
       label: "Ansatt siden",
       type: "date",
       placeholder: "01-01-1990",
@@ -129,6 +194,12 @@ export const userInputs = [
       label: "E-post",
       type: "mail",
       placeholder: "olanordmann@gmail.com",
+    },
+    {
+      id: "address",
+      label: "Adresse",
+      type: "text",
+      placeholder: "Oslo gate 14, 1087 Oslo",
     },
   ];
 
@@ -162,27 +233,44 @@ export const userInputs = [
    
    
   ];
+ 
+
+
+  
 
   export const eventInput = [
     
+    
     {
-      id: "title",
+      id: 'title',
       label: "Tittel",
       type: "text",
-      placeholder: "Bilvask",
+      value:{ProductsData},
+      placeholder:'' 
     },
     {
       id: "price",
-      label: "Price",
+      label: "Pris",
       type: "text",
-      placeholder: "1900",
+      placeholder: "100",
     },
     {
-      id: "start",
-      label: "Start tid",
-      type: "text",
-      placeholder: "2022-11-08T13:00",
+      id: "date_start",
+      label: "Start dato",
+      type: "date",
+      placeholder: "2022-11-08",
     },
+    {
+      id: "time_start",
+      label: "Start tid",
+      type: "time",
+      placeholder: "13:00",
+    },
+    
+  
+ 
+  
+    
+   
    
   ];
-  
