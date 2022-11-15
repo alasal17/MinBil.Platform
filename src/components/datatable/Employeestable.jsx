@@ -1,6 +1,6 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
-import { employeesColums } from "../../datatablesource";
+import { employeesColumns } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -10,6 +10,7 @@ import {
   doc,
   onSnapshot
 } from "firebase/firestore";
+import Moment from 'moment';
 import React  from 'react';
 import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
@@ -19,8 +20,7 @@ const Employeestable = ({pageTitle}, props) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const auth = getAuth();
-  
- 
+
   useEffect(() => {
     // LISTEN (REALTIME)
  
@@ -30,18 +30,22 @@ const Employeestable = ({pageTitle}, props) => {
       collection(db, "employees"),
       (snapShot) => {
         let list = [];
-
+        
         
           snapShot.docs.forEach((doc) => {
            
            
-            if(doc.data().userID === auth.currentUser.uid){
-              list.push({ id: doc.id, ...doc.data() });
+            if(doc.data().uid === auth.currentUser.uid){
+              
+              let hiredDate = Moment(doc.data().hiredDate.toDate).format('DD-MM-YYYY')
+            
+              list.push({ id: doc.id,  'fulName': doc.data().fulName, 'hiredDate': hiredDate, 'imageUrl': doc.data().imageUrl, 'email': doc.data().email, 'address': doc.data().address, 'phoneNumber': doc.data().phoneNumber, 'role': doc.data().role , 'status': doc.data().status   });
               
           }
          
           });
         setData(list);
+        
       },
 
       (error) => {
@@ -68,9 +72,9 @@ const Employeestable = ({pageTitle}, props) => {
   const viewDetails = async (id) => {
  
     const ref = doc(db, 'employees', id);
-    console.log('No users')
+    
     const snapDoc = await getDoc(ref);
-    navigate(`/employees/${id}`, {state:{data:snapDoc.data()}})  
+    navigate(`/employee/${id}`, {state:{data:snapDoc.data()}})  
 
 
       
@@ -122,14 +126,14 @@ const Employeestable = ({pageTitle}, props) => {
     <div className="datatable">
       <div className="datatableTitle">
         {pageTitle}
-        <Link to="/employees/new" className="link">
+        <Link to="/employee/new-employee" className="link">
         Legg til ny
         </Link>
       </div>
       <DataGrid
         className="datagrid"
         rows={data}
-        columns={employeesColums.concat(actionColumn)}
+        columns={employeesColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}
         checkboxSelection

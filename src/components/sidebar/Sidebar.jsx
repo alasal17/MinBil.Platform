@@ -47,14 +47,14 @@ const Sidebar = () => {
           </Link>
           <p className="title">LISTER</p>
           
-          <Link to="/employees" style={{ textDecoration: "none" }}>
+          <Link to="/employee" style={{ textDecoration: "none" }}>
             <li>
               <PersonOutlineIcon className="icon" />
               <span>Ansatte</span>
             </li>
           </Link>
 
-          <Link to="/products" style={{ textDecoration: "none" }}>
+          <Link to="/service" style={{ textDecoration: "none" }}>
             <li>
               <StoreIcon className="icon" />
               <span>Tjenester</span>

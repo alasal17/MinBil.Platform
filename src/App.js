@@ -3,16 +3,16 @@
 import Home from "./pages/home/Home";
 import Login from "./pages/login/Login";
 // import Register from "./pages/login/Register";
-import EmployeestableList from "./pages/list/EmployeestableList";
-import ProductsList from "./pages/list/ProductsList";
+import EmployeesList from "./pages/list/EmployeesList";
+import ServicesList from "./pages/list/ServicesList";
 import Sales from "./pages/sales/Sales";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import UpdateProducts from "./pages/new/UpdateProducts";
-import AddProduct from "./pages/new/AddProduct";
+import AddServices from "./pages/new/AddServices";
 import AddEvent from "./pages/new/AddEvent";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { productInputs, employeeInput, eventInput } from "./formSource";
+import { employeeInput, eventInput, serviceInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -46,17 +46,17 @@ function App() {
                 </RequireAuth>
               }
             />
-            <Route path="/employees">
+            <Route path="/employee">
               <Route
                 index
                 element={
                   <RequireAuth>
-                    <EmployeestableList pageTitle="Legg til en ny ansatt"/>
+                    <EmployeesList pageTitle="Legg til en ny ansatt"/>
                   </RequireAuth>
                 }
               />
               <Route
-                path=":userId"
+                path=":employeeId"
                 element={
                   <RequireAuth>
                     <Single />
@@ -64,7 +64,7 @@ function App() {
                 }
               />
               <Route
-                path="new"
+                path="new-employee"
                 element={
                   <RequireAuth>
                     <New inputs={employeeInput} title="Legg til ny ansatt"/>
@@ -73,17 +73,17 @@ function App() {
               />
             </Route>
             
-            <Route path="/products">
+            <Route path="/service">
               <Route
                 index
                 element={
                   <RequireAuth>
-                    <ProductsList pageTitle="Legg til produkt" />
+                    <ServicesList pageTitle="Legg til tjeneste" />
                   </RequireAuth>
                 }
               />
               <Route
-                path=":productId"
+                path=":serviceId"
                 element={
                   <RequireAuth>
                     <Sales />
@@ -91,10 +91,10 @@ function App() {
                 }
               />
               <Route
-                path="new"
+                path="new-service"
                 element={
                   <RequireAuth>
-                    <AddProduct inputs={productInputs} title="Legg til nytt produkt" />
+                    <AddServices inputs={serviceInputs} title="Legg til nytt tjeneste" />
                   </RequireAuth>
                 }
               />
@@ -103,7 +103,7 @@ function App() {
                 path="update"
                 element={
                   <RequireAuth>
-                    <UpdateProducts inputs={productInputs} title="Endre produkt" />
+                    <UpdateProducts inputs={serviceInputs} title="Endre tjeneste" />
                   </RequireAuth>
                 }
               />
@@ -122,7 +122,7 @@ function App() {
                 }
               />
               <Route
-                path="new"
+                path="new-event"
                 element={
                   <RequireAuth>
                     <AddEvent inputs={eventInput} title="Legg til nytt event" />

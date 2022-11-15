@@ -1,18 +1,12 @@
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import React, { Component } from 'react'
-import FullCalendar, { getDateMeta } from '@fullcalendar/react'
+import React from 'react'
+import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import Swal from 'sweetalert2'
-import { Link, useNavigate } from "react-router-dom";
-import { getData } from "ajv/dist/compile/validate";
 import { useEffect, useState } from "react";
 import {
   collection,
-  getDoc,
-  deleteDoc,
-  doc,
   onSnapshot
 } from "firebase/firestore";
 import { getAuth} from "firebase/auth";

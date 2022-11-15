@@ -14,14 +14,26 @@ import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import React  from 'react';
-
-const AddProduct = ({ inputs, title}) => {
+import Dropdown from "./Dropdown";
+import { integerPropType } from "@mui/utils";
+const AddServices = ({ inputs, title}) => {
   const [file, setFile] = useState("");
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
+  const [tagsData, setTags] = useState([]);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "services");
-  
+  const options = [
+    { value: "dekkskift", label: "Dekkskift" },
+    { value: "polering", label: "Polering" },
+    { value: "service", label: "Service" },
+    { value: "mekanikk", label: "Mekanikk" },
+    { value: "bilvask", label: "Bilvask" },
+    { value: "lakering", label: "Lakering" },
+    { value: "eu-kontroll", label: "EU-Kontroll" },
+    { value: "fjerne-rust", label: "Fjerne rust" },
+    { value: "sjekk-lufttrykk", label: "Sjekk lufttrykk" }
+  ];
   
   useEffect(() => {
     const uploadFile = () => {
@@ -54,7 +66,7 @@ const AddProduct = ({ inputs, title}) => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, photo_url: downloadURL }));
+            setData((prev) => ({ ...prev, imageUrl: downloadURL }));
           });
         }
       );
@@ -69,8 +81,15 @@ const AddProduct = ({ inputs, title}) => {
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
+  
+    if(id ==='price' || id === 'estimatedTime'){
+      setData({ ...data, [id]: Number(value)})
+    }
 
-    setData({ ...data, [id]: value });
+      
+  
+    else{
+      setData({ ...data, [id]: value});}
   };
 
 
@@ -80,8 +99,9 @@ const AddProduct = ({ inputs, title}) => {
       
       await addDoc(postsCollectionRef, {
         ...data,
-        timeStamp: serverTimestamp(),
-        userID:  auth.currentUser.uid,
+        ...tagsData,
+        createdAt: serverTimestamp(),
+        uid:  auth.currentUser.uid,
       });
       navigate(-1)
     } catch (err) {
@@ -89,11 +109,14 @@ const AddProduct = ({ inputs, title}) => {
     }
   };
 
+ 
+
+
   return (
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar img={data.photo_url}/>
+        <Navbar img={data.imageUrl}/>
         <div className="top">
           <h1>{title}</h1>
         </div>
@@ -130,11 +153,25 @@ const AddProduct = ({ inputs, title}) => {
                   <input
                     id={input.id}
                     type={input.type}
+                    
+                    options={options}
                     placeholder={input.placeholder}
                     onChange={handleInput}
-                  />
+                  /> 
+                
                 </div>
+
               ))}
+<div className="formInput" key='tags'>
+<Dropdown
+                  isSearchable
+                  isMulti
+                  placeHolder="Velg..."
+                  options={options}
+                  id='tags'
+                  onChange={(value) => setTags({'tags':value.map(c => c.value)}) }
+                />
+              </div>
               <button disabled={per !== null && per < 100} type="submit">
                 Send
               </button>
@@ -146,4 +183,4 @@ const AddProduct = ({ inputs, title}) => {
   );
 };
 
-export default AddProduct;
+export default AddServices;
