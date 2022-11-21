@@ -52,11 +52,6 @@ function Calendars() {
           });
         setData(list);
         
-         
-  
-  
-        
-      
       },
 
       (error) => {
