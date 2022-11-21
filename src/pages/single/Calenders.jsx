@@ -52,11 +52,6 @@ function Calendars() {
           });
         setData(list);
         
-         
-  
-  
-        
-      
       },
 
       (error) => {
@@ -71,14 +66,6 @@ function Calendars() {
       clearTimeout(timer)
     }
   },);
-  
-  
-
- 
-
- 
-
-
     return (
       
        
