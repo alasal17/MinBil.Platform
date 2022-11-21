@@ -5,15 +5,17 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { useEffect, useState, useContext } from "react";
+import { collection, query, where, getDocs, onSnapshot, orderBy } from "firebase/firestore";
 import { db } from "../../firebase";
 import React from 'react';
 import { getAuth} from "firebase/auth";
-
+import { AuthContext} from "../../context/AuthContext";
 const Widget = ({ type }) => {
   const [amount, setAmount] = useState(null);
   const [diff, setDiff] = useState(null);
+  const {currentUser} = useContext(AuthContext)
+  const [data2, setData2] = useState({});
   let data;
   
  
@@ -39,6 +41,7 @@ const Widget = ({ type }) => {
       data = {
         title: "BESTILLINGER I DAG",
         isMoney: false,
+        query:"booking",
         link: "Se alle bestillinger",
         icon: (
           <CalendarViewMonthIcon
@@ -54,6 +57,7 @@ const Widget = ({ type }) => {
     case "earning":
       data = {
         title: "INNTJENING",
+       
         isMoney: true,
         link: "Se nettoinntekter",
         icon: (
@@ -87,35 +91,31 @@ const Widget = ({ type }) => {
   };
 
   const today = new Date();
-  const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
-  const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
+  const lastMonth = new Date(new Date().setMonth(today.getMonth()));
+  // const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
 
   useEffect(   () => {
     async function fetchData() {
      
       const auth = getAuth();
-      
-      
      
-      const lastMonthQuery = await query(
-      
-        collection(db,  data.query),
-        
-        where("createdAt", "<=", today),
-        where("createdAt", ">", lastMonth)
-
     
-        
-      );
+    
+      const lastMonthQuery = await  query(
+        await collection(db, data.query),
+        where("uid", '==', currentUser.uid)
+        // ,where("createdAt", "==", lastMonth)
+        );
       
-      const prevMonthQuery =  await query(
-        await  collection(db, data.query),
-          where("createdAt", "<=", lastMonth),
-          where("createdAt", ">", prevMonth)
-
+      const prevMonthQuery =  query(
+        collection(db, data.query),
+        where("uid", '==', currentUser.uid)
+        // where("createdAt", "==", lastMonth)
+     
+       
       );
-      console.log()
-      // await console.log(data)
+
+
 
       const lastMonthData =  await getDocs(lastMonthQuery);
       const prevMonthData =  await getDocs(prevMonthQuery);
@@ -134,7 +134,8 @@ const Widget = ({ type }) => {
       
   
       return () => {
-        fetchData()}
+        fetchData();
+      }
   };
   fetchData()
 

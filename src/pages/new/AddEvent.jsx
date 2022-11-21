@@ -39,7 +39,7 @@ const AddEvent = ({ inputs, title}) => {
         let list = [];
         snapShot.docs.forEach((doc) => {
        
-          if (doc.data().userID === user){
+          if (doc.data().uid === user){
           
           list.push({ id: doc.id, ...doc.data() });
           }
@@ -78,14 +78,14 @@ const AddEvent = ({ inputs, title}) => {
         ...data,
         title:search,
         price:filteredContacts.map((service) =>(service.price))[0],
-        estimated_time:filteredContacts.map((service) =>(service.estimated_time))[0],
+        estimatedTime:filteredContacts.map((service) =>(service.estimatedTime))[0],
         tags:filteredContacts.map((service) =>(service.tags))[0],
         booked: false,
-        photo_url:filteredContacts.map((service) =>(service.photo_url)),
-        timeStamp: serverTimestamp(),
+        imageUrl:filteredContacts.map((service) =>(service.imageUrl)),
+        createdAt: serverTimestamp(),
         uid:  auth.currentUser.uid,
       });
-      console.log(auth.currentUser.uid)
+     
       navigate(-1)
     } catch (err) {
       console.log(err);
@@ -109,7 +109,7 @@ const AddEvent = ({ inputs, title}) => {
     <div className="new">
       <Sidebar />
       <div className="newContainer">
-        <Navbar img={data.photo_url}/>
+        <Navbar img={data.imageUrl}/>
         <div className="top">
           <h1>{title}</h1>
         </div>
@@ -118,8 +118,8 @@ const AddEvent = ({ inputs, title}) => {
             <img 
               src={
                 
-                filteredContacts.map((service) =>(service.photo_url))
-                  ? filteredContacts.map((service) =>(service.photo_url))
+                filteredContacts.map((service) =>(service.imageUrl))
+                  ? filteredContacts.map((service) =>(service.imageUrl))
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""
@@ -134,7 +134,7 @@ const AddEvent = ({ inputs, title}) => {
               <label>Price</label>
               <input id="price" type="text"  placeholder="1000"  value={ filteredContacts.map((service) =>(service.price)) }/>
               <label>Varighet</label>
-              <input id="estimated_time" type="text" value={filteredContacts.map((service) =>(service.estimated_time))}/>
+              <input id="estimated_time" type="text" value={filteredContacts.map((service) =>(service.estimatedTime))}/>
               <label>Tags</label>
               <input id="tags" type="text" value={filteredContacts.map((service) =>(service.tags))}/>
 
