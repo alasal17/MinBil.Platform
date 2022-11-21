@@ -29,7 +29,7 @@ export const ProductsData = () => {
         let list = [];
         snapShot.docs.forEach((doc) => {
        
-          if (doc.data().userID == user){
+          if (doc.data().uid == user){
           
           list.push({ id: doc.id, ...doc.data() });
           }

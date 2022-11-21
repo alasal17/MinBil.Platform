@@ -23,6 +23,8 @@ const AddServices = ({ inputs, title}) => {
   const [tagsData, setTags] = useState([]);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "services");
+
+  
   const options = [
     { value: "dekkskift", label: "Dekkskift" },
     { value: "polering", label: "Polering" },

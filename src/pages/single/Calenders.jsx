@@ -12,6 +12,8 @@ import {
 import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
 import EventList from "../list/EventList";
+import "./single.scss";
+import timeGridPlugin from '@fullcalendar/timegrid';
 
 export const auth = getAuth();
 function Calendars() {
@@ -26,7 +28,7 @@ function Calendars() {
   
     const unsub = onSnapshot(
       
-      collection(db, "events"),
+      collection(db, "booking"),
       (snapShot) => {
         let list = [];
        
@@ -36,13 +38,13 @@ function Calendars() {
            
             if(doc.data().uid === auth.currentUser.uid ){
               
-              list.push({ id: doc.id, booked: doc.data().booked, price: doc.data().price, title:doc.data().title, start: (doc.data().start_date+'T'+ doc.data().start_time)});
+              list.push({ id: doc.id, status: doc.data().status, price: doc.data().price, title:doc.data().title, start: (doc.data().startDate+'T'+ doc.data().startTime), customerUid:doc.data().customerUid});
 
 
             
               
           }
-          if(doc.data().booked === false){
+          if(doc.data().status === false){
            
             
         }
@@ -81,28 +83,23 @@ function Calendars() {
       
        
    
-   <div className="new">
+   <div className="single">
        <Sidebar />
-       <div className="newContainer">
+       <div className="singleContainer">
          <Navbar />
-       <div>
-     
+       <div className="left">
+       <div >
        <FullCalendar 
                     defaultView="dayGridMonth"
-                    plugins={[dayGridPlugin, interactionPlugin]}
+                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                    
+                    headerToolbar={{
+                      center: 'dayGridMonth,timeGridWeek,timeGridDay',
+                    }}
+                    height='auto'
                     editable={true}
-                    
-                    
-                    events={data}
-                    
-                    
-                        
-  
-                   
-                    
-                   
-                    
-                />
+                    events={data}/>
+                    </div>
 </div> <EventList/></div></div>
     )
   }
