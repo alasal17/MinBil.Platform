@@ -5,6 +5,7 @@ import { auth } from "../../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import {AuthContext} from "../../context/AuthContext"
 import React from 'react';
+import '../register/forms.css'
 import {
   collection,
   getDoc,
@@ -14,8 +15,9 @@ import {
 } from "firebase/firestore";
 import { DataGrid } from "@mui/x-data-grid";
 import { employeesColums, userColumns } from "../../datatablesource";
-import Register from './Register'
+import Register from '../register/Register'
 import { db } from "../../firebase";
+import '../register/forms.css'
 const Login = () => {
   const [error, setError] = useState(false);
   const [email, setEmail] = useState("");
@@ -48,6 +50,7 @@ const Login = () => {
 
   return (
     <div className="login">
+      <div className='auth'>
       <form onSubmit={handleLogin}>
         <input
           type="email"
@@ -63,17 +66,19 @@ const Login = () => {
         <button type="submit">Login</button>
         {error && <span>Wrong email or password!</span>}
       </form>
-      <div className="datatable">
-      <div className="datatableTitle">
-      
-      {/* <Link
-                to="/register"
-                className="text-blue-600 hover:underline dark:text-blue-500"
-              >
-                Don't have an account? Register
-              </Link> */}
-      </div>
+   <div className="line"></div>
+      <span>
+      Har du ikke en konto?  
+            <Link to='/register'>
+              <br></br>
+              <button style={{backgroundColor: 'rgb(53, 146, 34)'}}>
+              Registrer deg her
+              </button>
+              
+              </Link>
+          </span>
    
+
     </div>
     </div>
   );

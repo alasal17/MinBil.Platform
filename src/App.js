@@ -19,8 +19,8 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/single/Calenders";
 import React  from 'react';
-
-
+import Register from "./pages/register/Register";
+import VerifyEmail from '../src/pages/register/VerifyEmail';
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -46,6 +46,7 @@ function App() {
                 </RequireAuth>
               }
             />
+             
             <Route path="/employee">
               <Route
                 index
@@ -141,7 +142,7 @@ function App() {
             
             </Route>
 
-            {/* <Route path="/register">
+            <Route path="/register">
               <Route
                 index
                 element={
@@ -151,7 +152,8 @@ function App() {
                 }
               />
             
-            </Route> */}
+            </Route>
+            <Route path='/verify-email' element={<VerifyEmail/>} /> 
             </Route>
         </Routes>
       </BrowserRouter>
