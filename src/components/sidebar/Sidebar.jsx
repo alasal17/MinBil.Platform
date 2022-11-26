@@ -94,10 +94,12 @@ const Sidebar = () => {
             <span>Innstillinger</span>
           </li>
           <p className="title">USER</p>
+          <Link to="/profile" style={{ textDecoration: "none" }}>
           <li>
             <AccountCircleOutlinedIcon className="icon" />
             <span>Profil</span>
           </li>
+          </Link>
           <li>
             <ExitToAppIcon className="icon" />
             <span onClick={signUserOut}>Logg ut</span>

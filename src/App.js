@@ -21,7 +21,7 @@ import Calendars from "./pages/single/Calenders";
 import React  from 'react';
 import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
-
+import Profile from './pages/profile/Profile';
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
@@ -141,6 +141,17 @@ function App() {
               />
             
             </Route>
+
+            <Route
+                path="/profile"
+                element={
+                  <RequireAuth>
+                    <Profile />
+                  </RequireAuth>
+                }
+              />
+            
+           
 
             <Route path="/register">
               <Route

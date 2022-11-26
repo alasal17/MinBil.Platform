@@ -1,38 +1,33 @@
 import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   addDoc,
   collection,
   onSnapshot,
   serverTimestamp,
-
 } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { auth, db, storage } from "../../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { db } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import React  from 'react';
-import { Object } from "via";
+import { AuthContext} from "../../context/AuthContext";
 
 
 const AddEvent = ({ inputs, title}) => {
-  const [file, setFile] = useState("https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg");
+
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "events");
-  const [isChecked, setIsChecked] = useState(false);
-  const color = '';
+
   const [services, setService] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
-  const auth = getAuth();
+  const {currentUser} = useContext(AuthContext)
 
   useEffect(() => {
-    const user = auth.currentUser.uid;
+    const user = currentUser.uid;
     const serviceData = onSnapshot(
       collection(db, "services"),
       (snapShot) => {
@@ -83,7 +78,7 @@ const AddEvent = ({ inputs, title}) => {
         booked: false,
         imageUrl:filteredContacts.map((service) =>(service.imageUrl)),
         createdAt: serverTimestamp(),
-        uid:  auth.currentUser.uid,
+        uid:  currentUser.uid,
       });
      
       navigate(-1)
@@ -119,7 +114,7 @@ const AddEvent = ({ inputs, title}) => {
               src={
                 
                 filteredContacts.map((service) =>(service.imageUrl))
-                  ? filteredContacts.map((service) =>(service.imageUrl))
+                  ?filteredContacts.map((service) =>(service.imageUrl))
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=""
@@ -130,9 +125,9 @@ const AddEvent = ({ inputs, title}) => {
               
               <div className="formInput" key={inputs.map((input) => input.id)}>
               <label>Tittel</label>
-              <input id="title" type="text" onChange={(e) => setSearch(e.target.value)} />
+              <input id="title" type="text"  onChange={(e) => setSearch(e.target.value)} />
               <label>Price</label>
-              <input id="price" type="text"  placeholder="1000"  value={ filteredContacts.map((service) =>(service.price)) }/>
+              <input id="price" type="text" readOnly={true} placeholder="1000" editable = {false} value={filteredContacts.map((service) =>(service.price))}/>
               <label>Varighet</label>
               <input id="estimated_time" type="text" value={filteredContacts.map((service) =>(service.estimatedTime))}/>
               <label>Tags</label>
