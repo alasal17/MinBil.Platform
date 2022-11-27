@@ -32,7 +32,7 @@ const ServiceTable = ({pageTitle}) => {
        
           if (doc.data().uid === user){
           
-          list.push({ id: doc.id,smallCar: doc.data().price.smallCar, normalCar: doc.data().price.normalCar,bigCar: doc.data().price.bigCar, ...doc.data() });
+          list.push({ id: doc.id,smallCar: doc.data().price.smallCar, normalCar: doc.data().price.normalCar,bigCar: doc.data().price.bigCar,calculatedEstimatedTime:doc.data().calculatedEstimatedTime, ...doc.data() });
           setPricesData({price: doc.data().price})
           }
 

@@ -125,8 +125,13 @@ export const servicesColumns = [
   },
 
   {
+    field: "calculatedEstimatedTime",
+    headerName: "Kalkulert varighet",
+    width: 150,
+  },
+  {
     field: "estimatedTime",
-    headerName: "Varighet",
+    headerName: "Varighet i minutter",
     width: 150,
   },
   {
@@ -138,13 +143,13 @@ export const servicesColumns = [
 
         return (
           <div  className={`cellWithStatus ${params.row.status}`}>
-            Active
+            Aktiv
           </div>
         )
       }if(params.row.status !== true){
         return (
           <div  className={`cellWithStatus ${params.row.status}`}>
-            Ikke active
+            Ikke aktiv
           </div>
         )
 

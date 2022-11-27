@@ -28,16 +28,24 @@ const AddServices = ({ inputs, title}) => {
 
   
   const options = [
-    { value: "dekkskift", label: "Dekkskift" },
-    { value: "polering", label: "Polering" },
-    { value: "service", label: "Service" },
-    { value: "mekanikk", label: "Mekanikk" },
-    { value: "bilvask", label: "Bilvask" },
-    { value: "lakering", label: "Lakering" },
-    { value: "eu-kontroll", label: "EU-Kontroll" },
-    { value: "fjerne-rust", label: "Fjerne rust" },
-    { value: "sjekk-lufttrykk", label: "Sjekk lufttrykk" }
-  ];
+    { value: "Dekkskift", label: "Dekkskift" },
+    { value: "Polering", label: "Polering" },
+    { value: "Service", label: "Service" },
+    { value: "Mekanikk", label: "Mekanikk" },
+    { value: "Bilvask", label: "Bilvask" },
+    { value: "Lakering", label: "Lakering" },
+    { value: "EU-kontroll", label: "EU-Kontroll" },
+    { value: "Fjerne-rust", label: "Fjerne rust" },
+    { value: "Sjekk-lufttrykk", label: "Sjekk lufttrykk" },
+    
+    { value: "Utvendig vask", label: "Utvendig vask" },
+    { value: "Innvendig vask", label: "Innvendig vask" },
+    { value: "Motorvask", label: "Motorvask" },
+    { value: "Innvendig rens", label: "Innvendig rens" },
+    { value: "Lakkrens", label: "Lakkrens" },
+    { value: "Rens av matter, gummi etc", label:"Rens av matter, gummi etc" },
+    { value: "Polering", label: "Polering" }
+];
   
   useEffect(() => {
     const uploadFile = () => {
@@ -88,20 +96,21 @@ const AddServices = ({ inputs, title}) => {
   
 
 
-
+    setData({ ...data, [id]:value})
     if(id ==='price' || id === 'estimatedTime'){
       setData({ ...data, [id]: Number(value)})
     }
 
     if(id === 'estimatedTime'){
+     
       if (value >= 60){
-        setData({ ...data, [id]: (String(parseInt(value)/ 60 +' timer'))})
+        setData({ ...data, estimatedTime:value, calculatedEstimatedTime: (String(parseInt(value)/ 60 +' t'))})
       }
-      if(value%60 != 0 ){
-        setData({ ...data, [id]: (String(parseInt(parseInt(value)/ 60) +' timer og ' + Number(value)%60 + ' minutter'))})
+      if(value%60 !== 0 ){
+        setData({ ...data,estimatedTime:value,  calculatedEstimatedTime: (String(parseInt(parseInt(value)/ 60) +' t ' + Number(value)%60 + ' min'))})
       }
     else{
-      setData({ ...data, [id]: (String(parseInt(value)/ 60 +' timer'))})
+      setData({ ...data,estimatedTime:value, calculatedEstimatedTime: (String(parseInt(value)/ 60 +' t'))})
     }
       
     }
@@ -109,8 +118,11 @@ const AddServices = ({ inputs, title}) => {
       
   
     else{
-      setData({ ...data, [id]: value});}
+      setData({ ...data, [id]: value, calculatedEstimatedTime:0});}
+
   };
+
+  console.log(data)
 
 
   const handleAdd = async (e) => {
@@ -122,6 +134,8 @@ const AddServices = ({ inputs, title}) => {
         estimatedTime:data.estimatedTime,
         imageUrl:data.imageUrl,
         title:data.title,
+        status:true,
+        calculatedEstimatedTime:data.calculatedEstimatedTime,
         price:{ 'smallCar':parseFloat(data.smallCar), 'normalCar':parseFloat(data.normalCar), 'bigCar':parseFloat(data.bigCar)},
         ...tagsData,
         createdAt: serverTimestamp(),
