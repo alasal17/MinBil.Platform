@@ -21,8 +21,10 @@ const AddServices = ({ inputs, title}) => {
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const [tagsData, setTags] = useState([]);
+  const [priceData, setPriceData] = useState([]);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "services");
+ 
 
   
   const options = [
@@ -84,8 +86,24 @@ const AddServices = ({ inputs, title}) => {
     const id = e.target.id;
     const value = e.target.value;
   
+
+
+
     if(id ==='price' || id === 'estimatedTime'){
       setData({ ...data, [id]: Number(value)})
+    }
+
+    if(id === 'estimatedTime'){
+      if (value >= 60){
+        setData({ ...data, [id]: (String(parseInt(value)/ 60 +' timer'))})
+      }
+      if(value%60 != 0 ){
+        setData({ ...data, [id]: (String(parseInt(parseInt(value)/ 60) +' timer og ' + Number(value)%60 + ' minutter'))})
+      }
+    else{
+      setData({ ...data, [id]: (String(parseInt(value)/ 60 +' timer'))})
+    }
+      
     }
 
       
@@ -100,7 +118,11 @@ const AddServices = ({ inputs, title}) => {
     try {
       
       await addDoc(postsCollectionRef, {
-        ...data,
+        description:data.description,
+        estimatedTime:data.estimatedTime,
+        imageUrl:data.imageUrl,
+        title:data.title,
+        price:{ 'smallCar':parseFloat(data.smallCar), 'normalCar':parseFloat(data.normalCar), 'bigCar':parseFloat(data.bigCar)},
         ...tagsData,
         createdAt: serverTimestamp(),
         uid:  auth.currentUser.uid,
@@ -164,6 +186,44 @@ const AddServices = ({ inputs, title}) => {
                 </div>
 
               ))}
+          
+              <div className="formInput" >
+                  <label>Pris liten bil</label>
+                  <input
+                    id='smallCar'
+                    type='int'
+                    placeholder='1000'
+                    onChange={handleInput}
+                  /> 
+                
+                </div>
+
+                <div className="formInput" >
+                  <label>Pris vanlig bil</label>
+                  <input
+                    id='normalCar'
+                    type='int'
+                    placeholder='1000'
+                    onChange={handleInput}
+                  /> 
+                
+                </div>
+
+                <div className="formInput" >
+                  <label>Pris stor bil</label>
+                  <input
+                    id='bigCar'
+                    type='int'
+                    placeholder='1000'
+                    onChange={handleInput}
+                  /> 
+                
+                </div>
+        
+
+              
+
+
 <div className="formInput" key='tags'>
 <Dropdown
                   isSearchable

@@ -137,14 +137,25 @@ export const userInputs = [
       placeholder: "Grundig utvendig vask...",
     },
   
-   
+    // {
+    //   id: "smallCar",
+    //   label: "Pris for liten bil",
+    //   type: "int",
+    //   placeholder: "1000",
+    // },
 
     // {
-    //   id: "tags",
-    //   label: "Stikk ord",
-    //   type: "options",
-    //   name:'tags',
-    //   placeholder: "bilvask, polering, dekkskift,...",
+    //   id: "normalCar",
+    //   label: "Pris for normal bil",
+    //   type: "int",
+    //   placeholder: "1500",
+    // },
+
+    // {
+    //   id: "bigCar",
+    //   label: "Pris for stor bil",
+    //   type: "int",
+    //   placeholder: "2000"
     // },
 
     {
