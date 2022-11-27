@@ -137,12 +137,7 @@ export const userInputs = [
       placeholder: "Grundig utvendig vask...",
     },
   
-    {
-      id: "price",
-      label: "Pris",
-      type: "int",
-      placeholder: "100",
-    },
+   
 
     // {
     //   id: "tags",

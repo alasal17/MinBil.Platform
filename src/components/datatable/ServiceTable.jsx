@@ -2,7 +2,7 @@ import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { servicesColumns } from "../../datatablesource";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   collection,
   getDoc,
@@ -10,18 +10,18 @@ import {
   doc,
   onSnapshot
 } from "firebase/firestore";
-import { getAuth} from "firebase/auth";
+
 import { db } from "../../firebase";
 import React  from 'react';
+import { AuthContext} from "../../context/AuthContext";
 
-export const auth = getAuth();
 
 const ServiceTable = ({pageTitle}) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  const auth = getAuth();
-  const user = auth.currentUser.uid;
-
+  const {currentUser} = useContext(AuthContext)
+  const user = currentUser.uid;
+  const [pricesData, setPricesData] = useState([])
   useEffect(() => {
     // LISTEN (REALTIME)
     const unsub = onSnapshot(
@@ -32,11 +32,14 @@ const ServiceTable = ({pageTitle}) => {
        
           if (doc.data().uid === user){
           
-          list.push({ id: doc.id, ...doc.data() });
+          list.push({ id: doc.id,smallCar: doc.data().price.smallCar, normalCar: doc.data().price.normalCar,bigCar: doc.data().price.bigCar, ...doc.data() });
+          setPricesData({price: doc.data().price})
           }
+
           
         })
         setData(list);
+        
       },
       (error) => {
         console.log(error);

@@ -104,8 +104,18 @@ export const servicesColumns = [
     width: 300,
   },  
   {
-    field: "price",
-    headerName: "Pris",
+    field: "smallCar",
+    headerName: "Pris liten bil",
+    width: 100,
+  },
+  {
+    field: "normalCar",
+    headerName: "Pris vanlig bil",
+    width: 100,
+  },
+  {
+    field: "bigCar",
+    headerName: "Pris stor bil",
     width: 100,
   },
   {
