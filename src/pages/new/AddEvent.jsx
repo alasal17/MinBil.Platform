@@ -75,7 +75,7 @@ const AddEvent = ({ inputs, title}) => {
         estimatedTime:filteredContacts.map((service) =>(service.estimatedTime))[0],
         tags:filteredContacts.map((service) =>(service.tags))[0],
         booked: false,
-        imageUrl:filteredContacts.map((service) =>(service.imageUrl)),
+        imageUrl:filteredContacts.map((service) =>(service.imageUrl))[0],
         createdAt: serverTimestamp(),
         uid:  currentUser.uid,
       });
