@@ -131,19 +131,18 @@ const Widget = ({ type }) => {
       // //   console.log(doc.id, '=>', doc.data())
       // // })
       
-      
   
       return () => {
         fetchData();
       }
   };
-  fetchData()
+ 
 
 
 
 }, []);
   
-  console.log()
+
   return (
     <div className="widget">
       <div className="left">

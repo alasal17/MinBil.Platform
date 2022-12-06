@@ -96,7 +96,8 @@ const Profile = () => {
         <Navbar />
         <div className="top">
           <div className="left">
-            <div className="editButton" >Endre</div>
+         
+         
             <h1 className="title">Informasjon</h1>
             <div className="item">
               <img src={data.companyLogo} alt="" className="itemImg"/>

@@ -19,7 +19,7 @@ const AddEvent = ({ inputs, title}) => {
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const navigate = useNavigate()
-  const postsCollectionRef = collection(db, "events");
+  const postsCollectionRef = collection(db, "offer");
 
   const [services, setService] = useState([]);
   const [search, setSearch] = useState("");
@@ -72,7 +72,6 @@ const AddEvent = ({ inputs, title}) => {
         
         ...data,
         title:search,
-        price:filteredContacts.map((service) =>(service.price))[0],
         estimatedTime:filteredContacts.map((service) =>(service.estimatedTime))[0],
         tags:filteredContacts.map((service) =>(service.tags))[0],
         booked: false,
@@ -126,17 +125,20 @@ const AddEvent = ({ inputs, title}) => {
               <div className="formInput" key={inputs.map((input) => input.id)}>
               <label>Tittel</label>
               <input id="title" type="text"  onChange={(e) => setSearch(e.target.value)} />
-              <label>Price</label>
-              <input id="price" type="text" readOnly={true} placeholder="1000" editable = {false} value={filteredContacts.map((service) =>(service.price))}/>
+              <label>Tilbud pris</label>
+              <input id="price" type="text" onChange={handleInput}  placeholder="3000"/>
               <label>Varighet</label>
-              <input id="estimated_time" type="text" value={filteredContacts.map((service) =>(service.estimatedTime))}/>
+              <input id="estimated_time" type="text" defaultValue={filteredContacts.map((service) =>(service.estimatedTime))}/>
               <label>Tags</label>
-              <input id="tags" type="text" value={filteredContacts.map((service) =>(service.tags))}/>
+              <input id="tags" type="text" defaultValue={filteredContacts.map((service) =>(service.tags))}/>
+              
+            
+              <p style={{paddingTop:'30px', paddingBottom:'30px'}}>Start og slutt dato for kampanjen</p>
 
               <label>Dato</label>
-              <input id="start_date" onChange={handleInput} type="date" />
+              <input id="startDate" onChange={handleInput} type="date" />
               <label>Klokkeslett</label>
-              <input id="start_time" onChange={handleInput} type="time" />
+              <input id="endDate" onChange={handleInput} type="date" />
             
 
               </div>

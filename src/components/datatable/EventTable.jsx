@@ -24,7 +24,7 @@ const EventTable = ({pageTitle}) => {
   useEffect(() => {
     // LISTEN (REALTIME)
     const unsub = onSnapshot(
-      collection(db, "events"),
+      collection(db, "offer"),
       (snapShot) => {
         const user = auth.currentUser.uid;
         const timer = setTimeout(() => console.log('Initial timeout!'), 1000);
@@ -61,14 +61,14 @@ const EventTable = ({pageTitle}) => {
 
   const viewDetails = async (id) => {
     
-    const ref = doc(db, 'events', id);
+    const ref = doc(db, 'offer', id);
     const snapDoc = await getDoc(ref);
     navigate(`/calender/${id}`, {state:{data:snapDoc.data()}})   
   }
 
   const handleDelete = async (id) => {
     try {
-      await deleteDoc(doc(db, "events", id));
+      await deleteDoc(doc(db, "offer", id));
       setData(data.filter((item) => item.id !== id));
     } catch (err) {
       console.log(err);

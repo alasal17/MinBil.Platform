@@ -167,46 +167,37 @@ export const servicesColumns = [
 export const eventsColumns = [
   // { field: "id", headerName: "ID", width: 70 },
   {
-    field: "events" || "services",
-    headerName: "Eventer",
+    field: "offer",
+    headerName: "Tilbud",
     width: 230,
     renderCell: (params) => {
       return (
         <div className="cellWithImg">
-          <img className="cellImg" src={params.row.photo_url} alt="avatar" />
+          <img className="cellImg" src={params.row.imageUrl} alt="avatar" />
           {params.row.title}
         </div>
       );
     },
   },
-  {
-    field: "title",
-    headerName: "Tittel",
-    width: 230,
-  },
-  {
-    field: "booked",
-    headerName: "Åpent",
-    width: 300,
-  },  
+
+
   {
     field: "price",
     headerName: "Pris",
     width: 100,
   },
   {
-    field: "services",
-    headerName: "Eventer",
-    width: 230,
-    renderCell: (params) => {
-      return (
-        <div className="cellWithImg">
-         <img className="cellImg" src={params.row.photo_url} alt="avatar" />
-          {params.row.title}
-        </div>
-      );
-    },
+    field: "startDate",
+    headerName: "Kampanje start",
+    width: 150,
   },
+  {
+    field: "endDate",
+    headerName: "Kampanje slutt",
+    width: 150,
+  }
+
+
   
   
 ];

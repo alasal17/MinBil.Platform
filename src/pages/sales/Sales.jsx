@@ -34,18 +34,25 @@ const Sales = () => {
                   <span className="itemValue">{data.description}</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Pris:</span>
-                  <span className="itemValue">{data.price}</span>
+                  <h4>Priser:</h4>
+                  <span className="itemKey">Liten bil:</span>
+                  <span className="itemValue">{data.price.smallCar} kr</span>
+                  <br></br>
+                  <span className="itemKey">Vanlig bil:</span>
+                  <span className="itemValue">{data.price.normalCar} kr</span>
+                  <br></br>
+                  <span className="itemKey">Stor bil:</span>
+                  <span className="itemValue">{data.price.bigCar} kr</span>
                 </div>
                 <div className="detailItem">
-                  <span className="itemKey">Stikk ord</span>
-                  <span className="itemValue">
-                  {data.tags}
-                  </span>
+                  <span className="itemKey">Stikk ord:</span>
+                 
+                  {data.tags.map((item , index) =>  <span className="itemValue" key={index}> {item}, </span>)}
+                  
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Varighet:</span>
-                  <span className="itemValue">{data.estimatedTime}</span>
+                  <span className="itemValue">{data.calculatedEstimatedTime}</span>
                 </div>
               </div>
             </div>
