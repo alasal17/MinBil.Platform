@@ -4,14 +4,16 @@ import Navbar from "../../components/navbar/Navbar";
 import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import React, { useState, useEffect, useContext }   from 'react';
 import {
+  addDoc,
     collection,
     onSnapshot,
     query, 
-    where
+    where,
+    serverTimestamp
   } from "firebase/firestore";
-
+import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import ServiceCard from './ServiceCard'
-import { db } from "../../firebase";
+import { auth, db, storage } from "../../firebase";
 import { AuthContext} from "../../context/AuthContext";
 
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -24,7 +26,8 @@ import CompanyForm from "../register/CompanyForm";
 
 import SettingsIcon from '@mui/icons-material/Settings';
 import { validateAdditionalItems } from "ajv/dist/vocabularies/applicator/additionalItems";
-
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 const Profile = () => {
    
     const [data, setData] = useState({});
@@ -34,8 +37,15 @@ const Profile = () => {
     const close = false
     const [isData, setIsData] = useState('')
     const [visitorsData, setVisitorData] = useState('')
-
-  useEffect(() => {
+    const [file, setFile] = useState("");
+    const [data2, setData2] = useState({});
+    const [per, setPerc] = useState(null);
+    const [tagsData, setTags] = useState([]);
+    const navigate = useNavigate()
+    const postsCollectionRef = collection(db, "company");
+ 
+ 
+    useEffect(() => {
     // LISTEN (REALTIME)
    
     const unsub = onSnapshot(
@@ -52,7 +62,8 @@ const Profile = () => {
                country:doc.data().country,
                phoneNumber:doc.data().phoneNumber,
                about: doc.data().about,
-               role: doc.data().role.replace(/[0-9.]/g, ''),
+              //  role: doc.data().role.replace(/[0-9.]/g, ''),
+              role: doc.data().role,
                orgNumber:doc.data().orgNumber,
                CEO:doc.data().CEO,
                website:doc.data().website,
@@ -65,19 +76,19 @@ const Profile = () => {
                           
           });
 
-          snapShot.docs.map((doc) => {
-            setOpeningDays({
-                 mandag:doc.data().openingHours[0],
-                 tirsdag:doc.data().openingHours[1],
-                 onsdag:doc.data().openingHours[2],
-                 torsdag:doc.data().openingHours[3],
-                 fredag:doc.data().openingHours[4],
-                 lørdag:doc.data().openingHours[5],
-                 søndag:doc.data().openingHours[6]
+          // snapShot.docs.map((doc) => {
+          //   setOpeningDays({
+          //        mandag:doc.data().openingHours[0],
+          //        tirsdag:doc.data().openingHours[1],
+          //        onsdag:doc.data().openingHours[2],
+          //        torsdag:doc.data().openingHours[3],
+          //        fredag:doc.data().openingHours[4],
+          //        lørdag:doc.data().openingHours[5],
+          //        søndag:doc.data().openingHours[6]
               
-                 });
+          //        });
                             
-            });
+          //   });
 
 
             if(data.companyName == null || data.companyName === ''){
@@ -235,9 +246,70 @@ const Profile = () => {
     };
   }, );
 
+  useEffect(() => {
+    const uploadFile = () => {
+      const name = new Date().getTime() + file.name;
 
+      console.log(name);
+      const storageRef = ref(storage, file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          setPerc(progress);
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setData2((prev) => ({ ...prev, companyLogo: downloadURL }));
+          });
+        }
+      );
+    };
+    file && uploadFile();
+  }, [file]);
   
+  const handleInput = (e) => {
+    const id = e.target.id;
+    const value = e.target.value;
 
+    setData2({ ...data2, [id]:value})
+
+   
+  }
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    try {
+      registerButton(false)
+      await addDoc(postsCollectionRef, {
+     
+        ...data2,
+        status:true,
+        createdAt: serverTimestamp(),
+        uid:  auth.currentUser.uid,
+      });
+      
+   
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
 
   return (
@@ -505,63 +577,94 @@ const Profile = () => {
     </div>
 
     <CompanyForm trigger={registerButton} setTrigger={setRegisterButton}> 
- 
+    <form onSubmit={handleAdd}>
     <div className="row">
         <div className="col-md-3 border-right">
+        
             <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img className="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"/>
-                    <span className="font-weight-bold">Bedriftslogo</span><span> </span></div>
-        </div>
+            <img 
+              src={
+                
+                file
+                  ? URL.createObjectURL(file)
+                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+              }
+              alt="" className="rounded-circle mt-5" width="150px" 
+            />
+            
+                    {/* <span className="font-weight-bold">Bedriftslogo</span><span> </span> */}
+                    <div className="col-md-6 mt-4 text-center">
+                    
+                    <label htmlFor="file">
+                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
+                </label>
+                <input
+                
+                type="file"
+                id="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                style={{ display: "none" }}
+              />
+        </div></div></div>
+        
+        
         <div className="col-md-5 border-right">
+        
             <div className="p-3 py-5">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h4 className="text-right">Profile Settings</h4>
+                    <h4 className="text-right">Profil skjema</h4>
                 </div>
                 <div className="row mt-2">
-                    <div className="col-md-6"><label className="labels">Name</label>
-                    <input type="text" className="form-control" placeholder="first name" value=""/></div>
-                    <div className="col-md-6"><label className="labels">Surname</label>
-                    <input type="text" className="form-control" value="" placeholder="surname"/></div>
+                    <div className="col-md-6" key='orgNumber'><label className="labels">Org. nummer</label>
+                    <input type="text" id="orgNumber" className="form-control" placeholder="org. nummer ..."  onChange={handleInput}/></div>
+
+                    <div className="col-md-6" key='CEO'><label className="labels">Dagligleder</label>
+                    <input type="text" id ="CEO" className="form-control"  placeholder="dagligleder ..."  onChange={handleInput}/></div>
                 </div>
                 <div className="row mt-3">
-                    <div className="col-md-12"><label className="labels">Mobile Number</label>
+                    <div className="col-md-12" key='companyName'><label className="labels">Bedriftsnavn</label>
+                    <input type="text" id="companyName" className="form-control" placeholder="bedriftsnavn ..."  onChange={handleInput}/></div>
                     
-                    <input type="text" className="form-control" placeholder="enter phone number" value=""/></div>
-                    <div className="col-md-12"><label className="labels">Address Line 1</label>
+                    <div className="col-md-12" key='email'><label className="labels">E-post</label>
+                    <input  type="text" id="email" className="form-control" placeholder="epost ..."  onChange={handleInput}/></div>
                     
-                    <input type="text" className="form-control" placeholder="enter address line 1" value=""/></div>
-                    <div className="col-md-12"><label className="labels">Address Line 2</label>
+                    <div className="col-md-12" key='phoneNumber'><label className="labels">Telefon nummer</label>
+                    <input  id ="phoneNumber"type="text" className="form-control" placeholder="telefon ..." onChange={handleInput}/></div>
                     
-                    <input type="text" className="form-control" placeholder="enter address line 2" value=""/></div>
-                    <div className="col-md-12"><label className="labels">Postcode</label>
+                    <div className="col-md-12" key='country'><label className="labels">Land</label>
+                    <input type="text" id ="country"  className="form-control" placeholder="land ..." onChange={handleInput}/></div>
                     
-                    <input type="text" className="form-control" placeholder="enter address line 2" value=""/></div>
-                    <div className="col-md-12"><label className="labels">State</label>
+                    <div className="col-md-12" key='address'><label className="labels">Adresse</label>
+                    <input type="text" id ="address" className="form-control" placeholder="adresse ..."  onChange={handleInput}/></div>
                     
-                    <input type="text" className="form-control" placeholder="enter address line 2" value=""/></div>
-                    <div className="col-md-12"><label className="labels">Area</label>
+                    <div className="col-md-12" key='facebook'><label className="labels">Facebook</label>
+                    <input type="text" id ="facebook" className="form-control" placeholder="facebook ..."onChange={handleInput}  /></div>
                     
-                    <input type="text" className="form-control" placeholder="enter address line 2" value=""/></div>
-                    <div className="col-md-12"><label className="labels">Email ID</label>
+                    <div className="col-md-12" key='instagram'><label className="labels">Instagram</label>
+                    <input type="text"  id ="instagram" className="form-control" placeholder="instagram ..." onChange={handleInput}/></div>
                     
-                    <input type="text" className="form-control" placeholder="enter email id" value=""/></div>
-                    <div className="col-md-12"><label className="labels">Education</label>
-                    
-                    <input type="text" className="form-control" placeholder="education" value=""/></div>
+                    <div className="col-md-12" key='website'><label className="labels">Nettside</label>
+                    <input type="text" id ="website" className="form-control" placeholder="nettside ..." onChange={handleInput} /></div>
+                
                 </div>
-                <div className="row mt-3">
-                    <div className="col-md-6"><label className="labels">Country</label>
-                    <input type="text" className="form-control" placeholder="country" value=""/></div>
-                    <div className="col-md-6"><label className="labels">State/Region</label>
-                    <input type="text" className="form-control" value="" placeholder="state"/></div>
+                <div className="row mt-3" >
+                    <div className="col-md" key='about'><label className="labels">Om oss</label>
+                    <textarea type="text" className="form-control" placeholder="Om oss ...." id="about" onChange={handleInput}/></div>
+                    
                 </div>
                 <div className='row mt-3'>
-                <div className="col-md-6 mt-4 text-center"><button className="btn btn-primary profile-button" type="button">Save Profile</button></div>
-                <div className="col-md-6 mt-4 text-center"><button className="btn btn-primary profile-button" type="button" onClick={registerButton}>Avslutt</button></div>
+                <div className="col-md-6 mt-4 text-center">
+                  <button className="btn btn-primary profile-button" disabled={per !== null && per < 100} type="submit">Save Profile</button>
+                  </div>
+                <div className="col-md-6 mt-4 text-center">
+                <button className="btn btn-primary profile-button" type="button" onClick={ e => setRegisterButton(false)}>
+                Avslutt</button></div>
                 </div>
                 
             </div>
+          
         </div>
+        
         <div className="col-md-4">
             <div className="p-3 py-5">
                 <div className="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span className="border px-3 p-1 add-experience"><i className="fa fa-plus"></i>&nbsp;Experience</span></div>
@@ -574,7 +677,7 @@ const Profile = () => {
             </div>
         </div>
     </div>
-
+    </form>
         </CompanyForm>
     </div>
 
