@@ -6,7 +6,7 @@ services:
         ports:
           - "3000:3000"
         environment:
-          - REACT_APP_FIREBASE_KEY=AIzaSyBLjkwTxfudPWxHI88g7p-Hn5yQraPUzy4
+          - REACT_APP_FIREBASE_KEY=
         # volumes:
         #   - ./MINBIL-V1:/app
         #   - ./app/node_modules
