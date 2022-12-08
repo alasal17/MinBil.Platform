@@ -459,7 +459,7 @@ const Profile = () => {
       <div className="singleContainer">
         <Navbar />
         <div className="">
-<div class="container">
+<div class="container" style={{paddingTop:"10px"}}>
     <div class="main-body">
     
       
