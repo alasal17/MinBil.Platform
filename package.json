@@ -2,6 +2,9 @@
   "name": "minbil-v1",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.10.5",
