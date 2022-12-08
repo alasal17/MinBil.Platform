@@ -1,7 +1,7 @@
 import React from "react";
 import './CompanyForm.css'
 
-function CompanyForm (props) {
+function Popup (props) {
   
     return (props.trigger) ? (
         <div className="popup">
@@ -19,4 +19,4 @@ function CompanyForm (props) {
     ) : "" ;
 }
 
-export default CompanyForm;
+export default Popup;
