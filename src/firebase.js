@@ -5,8 +5,7 @@ import { getStorage } from "firebase/storage";
 import { useEffect, useState } from "react";
 
 const firebaseConfig = {
-  // apiKey: process.env.REACT_APP_FIREBASE_KEY,
-  apiKey: "AIzaSyBLjkwTxfudPWxHI88g7p-Hn5yQraPUzy4",
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: "minbil-v1.firebaseapp.com",
   databaseURL: "https://minbil-v1-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "minbil-v1",
