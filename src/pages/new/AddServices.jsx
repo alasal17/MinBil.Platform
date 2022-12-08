@@ -17,13 +17,16 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import React  from 'react';
 import Dropdown from "./Dropdown";
-import { integerPropType } from "@mui/utils";
+
+
+
+
+
 const AddServices = ({ inputs, title}) => {
   const [file, setFile] = useState("");
   const [data, setData] = useState({});
   const [per, setPerc] = useState(null);
   const [tagsData, setTags] = useState([]);
-  const [priceData, setPriceData] = useState([]);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "services");
  

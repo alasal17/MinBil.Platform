@@ -1,0 +1,84 @@
+.popup{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(238, 237, 237, 0.411);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-inner{
+    position: relative;
+    padding: 32px;
+    width: 100%;
+    max-width: 90%;
+    background-color: white;
+}
+
+.popup-inner .close-btn{
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+h1 {
+	font-weight: 300;
+	font-size: 36px;
+	line-height: normal;
+	margin: auto;
+	margin-top: 30px;
+	text-align: center;
+}
+h2 {
+	font-weight: 500;
+	font-size: 20px;
+	line-height: normal;
+	margin: auto;
+	margin-bottom: 30px;
+	text-align: center;
+	color: #09F;
+}
+
+
+.form-horizontal .control-label { padding-top: 0; }
+.form-horizontal .radio{	padding-top: 0; }
+
+
+.form-group:last-child { margin-bottom: 0; }
+.form-horizontal .control-label { margin-bottom: 10px; }
+
+.lg-container {
+	background-color: rgba(255,255,255,0.8);
+	border: 1px solid #dedede;
+	border-radius: 8px;
+	margin: 0 auto;
+	padding: 30px;
+}
+.dailyaspirants-bg-gray { background-color: #eee; }
+.daliyaspirants-bg-gray h1 { color: rgb(74, 164, 180); }
+
+.margin-bottom-15 {	margin-bottom: 15px; }
+.margin-bottom-30 {	margin-bottom: 30px; }
+.form-group { margin-bottom: 20px; }
+.form-group a {	line-height: 34px; }
+.inline-block { display: inline-block; }
+
+
+
+.dailyaspirants-login-page {
+	background-color: #fff;
+	border: none;
+	max-width: 700px;	
+}
+.dailyaspirants-login-page label { font-weight: 400; }
+.dailyaspirants-login-page input[type='checkbox'] {
+	margin-right: 10px;
+	position: relative;
+	top: -1.5px;
+}
+.radio-group { margin-top: 30px; }
+ 

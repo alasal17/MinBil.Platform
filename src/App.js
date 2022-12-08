@@ -22,6 +22,7 @@ import React  from 'react';
 import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
+
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
@@ -46,6 +47,7 @@ function App() {
                 </RequireAuth>
               }
             />
+
              
             <Route path="/employee">
               <Route
@@ -151,8 +153,7 @@ function App() {
                 }
               />
             
-           
-
+         
             <Route path="/register">
               <Route
                 index
@@ -162,7 +163,7 @@ function App() {
                  
                 }
               />
-            
+
             </Route>
             <Route path='/verify-email' element={<VerifyEmail/>} /> 
             </Route>
