@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "18.x.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@emotion/core": "^11.0.0",
@@ -92,7 +92,6 @@
     ]
   },
   "devDependencies": {
-    "@svgr/webpack": "^6.5.1",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
