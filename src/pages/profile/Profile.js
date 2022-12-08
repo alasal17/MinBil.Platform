@@ -665,7 +665,7 @@ const Profile = () => {
           
         </div>
         
-        {*<div className="col-md-4">
+        {/*<div className="col-md-4">
             <div className="p-3 py-5">
                 <div className="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span className="border px-3 p-1 add-experience"><i className="fa fa-plus"></i>&nbsp;Experience</span></div>
                 <br/>
@@ -674,7 +674,7 @@ const Profile = () => {
                 <br/>
                 <div className="col-md-12"><label className="labels">Additional Details</label>
                 <input type="text" className="form-control" placeholder="additional details" value=""/></div>
-            </div>*}
+            </div>*/}
         </div>
     </div>
     </form>
