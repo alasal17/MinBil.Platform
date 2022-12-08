@@ -654,7 +654,7 @@ const Profile = () => {
                 </div>
                 <div className='row mt-3'>
                 <div className="col-md-6 mt-4 text-center">
-                  <button className="btn btn-primary profile-button" disabled={per !== null && per < 100} type="submit">Save Profile</button>
+                  <button className="btn btn-primary profile-button" type="submit">Save Profile</button>
                   </div>
                 <div className="col-md-6 mt-4 text-center">
                 <button className="btn btn-primary profile-button" type="button" onClick={ e => setRegisterButton(false)}>
