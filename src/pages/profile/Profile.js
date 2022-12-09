@@ -243,11 +243,16 @@ const Profile = () => {
   
   
   useEffect(() => {
-    setTimeout = (() => {
-      if(data.companyName == null || data.companyName === ''){
+    if(data.companyName == null || data.companyName === '')
+    {
+      setTimeout = (() => {
         setRegisterButton(true)
-      },3000);
-      }, []);
+        },3000);
+    }
+    else{
+      setRegisterButton(false)
+    }
+        }, []);
   
   
   
