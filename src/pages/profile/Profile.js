@@ -86,7 +86,9 @@ const Profile = () => {
 
             if(data.companyName == null || data.companyName === ''){
               
-              
+              setTimeout = (() => {
+                setRegisterButton(true)
+                },3000);
              return (
               
             
@@ -240,14 +242,6 @@ const Profile = () => {
       unsub();
     };
   }, );
-  
-  
-  useEffect(() => {
-    setTimeout = (() => {
-      setRegisterButton(true)
-        },3000);
-    
-        }, []);
   
   
   
