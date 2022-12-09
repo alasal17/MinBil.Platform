@@ -243,15 +243,10 @@ const Profile = () => {
   
   
   useEffect(() => {
-    if(data.companyName == null || data.companyName === '')
-    {
-      setTimeout = (() => {
-        setRegisterButton(true)
+    setTimeout = (() => {
+      setRegisterButton(true)
         },3000);
-    }
-    else{
-      setRegisterButton(false)
-    }
+    
         }, []);
   
   
