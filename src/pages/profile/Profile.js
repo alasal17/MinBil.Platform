@@ -86,9 +86,7 @@ const Profile = () => {
 
             if(data.companyName == null || data.companyName === ''){
               
-              setTimeout = (() => {
-                setRegisterButton(true)
-                },3000);
+              
              return (
               
             
