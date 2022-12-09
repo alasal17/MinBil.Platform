@@ -16,7 +16,7 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import { auth, db, storage } from "../../firebase";
 import { AuthContext} from "../../context/AuthContext";
 
-import Popup from "../register/Popup";
+import Popup from "../../components/popup/Popup";
 
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";

@@ -1,5 +1,5 @@
 import React from "react";
-import './CompanyForm.css'
+import './popup.css'
 
 function Popup (props) {
   

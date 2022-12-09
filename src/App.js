@@ -17,7 +17,7 @@ import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
-import Calendars from "./pages/single/Calenders";
+import Calendars from "./pages/calendar/Calenders";
 import React  from 'react';
 import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
