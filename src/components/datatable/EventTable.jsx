@@ -18,7 +18,7 @@ import { auth} from "../../firebase";
 const EventTable = ({pageTitle}) => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-
+  const [registerButton, setRegisterButton] = useState(false)
   
     
   useEffect(() => {
@@ -112,12 +112,11 @@ const EventTable = ({pageTitle}) => {
     },
   ];
   return (
-    <div className="datatable">
+    <div>
+      
       <div className="datatableTitle">
         {pageTitle}
-        <Link to="/calender/new-event" className="link">
-        Legg til ny
-        </Link>
+        
 
         
 
@@ -130,6 +129,8 @@ const EventTable = ({pageTitle}) => {
         rowsPerPageOptions={[9]}
         checkboxSelection
       />
+
+
     </div>
   );
 };
