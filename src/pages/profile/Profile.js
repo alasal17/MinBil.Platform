@@ -85,6 +85,7 @@ const Profile = () => {
 
 
             if(data.companyName == null || data.companyName === ''){
+              setRegisterButton(true)
              return (
               
             
@@ -286,6 +287,7 @@ const Profile = () => {
 
    
   }
+  
   const handleAdd = async (e) => {
     e.preventDefault();
     setRegisterButton(false)
