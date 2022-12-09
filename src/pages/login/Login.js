@@ -54,10 +54,10 @@ const Login = () => {
 			<form className="form-detail" onSubmit={handleLogin}>
 				
 				<div className="form-row">
-					<input type="text" name="your-email" id="your-email" className="input-text" placeholder="Email Address"  onChange={(e) => setEmail(e.target.value)}/>
+					<input type="text" name="your-email" id="your-email" className="input-text" placeholder="E-post"  onChange={(e) => setEmail(e.target.value)}/>
 				</div>
 				<div className="form-row">
-					<input type="password" name="password" id="password" className="input-text" placeholder="Password"  onChange={(e) => setPassword(e.target.value)}/>
+					<input type="password" name="password" id="password" className="input-text" placeholder="Passord"  onChange={(e) => setPassword(e.target.value)}/>
 				</div>
 				
 			
