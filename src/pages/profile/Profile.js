@@ -85,7 +85,8 @@ const Profile = () => {
 
 
             if(data.companyName == null || data.companyName === ''){
-              setRegisterButton(true)
+              
+              
              return (
               
             
@@ -239,6 +240,17 @@ const Profile = () => {
       unsub();
     };
   }, );
+  
+  
+  useEffect(() => {
+    setTimeout = (() => {
+      if(data.companyName == null || data.companyName === ''){
+        setRegisterButton(true)
+      },3000);
+      }, []);
+  
+  
+  
 
   useEffect(() => {
     const uploadFile = () => {
