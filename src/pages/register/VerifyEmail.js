@@ -1,85 +1,55 @@
 import './verifyEmail.css'
-import {useAuthValue} from '../../context/AuthContext'
+
 import {useState, useEffect} from 'react'
-import {auth} from '../../firebase'
-import {sendEmailVerification} from 'firebase/auth'
+
 import {useNavigate, Link} from 'react-router-dom'
+
 
 function VerifyEmail() {
 
-  const {currentUser} = useAuthValue()
-  const [time, setTime] = useState(60)
-  const {timeActive, setTimeActive} = useAuthValue()
+
+
   const navigate = useNavigate()
-
+  const [count, setCount] = useState(5);
+  
+  setInterval(() => setCount(count - 1), 1000);
   useEffect(() => {
-    const interval = setInterval(() => {
-      currentUser?.reload()
-      .then(() => {
-        if(currentUser?.emailVerified){
-          clearInterval(interval)
-          navigate('/')
-        }
-      })
-      .catch((err) => {
-        alert(err.message)
-      })
-    }, 1000)
-  }, [navigate, currentUser])
+    setTimeout(() =>{
+       
+      navigate('/')
+     }, 5000)
 
-  useEffect(() => {
-    let interval = null
-    if(timeActive && time !== 0 ){
-      interval = setInterval(() => {
-        setTime((time) => time - 1)
-      }, 1000)
-    }else if(time === 0){
-      setTimeActive(false)
-      setTime(60)
-      clearInterval(interval)
-    }
-    return () => clearInterval(interval);
-  }, [timeActive, time, setTimeActive])
-
-  const resendEmailVerification = () => {
-    sendEmailVerification(auth.currentUser)
-    .then(() => {
-      setTimeActive(true)
-    }).catch((err) => {
-      alert(err.message)
-    })
-  }
-
+    
+      return <p></p>
+    
+  },);
+  
+ 
+  
   return (
-    <div className="login">
+    <div>
+          <div className="login">
     <div className='auth'>
       <div className='verifyEmail'>
-        <h1>Verify your Email Address</h1>
-        <p>
-          <strong>A Verification email has been sent to:</strong><br/>
-          <span>{currentUser?.email}</span>
-        </p>
-        <span>Follow the instruction in the email to verify your account</span>     
-        <br/> 
-        <div className="line"></div>
-        <br/> 
-        <Link to='/login'>
-            
-            <button style={{backgroundColor: 'rgb(53, 146, 34)'}}>
-            Login
-            </button>
+        <h1>Registert</h1>
+        
+        <div style={{paddingTop:'20px'}}>
+          <strong>Du kan nå logge inn med din registrerte din e-post adresse.</strong><br/>
+         
+        </div>
+        <span>Har du noe feil med registeringen eller om det er noe du lurer på, kan du kontakte oss</span>
+        <hr />
+    
+      
+        <span>Går til logg inn siden om: </span><span style={{color:'green', fontWeight: 'bold'}}> {count}</span>
               
-              </Link>
-              <br/>
-              
-        {/* <button 
-          onClick={resendEmailVerification}
-          disabled={timeActive}
-        >Resend Email {timeActive && time}</button> */}
+       
       </div>
       
     </div>
     </div>
+         
+        </div>
   )
 }
 

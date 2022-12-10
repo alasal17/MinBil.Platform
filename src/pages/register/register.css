@@ -1,8 +1,4 @@
-body{
-	margin: 0;
-}
-
-.page-content {
+.page-content-sign-up {
 	width: 100%;
 	height: 100vh;
 	margin:  0 auto;
@@ -24,11 +20,11 @@ body{
 	background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20200730/pngtree-vector-design-of-cloudy-city-background-in-mountains-image_374221.jpg');
 	background-size: 100% 100%;
 }
-.form-v6-content  {
+.form-v6-content-sign-up {
 	background: #fff;
 	box-shadow: inset 0 -1em 1em rgba(0, 0, 0, 0.1), 0 0 0 1px rgb(255, 255, 255),
     0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
-	width: 70%;
+	width: 60%;
 	height: 50%;
 	align-items: center;
 	-o-align-items: center;
@@ -44,20 +40,20 @@ body{
 	position: relative;
 	display: -webkit-flex;
 }
-.form-v6-content .form-left {
+.form-v6-content-sign-up .form-left-sign-up {
 	margin-bottom: -6px;
 }
-.form-v6-content .form-left img {
+.form-v6-content-sign-up .form-left-sign-up img {
 	border-top-left-radius: 8px;
 	border-bottom-left-radius: 8px;
 	padding: 60px;
 }
-.form-v6-content .form-detail {
+.form-v6-content-sign-up .form-detail-sign-up {
     padding: 30px;
 	position: relative;
 	width: 100%;
 }
-.form-v6-content .form-detail h2 {
+.form-v6-content-sign-up .form-detail-sign-up h2 {
 	color: #333;
 	font-size: 35px;
 	text-align: center;
@@ -65,16 +61,16 @@ body{
 	padding: 6px 0 0;
 	margin-bottom: 47px;
 }
-.form-v6-content .form-row {
+.form-v6-content-sign-up .form-row-sign-up {
     width: 100%;
 }
-.form-v6-content .form-detail .form-row-last {
+.form-v6-content-sign-up .form-detail-sign-up .form-row-last-sign-up {
 	text-align: center;
 }
-.form-v6-content .form-detail .input-text {
+.form-v6-content-sign-up .form-detail-sign-up .input-text-sign-up {
 	margin-bottom: 35px;
 }
-.form-v6-content .form-detail input {
+.form-v6-content-sign-up .form-detail-sign-up input {
 	width: 92%;
     padding: 0px 15px 10px 15px;
     border: 2px solid transparent;
@@ -94,10 +90,10 @@ body{
     font-weight: 700;
     color: #333;
 }
-.form-v6-content .form-detail .form-row input:focus {
+.form-v6-content-sign-up .form-detail-sign-up .form-row-sign-up input:focus {
 	border-bottom: 2px solid #fe892a;
 }
-.form-v6-content .form-detail .register {
+.form-v6-content-sign-up .form-detail-sign-up .register-sign-up {
 	background: #fe892a;
 	border-radius: 6px;
 	-o-border-radius: 6px;
@@ -119,7 +115,7 @@ body{
 	font-size: 18px;
 }
 
-.form-v6-content .form-detail .sign-up {
+.form-v6-content-sign-up .form-detail-sign-up .sign-up {
 	background: #2a7ffe;
 	border-radius: 6px;
 	-o-border-radius: 6px;
@@ -140,10 +136,10 @@ body{
 	font-weight: 700;
 	font-size: 18px;
 }
-.form-v6-content .form-detail .register:hover {
+.form-v6-content-sign-up .form-detail-sign-up .register-sign-up:hover {
 	background: #e37b27;
 }
-.form-v6-content .form-detail .form-row-last input {
+.form-v6-content-sign-up .form-detail-sign-up .form-row-last-sign-up input {
 	padding: 13px;
 }
 input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
@@ -162,7 +158,7 @@ input:-moz-placeholder { /* Firefox 18- */
   color: #666;
   font-size: 16px;
 }
-.line {
+.line-sign-up {
 	align-items: center;
 	border-bottom: 1px solid #dadde1;
 	display: flex;
@@ -171,7 +167,7 @@ input:-moz-placeholder { /* Firefox 18- */
   }
 /* Responsive */
 @media screen and (max-width: 991px) {
-	.form-v6-content {
+	.form-v6-content-sign-up{
 		margin: 180px 20px;
 		flex-direction:  column;
 		-o-flex-direction:  column;
@@ -179,33 +175,33 @@ input:-moz-placeholder { /* Firefox 18- */
 		-moz-flex-direction:  column;
 		-webkit-flex-direction:  column;
 	}
-	.form-v6-content .form-left {
+	.form-v6-content-sign-up .form-left-sign-up {
 		width: 100%;
 	}
-	.form-v6-content .form-left img {
+	.form-v6-content-sign-up .form-left-sign-up img {
 		width: 100%;
 		border-bottom-left-radius: 0px;
 	    border-top-right-radius: 8px;
 	}
-	.form-v6-content .form-detail {
+	.form-v6-content-sign-up .form-detail-sign-up {
 		padding: 30px 20px 30px 20px;
 	    width: auto;
 	}
-	.form-v6-content .form-detail .form-row input {
+	.form-v6-content-sign-up .form-detail-sign-up .form-row-sign-up input {
 		width: 96%;
 	}
-	.form-v6-content .form-detail .register {
+	.form-v6-content-sign-up .form-detail-sign-up .register-sign-up {
 		margin-bottom: 80px;
 	}
 }
 @media screen and (max-width: 767px) {
-	.form-v6-content .form-detail .form-row input {
+	.form-v6-content-sign-up .form-detail-sign-up .form-row-sign-up input {
 		width: 94%;
 	}
 }
 
 @media screen and (max-width: 575px) {
-	.form-v6-content .form-detail .form-row input {
+	.form-v6-content-sign-up .form-detail-sign-up .form-row-sign-up input {
 	    width: 89%;
 	}
 }
