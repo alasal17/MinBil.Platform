@@ -51,13 +51,18 @@ const Login = () => {
 			<div className="form-left">
 				<img src="https://cdn.dribbble.com/users/207059/screenshots/16573461/media/f154d82ff06254c9d49bd8ddda1db06f.gif" height={'400px'} width={'600px'} alt="form"/>
 			</div>
+
 			<form className="form-detail" onSubmit={handleLogin} autoComplete="off">
+
+
 				
 				<div className="form-row">
-					<input type="text" name="your-email" id="your-email" className="input-text" placeholder="Email Address"  onChange={(e) => setEmail(e.target.value)}/>
+					<input type="text" name="your-email" id="your-email" className="input-text" placeholder="E-post"  onChange={(e) => setEmail(e.target.value)}/>
 				</div>
 				<div className="form-row">
+
 					<input type="password" id="password" className="input-text" placeholder="Passord" autoComplete="off" onChange={(e) => setPassword(e.target.value)}/>
+
 				</div>
 				
 			

@@ -85,6 +85,8 @@ const Profile = () => {
 
 
             if(data.companyName == null || data.companyName === ''){
+              
+              
              return (
               
             
@@ -238,6 +240,9 @@ const Profile = () => {
       unsub();
     };
   }, );
+  
+  
+  
 
   useEffect(() => {
     const uploadFile = () => {
@@ -286,6 +291,7 @@ const Profile = () => {
 
    
   }
+  
   const handleAdd = async (e) => {
     e.preventDefault();
     setRegisterButton(false)
