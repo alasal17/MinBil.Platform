@@ -25,7 +25,7 @@ const Profile = () => {
    
     const [data, setData] = useState({});
     const {currentUser} = useContext(AuthContext)
-
+    const [searchTerm, setSearchTerm] = useState('');
     const [registerButton, setRegisterButton] = useState(false)
 
     const [isData, setIsData] = useState('')
@@ -33,7 +33,7 @@ const Profile = () => {
     const [file, setFile] = useState("");
     const [data2, setData2] = useState({});
     const [per, setPerc] = useState(null);
-
+    const [altinnData, setAltinnData] = useState([]);
     const postsCollectionRef = collection(db, "company");
  
  
@@ -241,8 +241,90 @@ const Profile = () => {
     };
   }, );
   
+
+const handleChange = async event => {
+setSearchTerm(event.target.value);
+}
+
+const handleSubmit = async event => {
+event.preventDefault();
+fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
+.then(response => response.json())
+.then(data => {
+  setAltinnData(data)
   
-  
+
+})
+}
+
+  // useEffect(() =>{
+  //   if (altinnData = undefined){
+
+  //     return (setAltinnData(
+  //       <div>
+  //       <div className="col-md-12"><label className="labels">organisasjonsnummer</label>
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" /></div> 
+  //               <br/>
+  //               <div className="col-md-12"><label className="labels">Dedriftsnavn</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" /></div> 
+
+  //               <div className="col-md-12"><label className="labels">Organisasjonsform</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" /></div> 
+
+  //               <div className="col-md-12"><label className="labels">Registreringsdato </label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" /></div> 
+
+  //               <div className="col-md-12"><label className="labels">Registrert IM-varegisteret</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience"/></div> 
+
+  //               <div className="col-md-12"><label className="labels">Virkesomhet beskrivelse</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" /></div> 
+
+  //               <div className="col-md-12"><label className="labels">Antall ansatte</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" /></div> 
+  //               </div>
+  //     ))
+  //   }
+  //   else{
+  //     return (setAltinnData(
+  //       <div>
+  //       <div className="col-md-12"><label className="labels">organisasjonsnummer</label>
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.organisasjonsnummer}/></div> 
+  //               <br/>
+  //               <div className="col-md-12"><label className="labels">Dedriftsnavn</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.navn}/></div> 
+
+  //               <div className="col-md-12"><label className="labels">Organisasjonsform</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.organisasjonsform.beskrivelse}/></div> 
+
+  //               <div className="col-md-12"><label className="labels">Registreringsdato </label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.registreringsdatoEnhetsregisteret}/></div> 
+
+  //               <div className="col-md-12"><label className="labels">Registrert IM-varegisteret</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.registrertIMvaregisteret}/></div> 
+
+  //               <div className="col-md-12"><label className="labels">Virkesomhet beskrivelse</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.naeringskode1.beskrivelse}/></div> 
+
+  //               <div className="col-md-12"><label className="labels">Antall ansatte</label>
+
+  //               <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.antallAnsatte}/></div> 
+  //               </div>
+  //     ))
+
+  //   }
+  // },[])
 
   useEffect(() => {
     const uploadFile = () => {
@@ -443,6 +525,17 @@ const Profile = () => {
     </div>
 
     <Popup trigger={registerButton} setTrigger={setRegisterButton}> 
+    <form onSubmit={handleSubmit}>
+    
+    <div className="col-md-12" key='orgNumber'><label className="labels">Org. nummer</label>
+    <input type="text" id="orgNumber"  value={searchTerm} className="form-control" placeholder="org. nummer ..."  onChange={handleChange}/></div>
+    <div className='row'>
+        <div className="col-md-12 mt-4 text-center">
+  <button type="submit" className="btn btn-primary profile-button">Hent data</button>
+  </div></div>
+  </form>
+    
+
     <form onSubmit={handleAdd}>
     <div className="row">
         <div className="col-md-3 border-right">
@@ -480,11 +573,10 @@ const Profile = () => {
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h4 className="text-right">Profil skjema</h4>
                 </div>
+                
                 <div className="row mt-2">
-                    <div className="col-md-6" key='orgNumber'><label className="labels">Org. nummer</label>
-                    <input type="text" id="orgNumber" className="form-control" placeholder="org. nummer ..."  onChange={handleInput}/></div>
-
-                    <div className="col-md-6" key='CEO'><label className="labels">Dagligleder</label>
+             
+                    <div className="col-md-12" key='CEO'><label className="labels">Dagligleder</label>
                     <input type="text" id ="CEO" className="form-control"  placeholder="dagligleder ..."  onChange={handleInput}/></div>
                 </div>
                 <div className="row mt-3">
@@ -533,16 +625,43 @@ const Profile = () => {
         
       <div className="col-md-4">
             <div className="p-3 py-5">
-                <div className="d-flex justify-content-between align-items-center experience"><span>Edit Experience</span><span className="border px-3 p-1 add-experience"><i className="fa fa-plus"></i>&nbsp;Experience</span></div>
+                <div className="d-flex justify-content-between align-items-center experience"><span>Data hentet ifra Enhetsregisteret</span>
+                {/* <span className="border px-3 p-1 add-experience">
+                  <i className="fa fa-plus">
+                    </i>&nbsp;Experience
+                    </span> */}
+                    </div>
                 <br/>
-                <div className="col-md-12"><label className="labels">Experience in Designing</label>
-                <input type="text" className="form-control" placeholder="experience" /></div> 
-                <br/>
-                <div className="col-md-12"><label className="labels">Additional Details</label>
-
-                <input type="text" className="form-control" placeholder="additional details" /></div>
+                
             </div>
 
+            
+            <div className="col-md-12"><label className="labels">organisasjonsnummer</label>
+                 <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.organisasjonsnummer}/></div> 
+                 <br/>
+                 <div className="col-md-12"><label className="labels">Dedriftsnavn</label>
+
+                 <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.navn}/></div> 
+
+                 {/* <div className="col-md-12"><label className="labels">Organisasjonsform</label>
+
+                 <input type="text" className="form-control" placeholder="experience" value={altinnData.organisasjonsform.beskrivelse}/></div>  */}
+
+                 <div className="col-md-12"><label className="labels">Registreringsdato </label>
+
+                 <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.registreringsdatoEnhetsregisteret}/></div> 
+
+                 {/* <div className="col-md-12"><label className="labels">Adresse</label>
+
+                 <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.forretningsadresse.adresse}/></div>  */}
+
+                 {/* <div className="col-md-12"><label className="labels">Virkesomhet beskrivelse</label>
+
+                 <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.forretningsadresse}/></div>  */}
+
+                 <div className="col-md-12"><label className="labels">Antall ansatte</label>
+
+                 <input type="text" readOnly={true} className="form-control" placeholder="experience" defaultValue={altinnData.antallAnsatte}/></div> 
                 <input type="text" className="form-control" placeholder="additional details" />
                 </div>
             </div>

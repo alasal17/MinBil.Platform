@@ -5,20 +5,16 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import { useEffect, useState, useContext } from "react";
-import { collection, query, where, getDocs, onSnapshot, orderBy } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
-import React from 'react';
-import { getAuth} from "firebase/auth";
-import { AuthContext} from "../../context/AuthContext";
+import React, { Component }  from 'react';
+
 const Widget = ({ type }) => {
   const [amount, setAmount] = useState(null);
   const [diff, setDiff] = useState(null);
-  const {currentUser} = useContext(AuthContext)
-  const [data2, setData2] = useState({});
   let data;
-  
- 
+
   switch (type) {
     case "employees":
       data = {
@@ -41,8 +37,8 @@ const Widget = ({ type }) => {
       data = {
         title: "BESTILLINGER I DAG",
         isMoney: false,
-        query:"booking",
         link: "Se alle bestillinger",
+        query:"booking",
         icon: (
           <CalendarViewMonthIcon
             className="icon"
@@ -57,7 +53,6 @@ const Widget = ({ type }) => {
     case "earning":
       data = {
         title: "INNTJENING",
-       
         isMoney: true,
         link: "Se nettoinntekter",
         icon: (
@@ -69,10 +64,8 @@ const Widget = ({ type }) => {
       };
       break;
     case "services":
-      
-    
       data = {
-        title: "TJENESTER",
+        title: "PRODUKTER",
         query:"services",
         link: "Se detaljer",
         icon: (
@@ -88,67 +81,43 @@ const Widget = ({ type }) => {
       break;
     default:
       break;
-  };
+  }
 
-  const today = new Date();
-  const lastMonth = new Date(new Date().setMonth(today.getMonth()));
-  // const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
+  useEffect(() => {
+    const fetchData = async () => {
+      const today = new Date();
+      const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
+      const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
 
-  useEffect(   () => {
-    async function fetchData() {
-     
-      const auth = getAuth();
-     
-    
-    
-      const lastMonthQuery = await  query(
-        await collection(db, data.query),
-        where("uid", '==', currentUser.uid)
-        // ,where("createdAt", "==", lastMonth)
-        );
-      
-      const prevMonthQuery =  query(
+      const lastMonthQuery = query(
         collection(db, data.query),
-        where("uid", '==', currentUser.uid)
-        // where("createdAt", "==", lastMonth)
-     
-       
+        where("createdAt", "<=", today),
+        where("createdAt", ">", lastMonth)
+      );
+      const prevMonthQuery = query(
+        collection(db, data.query),
+        where("createdAt", "<=", lastMonth),
+        where("createdAt", ">", prevMonth)
       );
 
+      const lastMonthData = await getDocs(lastMonthQuery);
+      const prevMonthData = await getDocs(prevMonthQuery);
 
-
-      const lastMonthData =  await getDocs(lastMonthQuery);
-      const prevMonthData =  await getDocs(prevMonthQuery);
-
-      setAmount(await lastMonthData.docs.length);
+      setAmount(lastMonthData.docs.length);
       setDiff(
-         (( await lastMonthData.docs.length -  prevMonthData.docs.length) /  prevMonthData.docs.length) *
+        ((lastMonthData.docs.length - prevMonthData.docs.length) / prevMonthData.docs.length) *
           100
       );
-
-      // console.log(lastMonthQuery.withConverter())
-      // // lastMonthData.docs.forEach( doc =>{
-      // //   console.log(doc.id, '=>', doc.data())
-      // // })
-      
-  
-      return () => {
-        fetchData();
-      }
-  };
- 
-
-
-
-}, []);
-  
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="widget">
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "kr"} {amount}
+          {data.isMoney && "$"} {amount}
         </span>
         <span className="link">{data.link}</span>
       </div>
@@ -158,7 +127,6 @@ const Widget = ({ type }) => {
           {diff} %
         </div>
         {data.icon}
-        
       </div>
     </div>
   );

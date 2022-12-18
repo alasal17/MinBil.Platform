@@ -22,6 +22,7 @@ import React  from 'react';
 import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
+import SearchBar from "./components/searchbar/SearchBar";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -149,6 +150,15 @@ function App() {
                 element={
                   <RequireAuth>
                     <Profile />
+                  </RequireAuth>
+                }
+              />
+
+<Route
+                path="/search"
+                element={
+                  <RequireAuth>
+                    <SearchBar />
                   </RequireAuth>
                 }
               />
