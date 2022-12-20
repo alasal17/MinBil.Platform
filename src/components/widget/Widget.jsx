@@ -5,20 +5,22 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import CalendarViewMonthIcon from '@mui/icons-material/CalendarViewMonth';
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext  } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase";
 import React, { Component }  from 'react';
+import { AuthContext} from "../../context/AuthContext";
 
 const Widget = ({ type }) => {
   const [amount, setAmount] = useState(null);
   const [diff, setDiff] = useState(null);
+  const {currentUser} = useContext(AuthContext)
   let data;
 
   switch (type) {
     case "employees":
       data = {
-        title: "BRUKERE",
+        title: "ANSATTE",
         isMoney: false,
         query:"employees",
         link: "Se alle brukere",
@@ -65,7 +67,7 @@ const Widget = ({ type }) => {
       break;
     case "services":
       data = {
-        title: "PRODUKTER",
+        title: "TJENESTER",
         query:"services",
         link: "Se detaljer",
         icon: (
@@ -86,18 +88,21 @@ const Widget = ({ type }) => {
   useEffect(() => {
     const fetchData = async () => {
       const today = new Date();
-      const lastMonth = new Date(new Date().setMonth(today.getMonth() - 1));
-      const prevMonth = new Date(new Date().setMonth(today.getMonth() - 2));
-
+      const timestampToDay = new Date().toISOString();
+      const lastMonth = new Date(new Date().setMonth(today.getMonth() - 0));
+      const prevMonth = new Date(new Date().setMonth(today.getMonth() - 1));
+      console.log(timestampToDay)
       const lastMonthQuery = query(
         collection(db, data.query),
-        where("createdAt", "<=", today),
-        where("createdAt", ">", lastMonth)
-      );
+        where("createdAt", "<=", lastMonth), 
+        where("createdAt", ">", prevMonth),
+        where("uid", '==', currentUser.uid) );
+
       const prevMonthQuery = query(
         collection(db, data.query),
-        where("createdAt", "<=", lastMonth),
-        where("createdAt", ">", prevMonth)
+        where("createdAt", "<=", lastMonth), 
+        where("createdAt", ">", prevMonth),
+        where("uid", '==', currentUser.uid) 
       );
 
       const lastMonthData = await getDocs(lastMonthQuery);
@@ -117,7 +122,7 @@ const Widget = ({ type }) => {
       <div className="left">
         <span className="title">{data.title}</span>
         <span className="counter">
-          {data.isMoney && "$"} {amount}
+          {data.isMoney && "NOK"} {amount}
         </span>
         <span className="link">{data.link}</span>
       </div>

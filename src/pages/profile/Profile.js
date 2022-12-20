@@ -44,6 +44,7 @@ const Profile = () => {
       
       query(collection(db, "company"), where("uid", "==", currentUser.uid)),
       (snapShot) => {
+        
         if(snapShot.docs !== ''){
         snapShot.docs.map((doc) => {
           setData({uid:doc.data().uid,
@@ -239,7 +240,7 @@ const Profile = () => {
     return () => {
       unsub();
     };
-  }, );
+  },[]);
   
 
 const handleChange = async event => {
@@ -382,6 +383,8 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
       await addDoc(postsCollectionRef, {
      
         ...data2,
+        openingDays:[''],
+        openingHours:[''],
         status:true,
         createdAt: serverTimestamp(),
         uid:  auth.currentUser.uid,
@@ -433,7 +436,7 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
               <div className="card mt-3">
                 <ul className="list-group list-group-flush">
                   <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
+                    <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{paddingRight:'6px'}} strokeLinejoin="round" className="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
                     <span className="text-secondary">{data.website}</span>
                   </li>
                   {/* <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -445,11 +448,11 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
                     <span className="text-secondary">@bootdey</span>
                   </li> */}
                   <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                    <span className="text-secondary">{data.instagram}</span>
+                    <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{paddingRight:'6px'}} strokeLinejoin="round" className="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
+                    <span className="text-secondary" > {data.instagram}</span>
                   </li>
                   <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
+                    <h6 className="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{paddingRight:'6px'}} strokeLinecap="round" strokeLinejoin="round" className="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
                     <span className="text-secondary">{data.facebook}</span>
                   </li>
                 
@@ -601,6 +604,15 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
                     <div className="col-md-12" key='instagram'><label className="labels">Instagram</label>
                     <input type="text"  id ="instagram" className="form-control" placeholder="instagram ..." onChange={handleInput}/></div>
                     
+                    <div className="col-md-12" key='website'><label className="labels">Rolle</label>
+                    <input type="text" id ="website" className="form-control" placeholder="Bilverksted ..." onChange={handleInput} /></div>
+
+                    <div className="col-md-12" key='website'><label className="labels">LinkedIn</label>
+                    <input type="text" id ="website" className="form-control" placeholder="linkedin ..." onChange={handleInput} /></div>
+
+                    <div className="col-md-12" key='website'><label className="labels">Youtube</label>
+                    <input type="text" id ="website" className="form-control" placeholder="youtube ..." onChange={handleInput} /></div>
+
                     <div className="col-md-12" key='website'><label className="labels">Nettside</label>
                     <input type="text" id ="website" className="form-control" placeholder="nettside ..." onChange={handleInput} /></div>
                 
@@ -658,11 +670,11 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
                  {/* <div className="col-md-12"><label className="labels">Virkesomhet beskrivelse</label>
 
                  <input type="text" readOnly={true} className="form-control" placeholder="experience" value={altinnData.forretningsadresse}/></div>  */}
-
+{/* 
                  <div className="col-md-12"><label className="labels">Antall ansatte</label>
 
                  <input type="text" readOnly={true} className="form-control" placeholder="experience" defaultValue={altinnData.antallAnsatte}/></div> 
-                <input type="text" className="form-control" placeholder="additional details" />
+                <input type="text" className="form-control" placeholder="additional details" /> */}
                 </div>
             </div>
     
