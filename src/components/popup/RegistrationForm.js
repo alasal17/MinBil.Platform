@@ -14,7 +14,7 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import { auth, db, storage } from "../../firebase";
 
 
-function RegistrationForm() {
+function RegistrationForm({buttonName}) {
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
 
@@ -87,7 +87,7 @@ function RegistrationForm() {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Open Form
+        {buttonName}
       </Button>
 
       <Modal show={show} onHide={handleClose}>
