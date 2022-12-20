@@ -29,7 +29,7 @@ function RegistrationForm({buttonName}) {
   const [data2, setData2] = useState({});
   const [per, setPerc] = useState(null);
   const [altinnData, setAltinnData] = useState([]);
-
+  const [hiddenInput, setShowInput] = useState(true)
   const postsCollectionRef = collection(db, "company");
 
 
@@ -41,6 +41,7 @@ function RegistrationForm({buttonName}) {
 
   const handleChange = async event => {
     setSearchTerm(event.target.value);
+    setShowInput(false)
     }
     
     const handleSubmit = async event => {
@@ -94,7 +95,7 @@ function RegistrationForm({buttonName}) {
         {page === 1 && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Registration Form</Modal.Title>
+              <Modal.Title>Registeringsskjema</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {/* First page of the form */}
@@ -107,86 +108,60 @@ function RegistrationForm({buttonName}) {
         <div className="col-md-12 mt-4 text-center">
   <button type="submit" className="btn btn-primary profile-button">Hent data</button>
   </div></div>
-  </form>
+
     
 
-    <form onSubmit={handleAdd}>
+    
     <div className="row">
-        <div className="col-md-3 border-right">
-        
-            <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img 
-              src={
-                
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt="" className="rounded-circle mt-5" width="150px" 
-            />
-            
-                    {/* <span className="font-weight-bold">Bedriftslogo</span><span> </span> */}
-                    <div className="col-md-6 mt-4 text-center">
-                    
-                    <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                
-                type="file"
-                id="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                style={{ display: "none" }}
-              />
-        </div></div></div>
+       
         
         
         <div className="col-md-5 border-right">
         
             <div className="p-3 py-5">
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                    <h4 className="text-right">Profil skjema</h4>
+                    <h4 className="text-right">Data fra Enhetsregisteret</h4>
                 </div>
                 
                 <div className="row mt-2">
              
-                    <div className="col-md-12" ><label className="labels">Dagligleder</label>
-                    <input type="text" id ="CEO" required={true} className="form-control"  placeholder="dagligleder ..."  onChange={handleInput}/></div>
+                    <div className="col-md-12" ><label className="labels" hidden={hiddenInput}>Bedriftsnavn</label>
+                    <input type="text" id ="companyName" className="form-control"  placeholder="Bilpleie..." hidden={hiddenInput}  value={altinnData.navn} onChange={handleInput}/></div>
                 </div>
                 <div className="row mt-3">
-                    <div className="col-md-12" ><label className="labels">Bedriftsnavn</label>
-                    <input type="text" id="companyName" className="form-control" placeholder="bedriftsnavn ..."  onChange={handleInput}/></div>
+                    {/* <div className="col-md-12" ><label className="labels" hidden={hiddenInput}>Organisasjonsform</label>
+                    <input type="text" id="beskrivelse" className="form-control" placeholder="bedriftsnavn ..."  hidden={hiddenInput}  value={altinnData.organisasjonsform.beskrivelse} onChange={handleInput}/></div>
+                     */}
+                    <div className="col-md-12" ><label className="labels" hidden={hiddenInput} >Ansatte</label>
+                    <input  type="text" id="email" className="form-control" placeholder="epost ..."  hidden={hiddenInput}  value={altinnData.antallAnsatte} onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" ><label className="labels">E-post</label>
-                    <input  type="text" id="email" className="form-control" placeholder="epost ..."  onChange={handleInput}/></div>
+                    <div className="col-md-12"><label className="labels" hidden={hiddenInput}>Stiftelsesdato</label>
+                    <input  id ="phoneNumber"type="text" className="form-control" placeholder="telefon ..."hidden={hiddenInput}  value={altinnData.stiftelsesdato} onChange={handleInput}/></div>
                     
-                    <div className="col-md-12"><label className="labels">Telefon nummer</label>
-                    <input  id ="phoneNumber"type="text" className="form-control" placeholder="telefon ..." onChange={handleInput}/></div>
+                    {/* <div className="col-md-12"><label className="labels" hidden={hiddenInput}>Land</label>
+                    <input type="text" id ="country"  className="form-control" hidden={hiddenInput}  value={altinnData.forretningsadresse.land} onChange={handleInput}/></div> */}
                     
-                    <div className="col-md-12"><label className="labels">Land</label>
-                    <input type="text" id ="country"  className="form-control" placeholder="land ..." onChange={handleInput}/></div>
+                    <div className="col-md-12"><label className="labels" hidden={hiddenInput}>Adresse</label>
+                    <input type="text" id ="address" className="form-control"hidden={hiddenInput}  value={altinnData.map(e => e.forretningsadresse.adresse + ' ' + e.forretningsadresse.poststed)} onChange={handleInput}/></div>
                     
-                    <div className="col-md-12"><label className="labels">Adresse</label>
-                    <input type="text" id ="address" className="form-control" placeholder="adresse ..."  onChange={handleInput}/></div>
+                    {/* <div className="col-md-12" ><label className="labels" hidden={hiddenInput}>Facebook</label>
+                    <input type="text" id ="facebook" className="form-control" hidden={hiddenInput} placeholder="facebook ..."  value={altinnData.organisasjonsnummer} onChange={handleInput}  /></div>
                     
-                    <div className="col-md-12" ><label className="labels">Facebook</label>
-                    <input type="text" id ="facebook" className="form-control" placeholder="facebook ..."onChange={handleInput}  /></div>
+                    <div className="col-md-12"><label className="labels" hidden={hiddenInput}>Instagram</label>
+                    <input type="text"  id ="instagram" className="form-control" hidden={hiddenInput} placeholder="instagram ..." onChange={handleInput}/></div>
                     
-                    <div className="col-md-12"><label className="labels">Instagram</label>
-                    <input type="text"  id ="instagram" className="form-control" placeholder="instagram ..." onChange={handleInput}/></div>
-                    
-                    <div className="col-md-12" key='website'><label className="labels">Rolle</label>
-                    <input type="text" id ="website" className="form-control" placeholder="Bilverksted ..." onChange={handleInput} /></div>
+                    <div className="col-md-12" key='website'><label className="labels" hidden={hiddenInput}>Rolle</label>
+                    <input type="text" id ="website" className="form-control" placeholder="Bilverksted ..." hidden={hiddenInput} onChange={handleInput} /></div>
 
-                    <div className="col-md-12" ><label className="labels">LinkedIn</label>
-                    <input type="text" id ="linkedin" className="form-control" placeholder="linkedin ..." onChange={handleInput} /></div>
+                    <div className="col-md-12" ><label className="labels" hidden={hiddenInput}>LinkedIn</label>
+                    <input type="text" id ="linkedin" className="form-control" placeholder="linkedin ..." hidden={hiddenInput} onChange={handleInput} /></div>
 
                 </div>
                 <div className="row mt-3" >
-                    <div className="col-md" key='about'><label className="labels">Om oss</label>
-                    <textarea type="text" className="form-control" placeholder="Om oss ...." id="about" onChange={handleInput}/></div>
+                    <div className="col-md" key='about'><label className="labels" hidden={hiddenInput}>Om oss</label>
+                    <textarea type="text" className="form-control" placeholder="Om oss ...." id="about"hidden={hiddenInput} onChange={handleInput}/></div>
                     
-                </div>
+                 */}</div>
                 <div className='row mt-3'>
                 
                 
@@ -205,12 +180,7 @@ function RegistrationForm({buttonName}) {
         
       <div className="col-md-4">
             <div className="p-3 py-5">
-                <div className="d-flex justify-content-between align-items-center experience"><span>Data hentet ifra Enhetsregisteret</span>
-                {/* <span className="border px-3 p-1 add-experience">
-                  <i className="fa fa-plus">
-                    </i>&nbsp;Experience
-                    </span> */}
-                    </div>
+               
                 <br/>
                 
             </div>
@@ -235,10 +205,10 @@ function RegistrationForm({buttonName}) {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
-                Close
+                Avslutt
               </Button>
               <Button variant="primary" onClick={handleNextPage}>
-                Next
+                Gå videre
               </Button>
             </Modal.Footer>
           </>
