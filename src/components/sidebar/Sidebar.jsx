@@ -31,6 +31,7 @@ const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const [data, setData] = useState({});
   const {currentUser} = useContext(AuthContext);
+  
   useEffect(() => {
     // LISTEN (REALTIME)
    
@@ -72,7 +73,7 @@ const Sidebar = () => {
     <div className="sidebar">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none"}}>
-          <img src={data.companyLogo}  alt="Admin" style={{ paddingTop: "50px"}} />
+          <img src={data.companyLogo}  alt="" style={{ paddingTop: "50px"}} />
         </Link>
       </div>
     

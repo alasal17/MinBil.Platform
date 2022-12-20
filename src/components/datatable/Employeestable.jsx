@@ -141,7 +141,7 @@ const Employeestable = () => {
         createdAt: serverTimestamp(),
         uid:  auth.currentUser.uid,
       });
-     
+      navigate(-1)
     } catch (err) {
       console.log(err);
     }
