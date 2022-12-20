@@ -23,7 +23,7 @@ import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
 
-import MultipleStepFormPopup from './components/popup/MultipleStepFormPopup'
+import RegistrationForm from './components/popup/MultipleStepFormPopup'
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
@@ -107,7 +107,7 @@ function App() {
                 path="update"
                 element={
                   <RequireAuth>
-                    <MultipleStepFormPopup/>
+                    <RegistrationForm/>
                   </RequireAuth>
                 }
               />
