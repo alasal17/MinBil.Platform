@@ -13,13 +13,54 @@ import PsychologyOutlinedIcon from "@mui/icons-material/PsychologyOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext } from "react";
 import { signOut } from "firebase/auth";
 import { auth} from "../../firebase";
-import React from 'react';
+import React, { useContext, useState,useEffect } from 'react';
+import { AuthContext} from "../../context/AuthContext";
+import {
+  collection,
+  onSnapshot,
+  where,
+  query
+} from "firebase/firestore";
+import { db} from "../../firebase";
 
 const Sidebar = () => {
+  
 
+  const { dispatch } = useContext(DarkModeContext);
+  const [data, setData] = useState({});
+  const {currentUser} = useContext(AuthContext);
+  useEffect(() => {
+    // LISTEN (REALTIME)
+   
+    const unsub = onSnapshot(
+      
+      query(collection(db, "company"), where("uid", "==", currentUser.uid)),
+      (snapShot) => {
+    
+
+                
+      
+        
+        snapShot.docs.map((doc) => {
+          setData({uid:doc.data().uid, companyName: doc.data().companyName, companyLogo:doc.data().companyLogo});
+              
+            
+          });
+ 
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  
+  
+
+    return () => {
+      unsub();
+    };
+  }, );
   const signUserOut = () => {
     signOut(auth).then(() => {
       localStorage.clear();
@@ -27,16 +68,15 @@ const Sidebar = () => {
     });
   };
 
-  const { dispatch } = useContext(DarkModeContext);
   return (
     <div className="sidebar">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none"}}>
-          <span className="logo">Min bil</span>
+          <img src={data.companyLogo}  alt="Admin" style={{ paddingTop: "50px"}} />
         </Link>
       </div>
     
-      <div className="center">
+      <div className="center" style={{ paddingTop: "50px"}} >
         <ul>
           <p className="title">MAIN</p>
           <Link to="/" style={{ textDecoration: "none" }}>

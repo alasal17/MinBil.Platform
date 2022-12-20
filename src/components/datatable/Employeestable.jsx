@@ -1,7 +1,7 @@
 import "./datatable.scss";
 import { DataGrid } from "@mui/x-data-grid";
 import { employeesColumns } from "../../datatablesource";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -9,24 +9,20 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  query, 
-  setDoc,
   addDoc,
-    where,
-    serverTimestamp
+  serverTimestamp
 } from "firebase/firestore";
-import Moment from 'moment';
 import React  from 'react';
 import { getAuth} from "firebase/auth";
 import { db, storage  } from "../../firebase";
 import Popup from "../popup/Popup";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 export const auth = getAuth();
 
 const Employeestable = () => {
   const [data, setData] = useState([]);
+  const [addData, setAddData] = useState([]);
   const navigate = useNavigate();
   const auth = getAuth();
   const [registerButton, setRegisterButton] = useState(false)
@@ -105,13 +101,15 @@ const Employeestable = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, imageUrl: downloadURL }));
+            setAddData((prev) => ({ ...prev, imageUrl: downloadURL }));
           });
         }
       );
     };
     file && uploadFile();
   }, [file]);
+
+  
   const handleDelete = async (id) => {
     try {
       await deleteDoc(doc(db, "employees", id));
@@ -138,12 +136,12 @@ const Employeestable = () => {
     try {
       
       await addDoc(postsCollectionRef, {
-        ...data,
+        ...addData,
         status:'true',
         createdAt: serverTimestamp(),
         uid:  auth.currentUser.uid,
       });
-      navigate(-1)
+     
     } catch (err) {
       console.log(err);
     }
@@ -152,8 +150,7 @@ const Employeestable = () => {
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
-
-    setData({ ...data, [id]: value });
+    setAddData({ ...data, [id]: value });
   };
 
   
@@ -266,20 +263,20 @@ const Employeestable = () => {
                 
                 <div className="row mt-2">
              
-                    <div className="col-md-12" key='fulName'><label className="labels">Full Navn</label>
+                    <div className="col-md-12" ><label className="labels">Full Navn</label>
                     <input type="text" id ="fulName" className="form-control"  placeholder="Ola Nordmann" onChange={handleInput} /></div>
                 </div>
                 <div className="row mt-3">
-                    <div className="col-md-12" key='address'><label className="labels">Adresse</label>
+                    <div className="col-md-12"><label className="labels">Adresse</label>
                     <input type="text" id="address" className="form-control" placeholder="Oslo Gate 33" onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='email'><label className="labels">E-post</label>
+                    <div className="col-md-12" ><label className="labels">E-post</label>
                     <input  type="text" id="email" className="form-control" placeholder="epost ..."  onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='phoneNumber'><label className="labels">Telefon nummer</label>
+                    <div className="col-md-12"><label className="labels">Telefon nummer</label>
                     <input  id ="phoneNumber"type="text" className="form-control" placeholder="telefon ..." onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='hiredDate'><label className="labels">Anstatelses dato</label>
+                    <div className="col-md-12" ><label className="labels">Anstatelses dato</label>
                     <input type="text" id ="hiredDate"  className="form-control" onChange={handleInput}/></div>
                     
                     <div className="col-md-12" key='role'><label className="labels">Rolle</label>

@@ -198,7 +198,7 @@ export const userInputs = [
     {
       id: "email",
       label: "E-post",
-      type: "mail",
+      type: "text",
       placeholder: "olanordmann@gmail.com",
     },
     {
