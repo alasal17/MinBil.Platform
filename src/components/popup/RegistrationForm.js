@@ -142,7 +142,7 @@ function RegistrationForm({buttonName}) {
                     <input type="text" id ="country"  className="form-control" hidden={hiddenInput}  value={altinnData.forretningsadresse.land} onChange={handleInput}/></div> */}
                     
                     <div className="col-md-12"><label className="labels" hidden={hiddenInput}>Adresse</label>
-                    <input type="text" id ="address" className="form-control"hidden={hiddenInput}  value={altinnData.map(e => e.forretningsadresse.adresse + ' ' + e.forretningsadresse.poststed)} onChange={handleInput}/></div>
+                    <input type="text" id ="address" className="form-control"hidden={hiddenInput}  onChange={handleInput}/></div>
                     
                     {/* <div className="col-md-12" ><label className="labels" hidden={hiddenInput}>Facebook</label>
                     <input type="text" id ="facebook" className="form-control" hidden={hiddenInput} placeholder="facebook ..."  value={altinnData.organisasjonsnummer} onChange={handleInput}  /></div>
