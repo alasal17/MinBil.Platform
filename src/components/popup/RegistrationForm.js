@@ -66,7 +66,7 @@ function RegistrationForm() {
               <Button variant="secondary" onClick={handlePrevPage}>
                 Previous
               </Button>
-              <Button variant="primary" onClick={handleSubmit}>
+              <Button variant="primary">
                 Submit
               </Button>
             </Modal.Footer>
