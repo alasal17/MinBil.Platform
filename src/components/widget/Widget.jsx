@@ -23,7 +23,7 @@ const Widget = ({ type }) => {
         title: "ANSATTE",
         isMoney: false,
         query:"employees",
-        link: "Se alle brukere",
+        link: "Se alle ansatte",
         icon: (
           <PersonOutlinedIcon
             className="icon"

@@ -31,7 +31,7 @@ export const employeesColumns = [
   {
     field: "hiredDate",
     headerName: "Ansatt dato",
-    type: Date,
+  
     width: 200,
   },
   

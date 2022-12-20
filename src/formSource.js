@@ -192,7 +192,7 @@ export const userInputs = [
     {
       id: "hiredDate",
       label: "Ansatt siden",
-      type: "date",
+      type: "text",
       placeholder: "01-01-1990",
     },
     {
