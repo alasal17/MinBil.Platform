@@ -37,6 +37,7 @@
     "formik": "^2.2.9",
     "fs": "^0.0.1-security",
     "googleapis": "^100.0.0",
+    "react-bootstrap": "2.7.0",
     "jake": "^10.8.2",
     "jquery": "^3.6.1",
     "moment": "^2.29.4",
