@@ -11,6 +11,10 @@
     align-items: center;
 }
 
+.modal{
+	--bs-modal-width: 1000px;
+}
+
 .popup-inner{
     position: relative;
     padding: 32px;

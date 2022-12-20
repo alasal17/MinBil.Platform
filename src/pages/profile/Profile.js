@@ -579,43 +579,37 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
                 
                 <div className="row mt-2">
              
-                    <div className="col-md-12" key='CEO'><label className="labels">Dagligleder</label>
-                    <input type="text" id ="CEO" className="form-control"  placeholder="dagligleder ..."  onChange={handleInput}/></div>
+                    <div className="col-md-12" ><label className="labels">Dagligleder</label>
+                    <input type="text" id ="CEO" required={true} className="form-control"  placeholder="dagligleder ..."  onChange={handleInput}/></div>
                 </div>
                 <div className="row mt-3">
-                    <div className="col-md-12" key='companyName'><label className="labels">Bedriftsnavn</label>
+                    <div className="col-md-12" ><label className="labels">Bedriftsnavn</label>
                     <input type="text" id="companyName" className="form-control" placeholder="bedriftsnavn ..."  onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='email'><label className="labels">E-post</label>
+                    <div className="col-md-12" ><label className="labels">E-post</label>
                     <input  type="text" id="email" className="form-control" placeholder="epost ..."  onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='phoneNumber'><label className="labels">Telefon nummer</label>
+                    <div className="col-md-12"><label className="labels">Telefon nummer</label>
                     <input  id ="phoneNumber"type="text" className="form-control" placeholder="telefon ..." onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='country'><label className="labels">Land</label>
+                    <div className="col-md-12"><label className="labels">Land</label>
                     <input type="text" id ="country"  className="form-control" placeholder="land ..." onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='address'><label className="labels">Adresse</label>
+                    <div className="col-md-12"><label className="labels">Adresse</label>
                     <input type="text" id ="address" className="form-control" placeholder="adresse ..."  onChange={handleInput}/></div>
                     
-                    <div className="col-md-12" key='facebook'><label className="labels">Facebook</label>
+                    <div className="col-md-12" ><label className="labels">Facebook</label>
                     <input type="text" id ="facebook" className="form-control" placeholder="facebook ..."onChange={handleInput}  /></div>
                     
-                    <div className="col-md-12" key='instagram'><label className="labels">Instagram</label>
+                    <div className="col-md-12"><label className="labels">Instagram</label>
                     <input type="text"  id ="instagram" className="form-control" placeholder="instagram ..." onChange={handleInput}/></div>
                     
                     <div className="col-md-12" key='website'><label className="labels">Rolle</label>
                     <input type="text" id ="website" className="form-control" placeholder="Bilverksted ..." onChange={handleInput} /></div>
 
-                    <div className="col-md-12" key='website'><label className="labels">LinkedIn</label>
-                    <input type="text" id ="website" className="form-control" placeholder="linkedin ..." onChange={handleInput} /></div>
+                    <div className="col-md-12" ><label className="labels">LinkedIn</label>
+                    <input type="text" id ="linkedin" className="form-control" placeholder="linkedin ..." onChange={handleInput} /></div>
 
-                    <div className="col-md-12" key='website'><label className="labels">Youtube</label>
-                    <input type="text" id ="website" className="form-control" placeholder="youtube ..." onChange={handleInput} /></div>
-
-                    <div className="col-md-12" key='website'><label className="labels">Nettside</label>
-                    <input type="text" id ="website" className="form-control" placeholder="nettside ..." onChange={handleInput} /></div>
-                
                 </div>
                 <div className="row mt-3" >
                     <div className="col-md" key='about'><label className="labels">Om oss</label>
