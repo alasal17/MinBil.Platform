@@ -50,6 +50,8 @@
     "react-bootstrap": "^2.7.0",
     "react-circular-progressbar": "^2.0.4",
     "react-dom": "^17.0.2",
+    "react-multiple-image-uploader": "^1.0.3",
+    "react-papaparse": "^4.1.0",
     "react-router-dom": "^6.2.2",
     "react-scripts": "^5.0.0",
     "react-sweetalert2": "^0.5.2",
