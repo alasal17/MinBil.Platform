@@ -440,12 +440,7 @@ function RegistrationForm({buttonName}) {
           </div>
         );
       })}
-       <div className="row mt-3" >
-                <div className="col-md" key='about'><label className="labels">Om oss</label>
-                <textarea type="text" className="form-control" style={{height:'200px'}} placeholder="Om oss ...." id="about" /></div>
-                
-            </div>
-
+    
 
             </Modal.Body>
             <Modal.Footer>
