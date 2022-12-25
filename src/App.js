@@ -21,7 +21,11 @@ import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
 import AuthPage from "./pages/login/AuthPage";
-import RegistrationForm from './components/popup/RegistrationForm';
+
+
+
+
+
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
@@ -101,14 +105,7 @@ function App() {
                 }
               />
 
-<Route
-                path="update"
-                element={
-                  <RequireAuth>
-                    <RegistrationForm/>
-                  </RequireAuth>
-                }
-              />
+
 
               
 

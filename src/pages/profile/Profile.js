@@ -11,17 +11,15 @@ import {
     where,
     serverTimestamp
   } from "firebase/firestore";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 
 import { auth, db, storage } from "../../firebase";
 import { AuthContext} from "../../context/AuthContext";
 
-import Popup from "../../components/popup/Popup";
 
 import RegistrationForm  from "../../components/popup/RegistrationForm";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { PropaneSharp } from "@mui/icons-material";
+
 
 const Profile = () => {
    
@@ -243,23 +241,6 @@ const Profile = () => {
       unsub();
     };
   },[]);
-  
-
-const handleChange = async event => {
-setSearchTerm(event.target.value);
-}
-
-const handleSubmit = async event => {
-event.preventDefault();
-fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
-.then(response => response.json())
-.then(data => {
-  setAltinnData(data)
-  
-
-})
-}
-
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;
@@ -299,6 +280,23 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
     file && uploadFile();
   }, [file]);
   
+
+const handleChange = async event => {
+setSearchTerm(event.target.value);
+}
+
+const handleSubmit = async event => {
+event.preventDefault();
+fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
+.then(response => response.json())
+.then(data => {
+  setAltinnData(data)
+  
+
+})
+}
+
+
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
