@@ -21,14 +21,14 @@ body{
 	-ms-align-items: center;
 	-moz-align-items: center;
 	-webkit-align-items: center;
-	background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20200730/pngtree-vector-design-of-cloudy-city-background-in-mountains-image_374221.jpg');
+	background-color: antiquewhite;
 	background-size: 100% 100%;
 }
 .form-v6-content  {
 	background: #fff;
 	box-shadow: inset 0 -1em 1em rgba(0, 0, 0, 0.1), 0 0 0 1px rgb(255, 255, 255),
     0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
-	width: 70%;
+	width: 50%;
 	height: 50%;
 	align-items: center;
 	-o-align-items: center;
@@ -208,4 +208,30 @@ input:-moz-placeholder { /* Firefox 18- */
 	.form-v6-content .form-detail .form-row input {
 	    width: 89%;
 	}
+}
+
+.modal-header {
+	display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--bs-modal-header-padding);
+    border-bottom: var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color);
+    border-top-left-radius: var(--bs-modal-inner-border-radius);
+    border-top-right-radius: var(--bs-modal-inner-border-radius);
+    flex-direction: column;
+}
+
+.modal-footer {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    padding: calc(var(--bs-modal-padding) - var(--bs-modal-footer-gap) * .5);
+    background-color: var(--bs-modal-footer-bg);
+    border-top: var(--bs-modal-footer-border-width) solid var(--bs-modal-footer-border-color);
+    border-bottom-right-radius: var(--bs-modal-inner-border-radius);
+    border-bottom-left-radius: var(--bs-modal-inner-border-radius);
+    flex-direction: column;
 }

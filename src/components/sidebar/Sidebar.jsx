@@ -71,9 +71,13 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-      <div className="top">
+      <div className="top ">
         <Link to="/" style={{ textDecoration: "none"}}>
-          <img src={data.companyLogo}  alt="" style={{ paddingTop: "50px"}} />
+          <img src={
+                data.companyLogo
+                  ? data.companyLogo
+                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+              }  alt="" style={{ paddingTop: "5%"}}className="rounded mx-auto d-block rounded-circle mt-5" />
         </Link>
       </div>
     

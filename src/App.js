@@ -1,14 +1,12 @@
 // import 'devextreme/dist/css/dx.common.css';
 // import 'devextreme/dist/css/dx.light.css';
 import Home from "./pages/home/Home";
-import Login from "./pages/login/Login";
 // import Register from "./pages/login/Register";
 import EmployeesList from "./pages/list/EmployeesList";
 import ServicesList from "./pages/list/ServicesList";
 import Sales from "./pages/sales/Sales";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
-import UpdateProducts from "./pages/new/UpdateProducts";
 import AddServices from "./pages/new/AddServices";
 import AddEvent from "./pages/new/AddEvent";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -22,7 +20,7 @@ import React  from 'react';
 import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
-
+import AuthPage from "./pages/login/AuthPage";
 import RegistrationForm from './components/popup/RegistrationForm';
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -39,7 +37,7 @@ function App() {
         <Routes>
          
         <Route path="/">
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<AuthPage />} />
             <Route
               index
               element={

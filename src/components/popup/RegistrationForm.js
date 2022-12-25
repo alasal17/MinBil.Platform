@@ -7,11 +7,11 @@ import {
     serverTimestamp
   } from "firebase/firestore";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import Dropdown from '../../pages/new/Dropdown';
 import { auth, db } from "../../firebase";
 import { RMIUploader } from "react-multiple-image-uploader";
 import ProgressBar from 'react-bootstrap/ProgressBar';
-
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function RegistrationForm({buttonName}) {
   const [show, setShow] = useState(false);
@@ -271,7 +271,7 @@ function RegistrationForm({buttonName}) {
                 Tilbake
               </Button>
               <Button variant="primary" onClick={handleNextPage}>
-                Neste
+                Gå videre
               </Button>
             </Modal.Footer>
           </>
@@ -377,7 +377,7 @@ function RegistrationForm({buttonName}) {
                 Tilbake
               </Button>
               <Button variant="primary" onClick={handleNextPage}>
-                Neste
+                Gå videre
               </Button>
             </Modal.Footer>
           </>
@@ -413,29 +413,29 @@ function RegistrationForm({buttonName}) {
 {inputList.map((x, i) => {
         return (
           <div className="row mt-2">
-            <div className="col-md-6" key='opningDays'><label className="labels">Dag</label>
+            <div className="col-md-5" key='opningDays'><label className="labels">Dag</label>
             <input
               name="opningDays"
-   placeholder="Mandag"
-   className='form-control'
+              placeholder="Dag eks. Mandag "
+              className='form-control'
               value={x.openingDays}
               onChange={e => handleInputChange(e, i)}
             />
             </div>
-            <div className="col-md-6" key='opningDays'><label className="labels">Åpnings- stengetid</label>
+            <div className="col-md-5" key='opningDays'><label className="labels">Åpnings- stengetid</label>
             <input
               className='form-control'
               name="opningHours"
-   placeholder="10:00-20:00"
+   placeholder="Åpningstid eks. 10:00-20:00"
               value={x.openingHours}
               onChange={e => handleInputChange(e, i)}
             />
             </div>
-            <div className="btn-box">
-              {inputList.length !== 1 && <button
+            <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
+              {inputList.length !== 1 && <DeleteIcon
                 className="mr10"
-                onClick={() => handleRemoveClick(i)}>Fjern</button>}
-              {inputList.length - 1 === i && <button onClick={handleAddClick}>Ny felt</button>}
+                onClick={() => handleRemoveClick(i)}/>}
+              {inputList.length - 1 === i && <AddBoxIcon onClick={handleAddClick}/>}
             </div>
           </div>
         );
@@ -448,7 +448,7 @@ function RegistrationForm({buttonName}) {
                 Tilbake
               </Button>
               <Button variant="primary" onClick={handleNextPage}>
-                Neste
+                Gå videre
               </Button>
             </Modal.Footer>
           </>
