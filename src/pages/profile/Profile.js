@@ -14,10 +14,7 @@ import {
 
 import { auth, db, storage } from "../../firebase";
 import { AuthContext} from "../../context/AuthContext";
-
-
 import RegistrationForm  from "../../components/popup/RegistrationForm";
-
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 

@@ -1,0 +1,10 @@
+.cButton{
+    background-color:teal;
+    color:white;
+}
+
+p{
+    content: ant-upload-textClick ('whatever it is you want to add')  !important;  
+}
+
+

@@ -2,13 +2,12 @@
 // import 'devextreme/dist/css/dx.light.css';
 import Home from "./pages/home/Home";
 // import Register from "./pages/login/Register";
-import EmployeesList from "./pages/list/EmployeesList";
-import ServicesList from "./pages/list/ServicesList";
+// import EmployeesList from "./pages/list/EmployeesList";
+// import ServicesList from "./pages/list/ServicesList";
 import Sales from "./pages/sales/Sales";
-import Single from "./pages/single/Single";
-import New from "./pages/new/New";
-import AddServices from "./pages/new/AddServices";
-import AddEvent from "./pages/new/AddEvent";
+// import Single from "./pages/single/Single";
+// import AddServices from "./pages/new/AddServices";
+// import AddEvent from "./pages/new/AddEvent";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { employeeInput, eventInput, serviceInputs } from "./formSource";
 import "./style/dark.scss";
@@ -17,14 +16,16 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/calendar/Calenders";
 import React  from 'react';
-import Register from "./pages/register/Register";
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
 import AuthPage from "./pages/login/AuthPage";
 
 
-
-
+const EmployeesList = React.lazy(() => import("./pages/list/EmployeesList"));
+const ServicesList = React.lazy(() => import("./pages/list/ServicesList"));
+const Single = React.lazy(() => import("./pages/single/Single"));
+const AddServices = React.lazy(() => import("./pages/new/AddServices"));
+const AddEvent = React.lazy(() => import("./pages/new/AddEvent"));
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -69,14 +70,14 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route
+              {/* <Route
                 path="new-employee"
                 element={
                   <RequireAuth>
                     <New inputs={employeeInput} title="Legg til ny ansatt"/>
                   </RequireAuth>
                 }
-              />
+              /> */}
             </Route>
             
             <Route path="/service">
@@ -152,7 +153,7 @@ function App() {
 
             
          
-            <Route path="/register">
+            {/* <Route path="/register">
               <Route
                 index
                 element={
@@ -162,7 +163,7 @@ function App() {
                 }
               />
 
-            </Route>
+            </Route> */}
             <Route path='/verify-email' element={<VerifyEmail/>} /> 
             </Route>
         </Routes>

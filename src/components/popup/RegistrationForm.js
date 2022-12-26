@@ -12,6 +12,7 @@ import { RMIUploader } from "react-multiple-image-uploader";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import DeleteIcon from '@mui/icons-material/Delete';
+import './registrationForm.css'
 
 function RegistrationForm({buttonName}) {
   const [show, setShow] = useState(false);
@@ -21,7 +22,7 @@ function RegistrationForm({buttonName}) {
   const {currentUser} = useContext(AuthContext)
   const [searchTerm, setSearchTerm] = useState('');
   const [registerButton, setRegisterButton] = useState(false)
-  const [inputList, setInputList] = useState([{ firstName: "", lastName: "" }]);
+  const [inputList, setInputList] = useState([{ openingDays: "", openingHours: "" }]);
   const [file, setFile] = useState("");
   const [data2, setData2] = useState({});
   const [altinnData, setAltinnData] = useState([]);
@@ -29,7 +30,7 @@ function RegistrationForm({buttonName}) {
   const [hiddenInfoText, setShowInfoText] = useState(false);
   const postsCollectionRef = collection(db, "company");
   const [visible, setVisible] = useState(false);
-  const [imageData, setImageData] = useState([]);
+  const [imageData, setImageData] = useState(['https://finetuneauto.com/wp-content/uploads/2021/02/auto-repair-service.jpg', 'https://finetuneauto.com/wp-content/uploads/2021/02/auto-repair-service.jpg']);
 
   const hideModal = () => {
     setVisible(false);
@@ -59,10 +60,54 @@ function RegistrationForm({buttonName}) {
     { label: "Lakering", value: "Lakering" }
     
 ];
+const dataSources = [
+  {
+    id: 1,
+    dataURL: "https://finetuneauto.com/wp-content/uploads/2021/02/auto-repair-service.jpg",
+  },
+  {
+    id: 2,
+    dataURL: "https://d1gymyavdvyjgt.cloudfront.net/drive/images/uploads/headers/ws_cropper/1_0x0_790x520_0x520_car-service-checklist.jpg",
+  },
+  {
+    id: 3,
+    dataURL: "https://etimg.etb2bimg.com/photo/75526812.cms",
+  },
+  {
+    id: 4,
+    dataURL: "https://picsum.photos/seed/4/600",
+  },
+  {
+    id: 5,
+    dataURL: "https://picsum.photos/seed/5/600",
+  },
+  {
+    id: 6,
+    dataURL: "https://picsum.photos/seed/6/600",
+  },
+  {
+    id: 7,
+    dataURL: "https://picsum.photos/seed/7/600",
+  },
+  {
+    id: 8,
+    dataURL: "https://picsum.photos/seed/8/600",
+  },
+  {
+    id: 9,
+    dataURL: "https://picsum.photos/seed/9/600",
+  },
+  {
+    id: 10,
+    dataURL: "https://picsum.photos/seed/10/600",
+  },
+];
   const handleChange = async event => {
     setSearchTerm(event.target.value);
     
     }
+
+
    // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -84,7 +129,7 @@ function RegistrationForm({buttonName}) {
   };
  
     
-    
+ 
     const handleSubmit = async event => {
     event.preventDefault();
     fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
@@ -143,7 +188,7 @@ function RegistrationForm({buttonName}) {
             </Modal.Header>
             
             <Modal.Body>
-            <ProgressBar now={10} />
+            <ProgressBar now={10} variant="success" style={{margin:'10px'}} label={`10%`}/>
               {/* First page of the form */}
 
               <form onSubmit={handleSubmit}>
@@ -152,12 +197,12 @@ function RegistrationForm({buttonName}) {
     <input type="text" id="orgNumber"  value={searchTerm} className="form-control" placeholder="000000000"  onChange={handleChange}/></div>
     <div className='row'>
         <div className="col-md-12 mt-4 text-center">
-  <button type="submit" className="btn btn-primary profile-button">Hent data</button>
+  <button type="submit" className="btn cButton profile-button">Hent data</button>
   </div></div>
 
-<div hidden={hiddenInfoText}>
-  <h4 className='text-center'>Hvorfor data fra Enhetsregisteret?</h4>
-  <p>Denne informasjonen bruker vi til å verfisere bedriftsinformasjon. 
+<div >
+  <h4 className='text-center' style={{margin:'30px'}}>Hvorfor data fra Enhetsregisteret?</h4>
+  <p className='text-center'>Denne informasjonen bruker vi til å verfisere bedriftsinformasjon. 
     Det er for å unngå misforståelser og identitetstyveri.
     <br/>
     Denne informasjon vil ikke være synlig for dine kunder.
@@ -224,14 +269,27 @@ function RegistrationForm({buttonName}) {
     </form>
 
             </Modal.Body>
+            
+              
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+            <div className="row ">
+    <div className="col">
+              
+    <Button variant="secondary" onClick={handleClose}>
                 Avslutt
               </Button>
-              <Button variant="primary" onClick={handleNextPage}>
+           
+              </div>
+              <div className="col">
+              
+
+              <Button style={{height:'auto', width:'100px'}} variant="primary" onClick={handleNextPage}>
                 Gå videre
               </Button>
+              </div>
+              </div>
             </Modal.Footer>
+           
           </>
         )}
         {page === 2 && (
@@ -267,12 +325,18 @@ function RegistrationForm({buttonName}) {
               <p className='text-center'> DENNE INFORMASJOENEN VIL VÆRE SYNLIG FOR DINE KUNDER</p>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handlePrevPage}>
+            <div className="row ">
+    <div className="col">
+              <Button variant="secondary"  onClick={handlePrevPage}>
                 Tilbake
               </Button>
-              <Button variant="primary" onClick={handleNextPage}>
+
+              </div>
+    <div className="col">
+              <Button variant="primary" style={{height:'auto', width:'100px'}} onClick={handleNextPage}>
                 Gå videre
               </Button>
+              </div></div>
             </Modal.Footer>
           </>
         )}
@@ -284,7 +348,7 @@ function RegistrationForm({buttonName}) {
             
             </Modal.Header>
             <Modal.Body>
-            <ProgressBar now={40} />
+            <ProgressBar now={40} variant="success" style={{margin:'10px'}} label={`40%`}/>
             <div className="">
         
         <div className="p-3 py-5">
@@ -317,7 +381,7 @@ function RegistrationForm({buttonName}) {
         </div>
             <div className="row mt-2">
                 <div className="col-md-6" key='orgNumber'><label className="labels">Org. nummer</label>
-                <input type="text" id="orgNumber" className="form-control" placeholder="org. nummer ..."  /></div>
+                <input type="text" id="orgNumber" readOnly className="form-control" value={searchTerm}  /></div>
 
                 <div className="col-md-6" key='CEO'><label className="labels">Dagligleder</label>
                 <input type="text" id ="CEO" className="form-control"  placeholder="dagligleder ..." /></div>
@@ -373,13 +437,19 @@ function RegistrationForm({buttonName}) {
     </div>
             </Modal.Body>
             <Modal.Footer>
+            <div className="row ">
+    <div className="col">
               <Button variant="secondary" onClick={handlePrevPage}>
                 Tilbake
               </Button>
-              <Button variant="primary" onClick={handleNextPage}>
+              </div>
+              <div className="col">
+              <Button variant="primary" style={{height:'auto', width:'100px'}}  onClick={handleNextPage}>
                 Gå videre
               </Button>
+              </div></div>
             </Modal.Footer>
+            
           </>
         )}
         
@@ -389,7 +459,7 @@ function RegistrationForm({buttonName}) {
             <Modal.Title>Register bedriftsinformasjon 2/3</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <ProgressBar now={70} />
+            <ProgressBar now={70} variant="success" style={{margin:'10px'}} label={`70%`}/>
 
 
             <div className="row mt-2">
@@ -413,19 +483,19 @@ function RegistrationForm({buttonName}) {
 {inputList.map((x, i) => {
         return (
           <div className="row mt-2">
-            <div className="col-md-5" key='opningDays'><label className="labels">Dag</label>
+            <div className="col-md-5" key='openingDays'><label className="labels">Dag</label>
             <input
-              name="opningDays"
+              name="openingDays"
               placeholder="Dag eks. Mandag "
               className='form-control'
               value={x.openingDays}
               onChange={e => handleInputChange(e, i)}
             />
             </div>
-            <div className="col-md-5" key='opningDays'><label className="labels">Åpnings- stengetid</label>
+            <div className="col-md-5" key='openingHours'><label className="labels">Åpnings- stengetid</label>
             <input
               className='form-control'
-              name="opningHours"
+              name="openingHours"
    placeholder="Åpningstid eks. 10:00-20:00"
               value={x.openingHours}
               onChange={e => handleInputChange(e, i)}
@@ -444,12 +514,16 @@ function RegistrationForm({buttonName}) {
 
             </Modal.Body>
             <Modal.Footer>
+            <div className="row ">
+    <div className="col">
               <Button variant="secondary" onClick={handlePrevPage}>
                 Tilbake
               </Button>
-              <Button variant="primary" onClick={handleNextPage}>
+              </div><div className="col">
+              <Button variant="primary"  style={{height:'auto', width:'100px'}}  onClick={handleNextPage}>
                 Gå videre
               </Button>
+              </div></div>
             </Modal.Footer>
           </>
         )}
@@ -460,7 +534,7 @@ function RegistrationForm({buttonName}) {
             <Modal.Title>Register bedriftsinformasjon 3/3</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-            <ProgressBar now={100} />
+            <ProgressBar now={100} variant="success" style={{margin:'10px'}} label={`100%`}/>
 
 
 
@@ -476,19 +550,29 @@ function RegistrationForm({buttonName}) {
         onSelect={onSelect}
         onUpload={onUpload}
         onRemove={onRemove}
-        dataSources={imageData}
+        dataSources={dataSources}
+        antUploadText='nhi'
       />
 
 
             </Modal.Body>
+            <div className="row mt-2">
             <Modal.Footer>
-              <Button variant="secondary" onClick={handlePrevPage}>
+            <div className="row ">
+    <div className="col">
+            
+              <Button variant="secondary"  onClick={handlePrevPage}>
                 Tilbake
               </Button>
-              <Button variant="primary">
-                Lagre
+              </div>
+              <div className="col">
+              <Button variant="success">
+                Lager
               </Button>
+              </div>
+              </div>
             </Modal.Footer>
+            </div>
           </>
         )}
       </Modal>
