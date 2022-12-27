@@ -9,7 +9,7 @@ import Sales from "./pages/sales/Sales";
 // import AddServices from "./pages/new/AddServices";
 // import AddEvent from "./pages/new/AddEvent";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { employeeInput, eventInput, serviceInputs } from "./formSource";
+import {eventInput, serviceInputs } from "./formSource";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";

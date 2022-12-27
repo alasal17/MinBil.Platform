@@ -8,3 +8,40 @@ p{
 }
 
 
+.companyLogo{
+    height: 20%;
+    width: 20%;
+    align-items: center;
+}
+
+.error{
+    color: red;
+}
+/* p.ant-upload-text{
+    visibility: hidden;
+    position: relative;
+      
+}
+
+.ant-upload-hint{
+    visibility: hidden;
+    position: relative;
+    align-items: center;
+       
+}
+.ant-upload-text::before{
+    position:absolute;
+    visibility: visible;
+    align-items: center;
+    content: "Klikk eller dra filen til dette området for å laste opp";    
+}
+
+
+
+
+
+.ant-upload-hint::before{
+    position:relative;
+    visibility: visible;
+    content: "Støtte for enkelt og masseopplasting.";    
+} */

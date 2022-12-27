@@ -77,11 +77,12 @@ const Sidebar = () => {
                 data.companyLogo
                   ? data.companyLogo
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }  alt="" style={{ paddingTop: "5%"}}className="rounded mx-auto d-block rounded-circle mt-5" />
+              }  alt="" className="rounded mx-auto d-block rounded-circle mt-5" />
         </Link>
+        
       </div>
-    
-      <div className="center" style={{ paddingTop: "50px"}} >
+      <hr/>
+      <div className="center"  >
         <ul>
           <p className="title">MAIN</p>
           <Link to="/" style={{ textDecoration: "none" }}>
