@@ -1,12 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { AuthContext} from "../../context/AuthContext";
 import {
-  addDoc,
+  doc,
     collection,
-    serverTimestamp
+    serverTimestamp, setDoc
   } from "firebase/firestore";
-import { auth, db } from "../../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { auth, db, storage } from "../../firebase";
 import { RMIUploader } from "react-multiple-image-uploader";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import AddBoxIcon from '@mui/icons-material/AddBox';
@@ -14,7 +15,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import './registrationForm.css'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import Select from 'react-select';
-
+import { useForm, Controller } from "react-hook-form";
+import { str } from 'ajv';
+import { string } from 'yup';
+import MuiPhoneInput from 'material-ui-phone-number';
 function RegistrationForm({buttonName}) {
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
@@ -27,14 +31,28 @@ function RegistrationForm({buttonName}) {
   const [altinnData, setAltinnData] = useState([]);
   const [data2, setData2] = useState({});
   const [selectedOption, setSelectedOption] = useState([]);
-  
-
+  const [selectedCountry, setSelectedCountry] = useState([]);
+  const postsCollectionRef =collection(db, "enhetsRegisteret")
+  const [per, setPerc] = useState(null);
   const [hiddenInfoText, setShowInfoText] = useState(false);
-  const postsCollectionRef = collection(db, "company");
+  const [firstFormValidated, setFirstFormValidated] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [imageData, setImageData] = useState(['https://finetuneauto.com/wp-content/uploads/2021/02/auto-repair-service.jpg', 'https://finetuneauto.com/wp-content/uploads/2021/02/auto-repair-service.jpg']);
   const [showData, setShowData] = useState();
   const [file, setFile] = useState("");
+  const areAllFieldsFilled =(searchTerm !== '') & (searchTerm.length === 9)
+  const dataIsNotEmpty = (altinnData.length !== 0) & (areAllFieldsFilled !== true)
+
+  const userID = auth.currentUser.uid
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm();
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
   const options = [
     { label: "Bilverksted", value: "Bilverksted" },
     { label: "Reprasjon", value: "Reprasjon" },
@@ -42,6 +60,15 @@ function RegistrationForm({buttonName}) {
     { label: "Mekanikk", value: "Mekanikk" },
     { label: "Lakering", value: "Lakering" }
     
+];
+
+const countries = [
+  { label:"Norway",  value: "no" },
+  { label:"Sweden",  value: "se" },
+  { label:"Danmark",  value: "dk" },
+  { label:"Iceland",  value: "is" },
+  { label:"Finland",  value: "fi" }
+  
 ];
 
 
@@ -66,7 +93,44 @@ function RegistrationForm({buttonName}) {
   const handlePrevPage = () => setPage(page - 1);
 
 
+  useEffect(() => {
+    const uploadFile = () => {
+      const name = new Date().getTime() + file.name;
 
+      console.log(name);
+      const storageRef = ref(storage, file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          setPerc(progress);
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setData2((prev) => ({ ...prev, imageUrl: downloadURL }));
+          });
+        }
+      );
+    };
+    file && uploadFile();
+  }, [file]);
 
 const dataSources = [
   {
@@ -132,13 +196,12 @@ const dataSources = [
   };
 
   // Search in API
-  const handleSubmit = async event => {
+  const handleSubmit2 = async event => {
     event.preventDefault();
     fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
     .then(response => response.json())
     .then(data => {
       setAltinnData(data)
-      console.log(data.organisasjonsnummer)
       
       if(data.organisasjonsnummer !== '' || data.organisasjonsnummer !== undefined){
         return(
@@ -279,29 +342,27 @@ const dataSources = [
 
     const handleChange = async event => {
       setSearchTerm(event.target.value);
-     
+      
       
       }
-      
+
+
    const handleSelectedChange =  e =>{
-    const id = e.target.id;
-    const value = e.target.value;
     setSelectedOption({multiValue: [...e.target.selectedOptions].map(o => o.value)})
 
-    console.log(selectedOption)
    }
 
+   
+
     const handleAdd = async (e) => {
+      
       e.preventDefault();
       setRegisterButton(false)
       try {
 
-        await addDoc(postsCollectionRef, {
-
-          ...data2,
-          openingDays:[''],
-          openingHours:[''],
-          status:true,
+        await setDoc(doc(db, "enhetsRegisteret", userID),{
+          id:userID,
+          ...altinnData,
           createdAt: serverTimestamp(),
           uid:  auth.currentUser.uid,
         });
@@ -312,14 +373,46 @@ const dataSources = [
       }
     };
 
-    const handleInput = (e) => {
+    // useEffect(() =>{
+    //   const validated = async (e) => {
+    //     const id = e.target.id;
+    //     const value = e.target.value;
+       
+    //     const CEO = id.CEO.value;
+    //     console.log(CEO)
+    //   if(value  === null || value === ''){
+  
+    //     setFirstFormValidated(true)
+    //   }
+    //   else{
+    //     setFirstFormValidated(false)
+        
+    //   }
+  
+     
+  
+    //   };
+    //   validated();
+  
+    // },[])
+
+    const handleInput = async (e) => {
       const id = e.target.id;
       const value = e.target.value;
+      const name = e.target.name;
+      const f = e.target.form
+
+      console.log(f)
+   
+     
+     
+
 
       setData2({ ...data2, [id]:value})
 
 
     }
+
 
   return (
     <>
@@ -341,14 +434,16 @@ const dataSources = [
             <ProgressBar now={10} variant="success" style={{margin:'10px'}} label={`10%`}/>
               {/* First page of the form */}
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit2}>
     
     <div className="col-md-12" key='orgNumber'><label className="labels">Organisasjonsnummer</label>
-    <input type="text" id="orgNumber"  onChange={handleChange} className="form-control" placeholder="000000000" /></div>
+    <input type="number" id="orgNumber"  onChange={handleChange} className="form-control" placeholder="000000000" /></div>
     <div className='row'>
         <div className="col-md-12 mt-4 text-center">
-  <button type="submit" className="btn btn-primary profile-button">Hent data</button>
+  <button type="submit" className="btn btn-primary profile-button" disabled={!areAllFieldsFilled}>Hent data</button>
   </div></div>
+  </form>
+  <form onSubmit={handleAdd}>
 
 <div hidden={hiddenInfoText}>
   <h4 className='text-center' style={{margin:'30px'}}>Hvorfor data fra Enhetsregisteret?</h4>
@@ -363,7 +458,7 @@ const dataSources = [
     {showData}
     
     
-   
+    {/* <button type="submit" className="btn btn-primary profile-button">Save data</button> */}
     </form>
 
             </Modal.Body>
@@ -381,7 +476,7 @@ const dataSources = [
               <div className="col">
 
 
-              <Button style={{height:'auto', width:'100px'}} variant="primary" onClick={handleNextPage}>
+              <Button style={{height:'auto', width:'100px'}} variant="primary" disabled={!dataIsNotEmpty}  onClick={handleNextPage}>
                 Gå videre
               </Button>
               </div>
@@ -450,7 +545,7 @@ const dataSources = [
             <Modal.Body>
             <ProgressBar now={40} variant="success" style={{margin:'10px'}} label={`40%`}/>
             <div className="">
-        
+        <form onSubmit={handleSubmit(onSubmit)}>
         <div className="">
            
             <img 
@@ -479,41 +574,79 @@ const dataSources = [
         </div>
             <div className="row mt-2">
                 <div className="col-md-6" key='forgNumber'><label className="labels">Org. nummer</label>
-                <input type="text" id="orgNumber" readOnly className="form-control" value={searchTerm}  /></div>
+                <input type="text" id="orgNumber" style={{backgroundColor:'#dde2eb'}}readOnly className="form-control" value={searchTerm}  onChange={handleInput}/></div>
 
-                <div className="col-md-6" key='CEO'><label className="labels">Dagligleder</label>
-                <input type="text" id ="CEO" className="form-control"  placeholder="dagligleder ..." /></div>
+                <div className="col-md-6" key='CEOs'><label className="labels">Dagligleder</label>
+                <input type="text" {...register("ceo", { required: true })}   className="form-control"  id='CEO'  onChange={handleInput}/>
+                {errors.ceo && <p style={{color:'red'}}>Dagligleder: Dette feltet er obligatorisk!</p>}
+                </div>
+                
             </div>
             <div className="row mt-2">
                 <div className="col-md-6" key='dcompanyName'><label className="labels">Bedriftsnavn</label>
-                <input type="text" id="companyName" className="form-control" placeholder="bedriftsnavn ..." /></div>
+                <input type="text" id="companyName" {...register("companyName", { required: true })}   className="form-control" placeholder="bedriftsnavn ..." onChange={handleInput}/>
+                {errors.ceo && <p style={{color:'red'}}>Bedriftsnavn: Dette feltet er obligatorisk!</p>}
+                </div>
                 
                 <div className="col-md-6" key='email'><label className="labels">E-post</label>
-                <input  type="text" id="email" className="form-control" placeholder="epost ..."  /></div>
+                <input  type="email" id="email" {...register("email", {
+          required: "required",
+          pattern: {
+            value: /\S+@\S+\.\S+/,
+            message: "Entered value does not match email format"
+          }
+        })} className="form-control" placeholder="epost ..."  onChange={handleInput}/>
+        {errors.email && <span style={{color:'red'}} role="alert">E-post: Dette feltet er obligatorisk!</span>}
+        </div>
            </div>    
             <div className="row mt-2">
                 <div className="col-md-6" key='phoneNumber'><label className="labels">Telefon nummer</label>
-                <input  id ="phoneNumber"type="text" className="form-control" placeholder="telefon ..." /></div>
+                <MuiPhoneInput
+                id='phoneNumber'
+                {...register("phoneNumber", {
+                  required: true
+              })}
+  className="form-control"               
+  defaultCountry='no'
+  onlyCountries={['no', 'se', 'dk', 'is', 'fi']}
+/>
+{errors.phoneNumber && <p style={{color:'red'}}>Telefon nummber: Dette feltet er obligatorisk!</p>}
+                {/* <input  id ="phoneNumber" type="tel" placeholder="Telefon nummer" {...register("phone",  {required: true, pattern:[/^[0-9+-]+$/, /[^a-zA-Z]/], minLength: 8, maxLength: 12})}    onChange={handleInput}/>
+                {errors?.phone && errors.phone.message} */}
+          </div>
+
+          
                 
                 <div className="col-md-6" key='country'><label className="labels">Land</label>
-                <input type="text" id ="country"  className="form-control" placeholder="land ..."/></div>
+                
+                <Select 
+        placeholder='Velg land'
+        defaultValue={selectedCountry}
+        onChange={setSelectedCountry}
+        options={countries}
+        {...register("country", { required: true })} 
+  
+        id ="country"
+      />
+      {errors.country && <span style={{color:'red'}} role="alert">Land: Dette feltet er obligatorisk!</span>}
+      </div>
             </div>
             <div className="row mt-2">
                 <div className="col-md-6" key='saddress'><label className="labels">Adresse</label>
-                <input type="text" id ="address" className="form-control" placeholder="adresse ..."  /></div>
+                <input type="text" id ="address"  className="form-control" placeholder="adresse ..."  onChange={handleInput}/></div>
 
-                <div className="col-md-3" key='state'><label className="labels">Sted</label>
-                <input type="text" id ="state" className="form-control" placeholder="Oslo"  /></div>
+                <div className="col-md-3" key='city'><label className="labels">Sted</label>
+                <input type="text" id ="city"  className="form-control" placeholder="Oslo"  onChange={handleInput}/></div>
                 
                 <div className="col-md-3" key='dzipCode'><label className="labels">Postnummer</label>
-                <input type="text" id ="fzipCode" className="form-control" placeholder="0000" /></div>
+                <input type="text" id ="fzipCode"  className="form-control" placeholder="0000" onChange={handleInput}/></div>
             </div>    
             
       
 <div className="formInput" >
 <div className="row mt-2" key='tags'>
 <div className="col-md-12" ><label className="labels">Bransje</label>
-<Select
+<Select 
 placeholder='Legg til bransje'
         isMulti 
         defaultValue={selectedOption}
@@ -532,18 +665,20 @@ placeholder='Legg til bransje'
 
     <div className="" style={{margin:'10px'}}>
     <input  type="checkbox"  className="form-check-input " id="exampleCheck1"/>
-    <label style={{paddingLeft:'10px'}} className="col-md-3 form-check-label" key='bigCars'  htmlFor="exampleCheck1">Utfører arbeid for lastebiler?</label>
+    <label style={{paddingLeft:'10px'}} className="col-md-3 form-check-label" key='bigCars' onChange={handleInput} htmlFor="exampleCheck1">Utfører arbeid for lastebiler?</label>
     <input type="checkbox"  className="form-check-input" id="exampleCheck1"/>
-    <label style={{paddingLeft:'10px'}} className=" col-md-4 form-check-label" key='companies' htmlFor="exampleCheck1">Leverer du faste avtaler for bedrifter?</label>
+    <label style={{paddingLeft:'10px'}} className=" col-md-4 form-check-label" key='companies' onChange={handleInput} htmlFor="exampleCheck1">Leverer du faste avtaler for bedrifter?</label>
     </div>
 
               </div>
 
            
-            
+              
+
             
         </div>
-      
+        <button type="submit" className="btn btn-primary profile-button">Save data</button>
+        </form>
     </div>
             </Modal.Body>
             <Modal.Footer>
@@ -554,7 +689,7 @@ placeholder='Legg til bransje'
               </Button>
               </div>
               <div className="col">
-              <Button variant="primary" style={{height:'auto', width:'100px'}}  onClick={handleNextPage}>
+              <Button variant="primary" style={{height:'auto', width:'100px'}} disabled={firstFormValidated} onClick={handleNextPage}>
                 Gå videre
               </Button>
               </div></div>
