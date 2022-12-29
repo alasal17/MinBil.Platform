@@ -41,7 +41,15 @@ function RegistrationForm({buttonName}) {
   const [file, setFile] = useState("");
   const areAllFieldsFilled =(searchTerm !== '') & (searchTerm.length === 9)
   const dataIsNotEmpty = (altinnData.length !== 0) & (areAllFieldsFilled !== true)
-
+  const [industryData, setIndustryData] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState([]);
+  const [country, setCountry] = useState([]);
+  const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
+  const [openingsData, setOpeningsData] = useState([]);
+  const [socialMedia, setSocialMedia] = useState([]);
+  const [companiesAgreements, setCompaniesAgreements] = useState([]);
+  const [performsTrucks, setPerformsTrucks] = useState(false);
+  const [aboutUs, setAboutUs] = useState(false);
   const userID = auth.currentUser.uid
   const {
     register,
@@ -49,9 +57,9 @@ function RegistrationForm({buttonName}) {
     watch,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  // const onSubmit = (data) => {
+  //   console.log(data);
+  // };
 
   const options = [
     { label: "Bilverksted", value: "Bilverksted" },
@@ -173,14 +181,20 @@ const dataSources = [
 ];
   
 
+const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
+
 
    // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
     list[index][name] = value;
-    setInputList(list);
-    console(list)
+    list[index]['openingDays'] = weekDays[index];
+    setInputList([...inputList, {openingDays:"", openingHours:""}]);
+    // setInputList({'OpningDays':weekDays[index], 'OpningHours':e.target.value });
+
+    console.log(list)
+
   };
 
   // handle click event of the Remove button
@@ -191,8 +205,16 @@ const dataSources = [
   };
 
   // handle click event of the Add button
-  const handleAddClick = () => {
-    setInputList([...inputList, { openingDays: "", openingHours: "" }]);
+  const handleAddClick = (e) => {
+    if(inputList.length <= 6){
+      setInputList([...inputList, {openingDays:"", openingHours:""}]);
+      
+    }
+    else{
+      setHiddeAddIcon(true)
+      console.log('All seven days')
+    }
+    
   };
 
   // Search in API
@@ -373,43 +395,39 @@ const dataSources = [
       }
     };
 
-    // useEffect(() =>{
-    //   const validated = async (e) => {
-    //     const id = e.target.id;
-    //     const value = e.target.value;
-       
-    //     const CEO = id.CEO.value;
-    //     console.log(CEO)
-    //   if(value  === null || value === ''){
-  
-    //     setFirstFormValidated(true)
-    //   }
-    //   else{
-    //     setFirstFormValidated(false)
-        
-    //   }
-  
-     
-  
-    //   };
-    //   validated();
-  
-    // },[])
+    const handleAddCompanyInfo = async (e) => {
+      
+      e.preventDefault();
+      setRegisterButton(false)
+      try {
 
-    const handleInput = async (e) => {
+        await setDoc(doc(db, "company", userID),{
+          uid:userID,
+          ...data,
+          ...industryData,
+          ...country,
+          ...phoneNumber,
+          createdAt: serverTimestamp(),
+ 
+        });
+
+
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const handleInput = (e) => {
       const id = e.target.id;
       const value = e.target.value;
-      const name = e.target.name;
-      const f = e.target.form
 
-      console.log(f)
-   
-     
-     
+      setData({ ...data, [id]:value})
 
+  
+    }
 
-      setData2({ ...data2, [id]:value})
-
+    const checkData = async () =>{
+      console.log(phoneNumber)
 
     }
 
@@ -420,7 +438,7 @@ const dataSources = [
         {buttonName}
       </Button>
 
-      <form>
+ 
   <div>
       <Modal show={show} onHide={handleClose}>
         {page === 1 && (
@@ -545,8 +563,8 @@ const dataSources = [
             <Modal.Body>
             <ProgressBar now={40} variant="success" style={{margin:'10px'}} label={`40%`}/>
             <div className="">
-        <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="">
+        
+   
            
             <img 
               src={
@@ -557,13 +575,14 @@ const dataSources = [
               }
               alt="" className="rounded companyLogo mx-auto d-block rounded-circle mt-5" width="150px" 
             />
-            
+               <form onSubmit={handleSubmit(checkData)}>
                     {/* <span className="font-weight-bold">Bedriftslogo</span><span> </span> */}
                     <div className="col text-center" style={{paddingBottom:'20px'}}>
-                    
+                 
                     <label htmlFor="file" style={{paddingTop:'20px'}}>
                   Bilde: <CloudUploadOutlinedIcon className="icon" />
                 </label>
+  
                 <input
                 
                 type="file"
@@ -572,20 +591,22 @@ const dataSources = [
                 style={{ display: "none" }}
               />
         </div>
+        
+     
             <div className="row mt-2">
-                <div className="col-md-6" key='forgNumber'><label className="labels">Org. nummer</label>
+                <div className="col-md-6" key='orgNumber'><label className="labels">Org. nummer</label>
                 <input type="text" id="orgNumber" style={{backgroundColor:'#dde2eb'}}readOnly className="form-control" value={searchTerm}  onChange={handleInput}/></div>
 
-                <div className="col-md-6" key='CEOs'><label className="labels">Dagligleder</label>
-                <input type="text" {...register("ceo", { required: true })}   className="form-control"  id='CEO'  onChange={handleInput}/>
+                <div className="col-md-6" key='CEO'><label className="labels">Dagligleder</label>
+                <input type="text" {...register("CEO", { required: true })}   className="form-control"  id='CEO'  onChange={handleInput}/>
                 {errors.ceo && <p style={{color:'red'}}>Dagligleder: Dette feltet er obligatorisk!</p>}
                 </div>
                 
             </div>
             <div className="row mt-2">
-                <div className="col-md-6" key='dcompanyName'><label className="labels">Bedriftsnavn</label>
+                <div className="col-md-6" key='companyName'><label className="labels">Bedriftsnavn</label>
                 <input type="text" id="companyName" {...register("companyName", { required: true })}   className="form-control" placeholder="bedriftsnavn ..." onChange={handleInput}/>
-                {errors.ceo && <p style={{color:'red'}}>Bedriftsnavn: Dette feltet er obligatorisk!</p>}
+                {errors.companyName && <p style={{color:'red'}}>Bedriftsnavn: Dette feltet er obligatorisk!</p>}
                 </div>
                 
                 <div className="col-md-6" key='email'><label className="labels">E-post</label>
@@ -602,13 +623,12 @@ const dataSources = [
             <div className="row mt-2">
                 <div className="col-md-6" key='phoneNumber'><label className="labels">Telefon nummer</label>
                 <MuiPhoneInput
-                id='phoneNumber'
-                {...register("phoneNumber", {
-                  required: true
-              })}
-  className="form-control"               
-  defaultCountry='no'
-  onlyCountries={['no', 'se', 'dk', 'is', 'fi']}
+                name='phoneNumber'
+                // onChange={handleInput}
+                onChange={(value) => setPhoneNumber({'phoneNumber':value})}
+                className="form-control"               
+                defaultCountry='no'
+                onlyCountries={['no', 'se', 'dk', 'is', 'fi']}
 />
 {errors.phoneNumber && <p style={{color:'red'}}>Telefon nummber: Dette feltet er obligatorisk!</p>}
                 {/* <input  id ="phoneNumber" type="tel" placeholder="Telefon nummer" {...register("phone",  {required: true, pattern:[/^[0-9+-]+$/, /[^a-zA-Z]/], minLength: 8, maxLength: 12})}    onChange={handleInput}/>
@@ -622,64 +642,59 @@ const dataSources = [
                 <Select 
         placeholder='Velg land'
         defaultValue={selectedCountry}
-        onChange={setSelectedCountry}
+        onChange={(value) => setCountry({'country':value})}
         options={countries}
-        {...register("country", { required: true })} 
+        
   
-        id ="country"
+        name ="country"
       />
       {errors.country && <span style={{color:'red'}} role="alert">Land: Dette feltet er obligatorisk!</span>}
       </div>
             </div>
             <div className="row mt-2">
-                <div className="col-md-6" key='saddress'><label className="labels">Adresse</label>
-                <input type="text" id ="address"  className="form-control" placeholder="adresse ..."  onChange={handleInput}/></div>
+                <div className="col-md-6" key='address'><label className="labels">Adresse</label>
+                <input type="text" id ="address"  className="form-control" placeholder="Oslo Gate 33"  onChange={handleInput}/></div>
 
                 <div className="col-md-3" key='city'><label className="labels">Sted</label>
                 <input type="text" id ="city"  className="form-control" placeholder="Oslo"  onChange={handleInput}/></div>
                 
-                <div className="col-md-3" key='dzipCode'><label className="labels">Postnummer</label>
-                <input type="text" id ="fzipCode"  className="form-control" placeholder="0000" onChange={handleInput}/></div>
+                <div className="col-md-3" key='zipCode'><label className="labels">Postnummer</label>
+                <input type="text" id ="zipCode"  className="form-control" placeholder="1069" onChange={handleInput}/></div>
             </div>    
             
       
-<div className="formInput" >
-<div className="row mt-2" key='tags'>
+
+<div className="row mt-2" >
 <div className="col-md-12" ><label className="labels">Bransje</label>
 <Select 
 placeholder='Legg til bransje'
         isMulti 
         defaultValue={selectedOption}
-        onChange={setSelectedOption}
+        onChange={(value) => setIndustryData({'industry':value.map(c => c.value)})}
         options={options}
+        name='industry'
       />
-
-{/* <select multiple  className="form-control" id={options.value} onChange={(value) => setSelectedOption({'tags':value.map(c => c.value)}) } key={options.value} >
-{options.map((e) =>
-    <option id={e.value} value={e.value}  > {e.value}</option>
-    )}
-    </select> */}
     </div>
   
     </div> 
 
     <div className="" style={{margin:'10px'}}>
-    <input  type="checkbox"  className="form-check-input " id="exampleCheck1"/>
-    <label style={{paddingLeft:'10px'}} className="col-md-3 form-check-label" key='bigCars' onChange={handleInput} htmlFor="exampleCheck1">Utfører arbeid for lastebiler?</label>
-    <input type="checkbox"  className="form-check-input" id="exampleCheck1"/>
-    <label style={{paddingLeft:'10px'}} className=" col-md-4 form-check-label" key='companies' onChange={handleInput} htmlFor="exampleCheck1">Leverer du faste avtaler for bedrifter?</label>
+    <input  type="checkbox"  className="form-check-input " id="performsTrucks"  onChange={handleInput}/>
+    <label style={{paddingLeft:'10px'}} className="col-md-3 form-check-label" key='performsTrucks' htmlFor="exampleCheck1">Utfører arbeid for lastebiler?</label>
+    <input type="checkbox"  className="form-check-input" id="companiesAgreements" onChange={handleInput}/>
+    <label style={{paddingLeft:'10px'}} className=" col-md-4 form-check-label" key='companiesAgreements'  htmlFor="exampleCheck1">Leverer du faste avtaler for bedrifter?</label>
     </div>
 
-              </div>
+    
 
            
               
 
             
-        </div>
-        <button type="submit" className="btn btn-primary profile-button">Save data</button>
+     
+        <button type="submit"  className="btn btn-primary profile-button">Save data</button>
         </form>
-    </div>
+    </div>  
             </Modal.Body>
             <Modal.Footer>
             <div className="row ">
@@ -709,21 +724,21 @@ placeholder='Legg til bransje'
 
             <div className="row mt-2">
 
-<div className="col-md-3" key='website'><label className="labels">Nettside</label>
-<input type="text" id ="website" className="form-control" placeholder="www.nettside.no"  /></div>
+            <div className="col-md-3" key='website'><label className="labels">Nettside</label>
+            <input type="text" id ="website" defaultValue={"www.nettside.no" } className="form-control" onChange={(value) => setSocialMedia({'website':value})}/></div>
 
-<div className="col-md-3" key='instagram'><label className="labels">Instagram</label>
-<input type="text"  id ="instagram" className="form-control" placeholder="@instagram" /></div>
+            <div className="col-md-3" key='instagram'><label className="labels">Instagram</label>
+            <input type="text"  id ="instagram" className="form-control"  defaultValue={"@instagram" } onChange={(value) => setSocialMedia({'instagram':value})}/></div>
 
 
 
-<div className="col-md-3" key='facebook'><label className="labels">Facebook</label>
-<input type="text" id ="facebook" className="form-control" placeholder="www.facebook.com"  /></div>
+            <div className="col-md-3" key='facebook'><label className="labels">Facebook</label>
+            <input type="text" id ="facebook" className="form-control" defaultValue={"www.facebook.com" }  onChange={(value) => setSocialMedia({'facebook':value})}/></div>
 
-<div className="col-md-3" key='youtube'><label className="labels">Youtube</label>
-<input type="text" id ="youtube" className="form-control" placeholder="www.youtube.com"  /></div>
+            <div className="col-md-3" key='youtube'><label className="labels">Youtube</label>
+            <input type="text" id ="youtube" className="form-control" defaultValue={"www.youtube.com" }    onChange={(value) => setSocialMedia({'youtube':value})}/></div>
 
-</div>
+            </div>
 
 {inputList.map((x, i) => {
         return (
@@ -731,10 +746,11 @@ placeholder='Legg til bransje'
             <div className="col-md-5" key='openingDays'><label className="labels">Dag</label>
             <input
               name="openingDays"
-              placeholder="Dag eks. Mandag "
+         
               className='form-control'
-              value={x.openingDays}
+              value={weekDays[i]}
               onChange={e => handleInputChange(e, i)}
+           
             />
             </div>
             <div className="col-md-5" key='openingHours'><label className="labels">Åpnings- stengetid</label>
@@ -744,13 +760,14 @@ placeholder='Legg til bransje'
    placeholder="Åpningstid eks. 10:00-20:00"
               value={x.openingHours}
               onChange={e => handleInputChange(e, i)}
+              type='time'
             />
             </div>
             <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
               {inputList.length !== 1 && <DeleteIcon
                 className="mr10"
                 onClick={() => handleRemoveClick(i)}/>}
-              {inputList.length - 1 === i && <AddBoxIcon onClick={handleAddClick}/>}
+              {inputList.length - 1 === i && <AddBoxIcon hidden={hiddeAddIcon} onClick={handleAddClick}/>}
             </div>
           </div>
         );
@@ -823,7 +840,7 @@ placeholder='Legg til bransje'
           </>
          
         )}
-      </Modal></div> </form>
+      </Modal></div> 
     </>
   );
 }
