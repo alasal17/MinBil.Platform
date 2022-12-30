@@ -2,12 +2,12 @@
 // import 'devextreme/dist/css/dx.light.css';
 import Home from "./pages/home/Home";
 // import Register from "./pages/login/Register";
-// import EmployeesList from "./pages/list/EmployeesList";
-// import ServicesList from "./pages/list/ServicesList";
+import EmployeesList from "./pages/list/EmployeesList";
+import ServicesList from "./pages/list/ServicesList";
 import Sales from "./pages/sales/Sales";
-// import Single from "./pages/single/Single";
-// import AddServices from "./pages/new/AddServices";
-// import AddEvent from "./pages/new/AddEvent";
+import Single from "./pages/single/Single";
+import AddServices from "./pages/new/AddServices";
+import AddEvent from "./pages/new/AddEvent";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import {eventInput, serviceInputs } from "./formSource";
 import "./style/dark.scss";
@@ -21,11 +21,11 @@ import Profile from './pages/profile/Profile';
 import AuthPage from "./pages/login/AuthPage";
 
 
-const EmployeesList = React.lazy(() => import("./pages/list/EmployeesList"));
-const ServicesList = React.lazy(() => import("./pages/list/ServicesList"));
-const Single = React.lazy(() => import("./pages/single/Single"));
-const AddServices = React.lazy(() => import("./pages/new/AddServices"));
-const AddEvent = React.lazy(() => import("./pages/new/AddEvent"));
+// const EmployeesList = React.lazy(() => import("./pages/list/EmployeesList"));
+// const ServicesList = React.lazy(() => import("./pages/list/ServicesList"));
+// const Single = React.lazy(() => import("./pages/single/Single"));
+// const AddServices = React.lazy(() => import("./pages/new/AddServices"));
+// const AddEvent = React.lazy(() => import("./pages/new/AddEvent"));
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
