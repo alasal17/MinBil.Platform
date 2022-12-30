@@ -22,7 +22,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import MuiPhoneInput from "material-ui-phone-number";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -40,7 +40,7 @@ function RegistrationForm({ buttonName }) {
     { openingDays: "", openingHours: "" },
   ]);
   const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
-  const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
+  const [enhetsRegisteretDB, setEnhetsRegisteretDB] = useState([]);
   const [data2, setData2] = useState({});
   const [selectedOption, setSelectedOption] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState([]);
@@ -51,8 +51,7 @@ function RegistrationForm({ buttonName }) {
   const [visible, setVisible] = useState(false);
   const [showData, setShowData] = useState();
   const [file, setFile] = useState("");
-  const areAllFieldsFilled = (!(searchTerm === "") & !(searchTerm === undefined));
-  const dataIsNotEmpty = (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true);
+  
   const [industryData, setIndustryData] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [country, setCountry] = useState([]);
@@ -64,8 +63,11 @@ function RegistrationForm({ buttonName }) {
   const [companiesAgreements, setCompaniesAgreements] = useState(false);
   const [performsTrucks, setPerformsTrucks] = useState(false);
   const [aboutUs, setAboutUs] = useState(false);
-
+  const [enhetsRegisteretAPIDataSaved, setEnhetsRegisteretAPIDataSaved] = useState([]);
+  const  [requestFailed, setRequestFailed] = useState(true);
   const userID = auth.currentUser.uid;
+  const areAllFieldsFilled = (!(searchTerm === "") & !(searchTerm === undefined));
+  const dataIsNotEmpty = (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true) & (enhetsRegisteretAPIData.status !== 400);
   const {
     register,
     handleSubmit,
@@ -227,7 +229,7 @@ function RegistrationForm({ buttonName }) {
           }
         });
 
-        setEnhetsRegisteretData(list);
+        setEnhetsRegisteretDB(list);
       },
 
       (error) => {
@@ -324,10 +326,12 @@ function RegistrationForm({ buttonName }) {
 
 
       console.log(enhetsRegisteretAPIData.uid);
-      if (enhetsRegisteretData.organisasjonsnummer === searchTerm) {
+      
+      if (enhetsRegisteretDB.organisasjonsnummer === searchTerm) {
         console.log("organisasjonsnummer already exists in db!");
         setShowInfoText(true);
         setPage(page);
+        
         
         // setTimeout(() =>{
         //   setShowData('')
@@ -353,7 +357,7 @@ function RegistrationForm({ buttonName }) {
         );
       }
 
-      if (enhetsRegisteretData.uid === userID) {
+      if (enhetsRegisteretDB.uid === userID) {
         console.log("User has user registered");
         setShowInfoText(true);
         setPage(2);
@@ -365,7 +369,7 @@ function RegistrationForm({ buttonName }) {
             <div className=" border-right">
               <h1 className="errorTitle">
                 Denne brukeren har eksisterer en organisasjonsnummer tidligere:{" "}
-                {enhetsRegisteretData.organisasjonsnummer}!
+                {enhetsRegisteretDB.organisasjonsnummer}!
               </h1>
               <div>
                 <p className="errorBody">
@@ -377,23 +381,51 @@ function RegistrationForm({ buttonName }) {
         );
       } else {
         try {
+
           
-          setPage(page + 1);
+          
           setDoc(doc(db, "enhetsRegisteret", userID), {
             uid: userID,
             ...enhetsRegisteretAPIData,
             createdAt: serverTimestamp(),
           });
-
           console.log("Data fra enhetregisteret er lageret i database!");
+          setEnhetsRegisteretAPIDataSaved(
+            <div>
+              
+              <div className="row">
+                <div className=" border-right">
+                  <div className="alert alert-success" role="alert">
+                    <span className="text-center">
+                      <h1>Velkommen!</h1>
+                      <p>{}</p>
+                      <p style={{fontWeight:' 800'}}>
+                      Nå er ditt organisasjonsnummer {searchTerm} registeret i vårt system.
+                      </p>
+                    </span>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+            )
+          return(
+            
+            setTimeout(() => {
+              setPage(page + 1)}, 5000)
+          )
+          
         } catch (err) {
           console.log(err);
         }
       }
    
   };
+  const handleNextPage =() => {
+    setPage(page + 1);
+  }
 
-  const handleNextPage = () => {
+  const handlePageFourNextPage = () => {
     if (socialMedia.youtube === undefined) {
       setSocialMedia({ ...socialMedia, youtube: null });
     } else {
@@ -454,14 +486,15 @@ function RegistrationForm({ buttonName }) {
   // Search in API
   const handleAPIRequesest = async (event) => {
     event.preventDefault();
+    // console.log('Enhetsregisteret API call, SearchTerm: ', {searchTerm})
     fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
       .then((response) => response.json())
       .then((data) => {
         setEnhetsRegisteretAPIData(data);
-        console.log(enhetsRegisteretData)
-        if (data.organisasjonsnummer !== "" || data.organisasjonsnummer !== undefined) {
-          console.log('data.organisasjonsnummer !== "" || data.organisasjonsnummer !== undefined')
-
+        
+        if (data.status !== 400 ) {
+          console.log('<---- data.organisasjonsnummer !== "" || data.organisasjonsnummer !== undefined ----> ')
+         
           return setShowData(
             <div className="row">
               <div className=" border-right">
@@ -475,6 +508,7 @@ function RegistrationForm({ buttonName }) {
                         readOnly
                         className="form-control"
                         value={data.navn}
+                        onChange={handleInput}
                       />
                     </div>
                     <div className="col-md-5">
@@ -528,7 +562,7 @@ function RegistrationForm({ buttonName }) {
                         id="businessStreetAddress"
                         readOnly
                         className="form-control"
-                        value={data.forretningsadresse.adresse[0]}
+                        value={data.forretningsadresse.adresse.map((e) => e)}
                         onChange={handleInput}
                       />
                     </div>
@@ -561,16 +595,48 @@ function RegistrationForm({ buttonName }) {
               </div>
             </div>
           );
-        } else {
+        }
+        if(searchTerm.length > 9 || searchTerm.length < 9)
+        {
+          console.log(`Organisasjonsnummer skal inneholde 9-siffer. Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen.`)
+
+          return setShowData(
+            <div className="row">
+              <div className=" border-right">
+              <div className="alert alert-danger" role="alert">
+              <span className="text-center">
+                <h1>Noe gikk galt!</h1><p>Status kode: {data.status}</p>
+                <p style={{fontWeight:' 800'}}>
+                  Organisasjonsnummer skal inneholde 9-siffer, du tastet {searchTerm.length}-siffer.<br/> Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
+                  igjen.<br/>
+                  
+                </p>
+                </span>
+                </div>
+                
+                
+            
+                
+                
+              </div>
+            </div>
+          );
+        }
+       
+        else {
           console.log('Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen.')
           return setShowData(
             <div className="row">
               <div className=" border-right">
-                <h1>Noe gikk galt!</h1>
-                <p>
+              <div className="alert alert-danger" role="alert">
+              <span className="text-center">
+                <h1>Noe gikk galt!</h1><p>Status kode: {data.status}</p>
+                <p style={{fontWeight:' 800'}}>
                   Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
                   igjen.
                 </p>
+                </span>
+                </div>
               </div>
             </div>
           );
@@ -578,16 +644,28 @@ function RegistrationForm({ buttonName }) {
       })
       .catch((error) => {
         setShowInfoText(true);
-        return setShowData(
-          <div className="row">
-            <div className=" border-right">
-              <h1 className="error">Noe gikk galt!</h1>
-              <p className="text-center ">
-                Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
-                igjen. {searchTerm}
-              </p>
+  
+        console.log('Organisasjonsnummer eksisterer ikke.')
+          return setShowData(
+            <div className="row">
+              <div className=" border-right">
+              <div className="alert alert-danger" role="alert">
+              <span className="text-center">
+                <h1>Noe gikk galt!</h1><p>Status kode: {data.status}</p>
+                <p style={{fontWeight:' 800'}}>
+                  Organisasjonsnummer eksisterer ikke. Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
+                  igjen. - {searchTerm}
+                </p>
+                </span>
+                </div>
+                
+                
+            
+                
+                
+              </div>
             </div>
-          </div>
+          
         );
       });
   };
@@ -633,6 +711,8 @@ function RegistrationForm({ buttonName }) {
         ...socialMedia,
         ...companiesAgreements,
         ...performsTrucks,
+        images:imagesData,
+        companyLogo: data.companyLogo ?? "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg",
 
         createdAt: serverTimestamp(),
       });
@@ -657,9 +737,6 @@ function RegistrationForm({ buttonName }) {
     setData({ ...data, [id]: value });
   };
 
-  const checkData = async () => {
-    console.log(phoneNumber);
-  };
 
   return (
     <>
@@ -722,7 +799,7 @@ function RegistrationForm({ buttonName }) {
                   </div>
 
                   {showData}
-
+                  
                   {/* <button type="submit" className="btn btn-primary profile-button">Save data</button> */}
                 </form >
               </Modal.Body>
@@ -867,14 +944,14 @@ function RegistrationForm({ buttonName }) {
 
                     <div className="row mt-2">
                       <div className="col-md-6" key="orgNumber">
-                        <label className="labels">Org. nummer</label>
+                        <label className="labels">Organisasjonsnummer</label>
                         <input
                           type="text"
                           id="orgNumber"
                           style={{ backgroundColor: "#dde2eb" }}
                           readOnly
                           className="form-control"
-                          value={searchTerm}
+                          value={searchTerm }
                           onChange={handleInput}
                         />
                       </div>
@@ -883,6 +960,7 @@ function RegistrationForm({ buttonName }) {
                         <label className="labels">Dagligleder</label>
                         <input
                           type="text"
+                          placeholder="Ola Nordmann"
                           {...register("CEO", { required: true })}
                           className="form-control"
                           id="CEO"
@@ -903,7 +981,7 @@ function RegistrationForm({ buttonName }) {
                           id="companyName"
                           {...register("companyName", { required: true })}
                           className="form-control"
-                          placeholder="bedriftsnavn ..."
+                          placeholder="Bilpleie AS"
                           onChange={handleInput}
                         />
                         {errors.companyName && (
@@ -927,7 +1005,7 @@ function RegistrationForm({ buttonName }) {
                             },
                           })}
                           className="form-control"
-                          placeholder="epost ..."
+                          placeholder="post@bilpleie.no"
                           onChange={handleInput}
                         />
                         {errors.email && (
@@ -941,20 +1019,14 @@ function RegistrationForm({ buttonName }) {
                       <div className="col-md-6" key="phoneNumber">
                         <label className="labels">Telefon nummer</label>
                         <MuiPhoneInput
-                          name="phoneNumber"
-                          // onChange={handleInput}
-                          onChange={(value) =>
-                            setPhoneNumber({ phoneNumber: value })
-                          }
+                         // onChange={handleInput}
+                          onChange={(value) => setPhoneNumber({ value })}
                           className="form-control"
                           defaultCountry="no"
                           onlyCountries={["no", "se", "dk", "is", "fi"]}
+                          
                         />
-                        {errors.phoneNumber && (
-                          <p style={{ color: "red" }}>
-                            Telefon nummber: Dette feltet er obligatorisk!
-                          </p>
-                        )}
+                       
                         {/* <input  id ="phoneNumber" type="tel" placeholder="Telefon nummer" {...register("phone",  {required: true, pattern:[/^[0-9+-]+$/, /[^a-zA-Z]/], minLength: 8, maxLength: 12})}    onChange={handleInput}/>
                 {errors?.phone && errors.phone.message} */}
                       </div>
@@ -964,50 +1036,69 @@ function RegistrationForm({ buttonName }) {
 
                         <Select
                           placeholder="Velg land..."
-                          defaultValue={countries.value}
+                          defaultValue={countries[0]}
                           onChange={(value) => setCountry({ country: value })}
                           options={countries}
                           name="country"
+                          id="country"
+                          closeMenuOnSelect={true}
                         />
-                        {errors.country && (
-                          <span style={{ color: "red" }} role="alert">
-                            Land: Dette feltet er obligatorisk!
-                          </span>
-                        )}
+                       
                       </div>
                     </div>
                     <div className="row mt-2">
                       <div className="col-md-6" key="address">
                         <label className="labels">Adresse</label>
                         <input
+                        {...register("address", { required: true })}
                           type="text"
                           id="address"
+                          name="address"
                           className="form-control"
                           placeholder="Oslo Gate 33"
                           onChange={handleInput}
                         />
+                        {errors.country && (
+                          <span style={{ color: "red" }} role="alert">
+                            Adresse: Dette feltet er obligatorisk!
+                          </span>
+                        )}
                       </div>
 
                       <div className="col-md-3" key="city">
                         <label className="labels">Sted</label>
                         <input
+                        {...register("city", { required: true })}
                           type="text"
                           id="city"
+                          name="city"
                           className="form-control"
                           placeholder="Oslo"
                           onChange={handleInput}
                         />
+                        {errors.country && (
+                          <span style={{ color: "red" }} role="alert">
+                            Sted: Dette feltet er obligatorisk!
+                          </span>
+                        )}
                       </div>
 
                       <div className="col-md-3" key="zipCode">
                         <label className="labels">Postnummer</label>
                         <input
+                        {...register("zipCode", { required: true })}
                           type="text"
                           id="zipCode"
+                          name="zipCode"
                           className="form-control"
                           placeholder="1069"
                           onChange={handleInput}
                         />
+                        {errors.country && (
+                          <span style={{ color: "red" }} role="alert">
+                            Postnummer: Dette feltet er obligatorisk!
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -1016,6 +1107,7 @@ function RegistrationForm({ buttonName }) {
                         <label className="labels">Bransje</label>
 
                         <Select
+                        // {...register("industry", { required: true })}
                           placeholder="Legg til bransje"
                           isMulti
                           defaultValue={selectedOption}
@@ -1026,7 +1118,13 @@ function RegistrationForm({ buttonName }) {
                           }
                           options={options}
                           name="industry"
+                          id='industry'
                         />
+                        {/* {errors.country && (
+                          <span style={{ color: "red" }} role="alert">
+                            Bransje: Dette feltet er obligatorisk!
+                          </span>
+                        )} */}
                       </div>
                     </div>
 
@@ -1099,7 +1197,7 @@ function RegistrationForm({ buttonName }) {
                 />
 
                 <div className="row mt-2">
-                  <div className="col-md-3" key="website">
+                  <div className="col-md-3" >
                     <label className="labels">Nettside</label>
                     <input
                       type="text"
@@ -1110,7 +1208,7 @@ function RegistrationForm({ buttonName }) {
                     />
                   </div>
 
-                  <div className="col-md-3" key="instagram">
+                  <div className="col-md-3" >
                     <label className="labels">Instagram</label>
                     <input
                       type="text"
@@ -1121,7 +1219,7 @@ function RegistrationForm({ buttonName }) {
                     />
                   </div>
 
-                  <div className="col-md-3" key="facebook">
+                  <div className="col-md-3" >
                     <label className="labels">Facebook</label>
                     <input
                       type="text"
@@ -1132,7 +1230,7 @@ function RegistrationForm({ buttonName }) {
                     />
                   </div>
 
-                  <div className="col-md-3" key="youtube">
+                  <div className="col-md-3">
                     <label className="labels">Youtube</label>
                     <input
                       type="text"
@@ -1147,7 +1245,7 @@ function RegistrationForm({ buttonName }) {
                 {inputList.map((x, i) => {
                   return (
                     <div className="row mt-2">
-                      <div className="col-md-2" key="openingDays">
+                      <div className="col-md-2" key={i}>
                         <input
                           name="openingDays"
                           style={{ height: "55px", textAlign: "center" }}
@@ -1159,7 +1257,7 @@ function RegistrationForm({ buttonName }) {
                       </div>
 
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <div className="col-md-5" key="openingHours">
+                        <div className="col-md-5" key={x}>
                           <label className="labels"></label>
 
                           <TimePicker
@@ -1174,7 +1272,7 @@ function RegistrationForm({ buttonName }) {
                             maxTime={dayjs("2022-04-07T10:15")}
                           />
                         </div>
-                        <div className="col-md-5" key="openingHours">
+                        <div className="col-md-5" >
                           <label className="labels"></label>
                           <TimePicker
                             renderInput={(params) => <TextField {...params} />}
@@ -1201,12 +1299,12 @@ function RegistrationForm({ buttonName }) {
               type='time'
             /> */}
 
-                      {/* <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
+                       <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
               {inputList.length !== 1 && <DeleteIcon
                 className="mr10"
                 onClick={() => handleRemoveClick(i)}/>}
               {inputList.length - 1 === i && <AddBoxIcon hidden={hiddeAddIcon} onClick={handleAddClick}/>}
-            </div> */}
+            </div> 
                     </div>
                   );
                 })}
@@ -1222,7 +1320,7 @@ function RegistrationForm({ buttonName }) {
                     <Button
                       variant="primary"
                       style={{ height: "auto", width: "100px" }}
-                      onClick={handleNextPage}
+                      onClick={handlePageFourNextPage}
                     >
                       Gå videre
                     </Button>
@@ -1232,6 +1330,61 @@ function RegistrationForm({ buttonName }) {
             </>
           )}
           {page === 5 && (
+            <>
+              <Modal.Header closeButton>
+                <Modal.Title>Register bedriftsinformasjon 3/3</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <ProgressBar
+                  now={100}
+                  variant="success"
+                  style={{ margin: "10px" }}
+                  label={`100%`}
+                />
+
+                <div className="row mt-3">
+                  <div className="col-md" key="about">
+                    <label className="labels">Om oss</label>
+                    <textarea
+                      type="text"
+                      className="form-control"
+                      style={{ height: "200px" }}
+                      placeholder="Om oss ...."
+                      id="about"
+                      onChange={(e) => setAboutUs(e.value)}
+                    />
+                  </div>
+                </div>
+
+                <RMIUploader
+                  isOpen={visible}
+                  hideModal={hideModal}
+                  onSelect={onUpload}
+                  onUpload={onUpload}
+                  onRemove={onRemove}
+                  dataSources={dataSources}
+                  onChange={onUpload}
+                />
+              </Modal.Body>
+              <div className="row mt-2">
+                <Modal.Footer>
+                  <div className="row ">
+                    <div className="col">
+                      <Button variant="secondary" onClick={handlePrevPage}>
+                        Tilbake
+                      </Button>
+                    </div>
+                    <div className="col">
+                      <Button onClick={handleAddCompanyInfo} variant="success">
+                        Lager
+                      </Button>
+                    </div>
+                  </div>
+                </Modal.Footer>
+              </div>
+            </>
+          )}
+          {page === 6 && (
             <>
               <Modal.Header closeButton>
                 <Modal.Title>Register bedriftsinformasjon 3/3</Modal.Title>
