@@ -14,8 +14,18 @@ p{
     align-items: center;
 }
 
-.error{
+.errorTitle{
     color: red;
+    text-align: center;
+}
+
+.errorBody{
+    color: black;
+    text-align: center;
+}
+
+ant-image-img{
+    height: 200px;
 }
 /* p.ant-upload-text{
     visibility: hidden;
@@ -37,7 +47,7 @@ p{
 }
 
 
-
+.
 
 
 .ant-upload-hint::before{

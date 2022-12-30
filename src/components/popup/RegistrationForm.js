@@ -4,7 +4,7 @@ import { AuthContext} from "../../context/AuthContext";
 import {
   doc,
     collection,
-    serverTimestamp, setDoc
+    serverTimestamp, setDoc, onSnapshot
   } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "../../firebase";
@@ -16,19 +16,28 @@ import './registrationForm.css'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import Select from 'react-select';
 import { useForm, Controller } from "react-hook-form";
-import { str } from 'ajv';
-import { string } from 'yup';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import MuiPhoneInput from 'material-ui-phone-number';
+import { useNavigate } from "react-router-dom";
+import dayjs from 'dayjs';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+
 function RegistrationForm({buttonName}) {
+
+  const [date, setDate] = React.useState(dayjs('2022-04-07T10:15'));
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
-
+  const navigate = useNavigate()
   const [data, setData] = useState({});
   const {currentUser} = useContext(AuthContext)
   const [searchTerm, setSearchTerm] = useState('');
   const [registerButton, setRegisterButton] = useState(false)
   const [inputList, setInputList] = useState([{ openingDays: "", openingHours: "" }]);
   const [altinnData, setAltinnData] = useState([]);
+  const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
   const [data2, setData2] = useState({});
   const [selectedOption, setSelectedOption] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState([]);
@@ -46,10 +55,13 @@ function RegistrationForm({buttonName}) {
   const [country, setCountry] = useState([]);
   const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
   const [openingsData, setOpeningsData] = useState([]);
-  const [socialMedia, setSocialMedia] = useState([]);
-  const [companiesAgreements, setCompaniesAgreements] = useState([]);
+  const [imagesData, setImagesData] = useState([]);
+  const [tempImagesData, setTempImagesData] = useState([]);
+  const [socialMedia, setSocialMedia] = useState({});
+  const [companiesAgreements, setCompaniesAgreements] = useState(false);
   const [performsTrucks, setPerformsTrucks] = useState(false);
   const [aboutUs, setAboutUs] = useState(false);
+
   const userID = auth.currentUser.uid
   const {
     register,
@@ -67,79 +79,17 @@ function RegistrationForm({buttonName}) {
     { label: "Bilpleie", value: "Bilpleie" },
     { label: "Mekanikk", value: "Mekanikk" },
     { label: "Lakering", value: "Lakering" }
-    
+
 ];
 
 const countries = [
-  { label:"Norway",  value: "no" },
-  { label:"Sweden",  value: "se" },
+  { label:"Norge",  value: "no" },
+  { label:"Svergie",  value: "se" },
   { label:"Danmark",  value: "dk" },
-  { label:"Iceland",  value: "is" },
+  { label:"Island",  value: "is" },
   { label:"Finland",  value: "fi" }
-  
+
 ];
-
-
-  const hideModal = () => {
-    setVisible(false);
-  };
-  const onUpload = (data) => {
-    console.log("Upload files", data);
-    setData(data);
-  };
-  const onSelect = (data) => {
-    console.log("Select files", data);
-  };
-  const onRemove = (id) => {
-    console.log("Remove image id", id);
-  };
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  const handleNextPage = () => setPage(page + 1);
-  const handlePrevPage = () => setPage(page - 1);
-
-
-  useEffect(() => {
-    const uploadFile = () => {
-      const name = new Date().getTime() + file.name;
-
-      console.log(name);
-      const storageRef = ref(storage, file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setPerc(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData2((prev) => ({ ...prev, imageUrl: downloadURL }));
-          });
-        }
-      );
-    };
-    file && uploadFile();
-  }, [file]);
-
 const dataSources = [
   {
     id: 1,
@@ -179,10 +129,328 @@ const dataSources = [
   },
 
 ];
-  
+
 
 const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
 
+
+  const hideModal = () => {
+    setVisible(false);
+  };
+  const onUpload = async (data) => {
+    // console.log("Upload files", data.map((item) => item.dataURL));
+    let list = [];
+    let list2 = [];
+ 
+
+    // console.log(data)
+  
+
+    data.map((e) =>{
+
+    if(e.img ){
+      
+      if(!list.includes(e.img.id)){
+        console.log('Not temp images')
+        list2.push(e.img.id)
+        list2.push(e.dataURL)
+        setImagesData({...imagesData, images:list2})
+      }else{
+        console.log('Not temp images In list')
+      }
+      
+    }
+    if(e.file){
+      if(!imagesData.includes(e.file.name) ){
+      list.push(e.file.name)
+      console.log('Temp images is in list')
+    }
+      else{
+        console.log('Temp images')
+        console.log(list.includes(e.file.name))
+        list.push(e.file.name)
+        // list2.push(e.dataURL)
+        setImagesData([...imagesData,e.dataURL])
+      }
+    }
+    else{
+      console.log('someting else')
+      console.log(e.file)
+      console.log(list)
+    }
+
+    
+  })
+
+    
+    // 
+    // setImagesData([data.map(e => e.dataURL)])
+    
+
+    
+
+
+    // await setImagesData(...imagesData, [data.map((e) => e.index)]);
+    console.log('OWN DATA', imagesData)
+    // console.log("Image Data", imagesData);
+    
+  };
+  // const onSelect = async (data) => {
+  //   await setImagesData(...imagesData, data);
+  //   console.log(imagesData)
+  // };
+  const onRemove = (id) => {
+    console.log("Remove image id", id);
+  };
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  useEffect(() => {
+    // LISTEN (REALTIME)
+
+
+    const unsub = onSnapshot(
+
+      collection(db, "enhetsRegisteret"),
+      (snapShot) => {
+        let list = [];
+
+
+          snapShot.docs.forEach((doc) => {
+
+            list.push({id: doc.id, ...doc.data()});
+          //   if(doc.id === userID){
+          //     list.push({id: doc.id, ...doc.data()});
+          // }
+
+          if(doc.id === userID){
+            setPage(2)
+            setSearchTerm(doc.data().organisasjonsnummer)
+          }
+
+          });
+
+        setEnhetsRegisteretData(list);
+
+        
+      },
+
+      (error) => {
+        console.log(error);
+
+      }
+    );
+
+    return () => {
+      unsub();
+    };
+
+
+  },[]);
+
+
+  useEffect(() => {
+
+
+    const uploadFile = () => {
+      const name = new Date().getTime() + file.name;
+
+      console.log(name);
+      const storageRef = ref(storage, file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          setPerc(progress);
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setData((prev) => ({ ...prev, companyLogo: downloadURL }));
+          });
+        }
+      );
+    };
+    file && uploadFile();
+  }, [file]);
+
+
+  // useEffect(() => {
+
+
+  //   const uploadFile = () => {
+  //     const name = new Date().getTime() + file.name;
+
+  //     console.log(name);
+  //     const storageRef = ref(storage, file.name);
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
+
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         const progress =
+  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //         console.log("Upload is " + progress + "% done");
+  //         setPerc(progress);
+  //         switch (snapshot.state) {
+  //           case "paused":
+  //             console.log("Upload is paused");
+  //             break;
+  //           case "running":
+  //             console.log("Upload is running");
+  //             break;
+  //           default:
+  //             break;
+  //         }
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  //           setData2((prev) => ({ ...prev, companyLogo: downloadURL }));
+  //         });
+  //       }
+  //     );
+  //   };
+  //   file && uploadFile();
+  // }, [file]);
+
+  const handleEnhetregisteretNextPage = async () => {
+    setRegisterButton(false)
+
+    enhetsRegisteretData.map( async (e) => {
+
+
+      if(e.organisasjonsnummer === searchTerm){
+        console.log('organisasjonsnummer already exists in db!')
+        setShowInfoText(true)
+        setPage(page)
+        // setTimeout(() =>{
+        //   setShowData('')
+        // },1000)
+        return(
+
+          setShowData(<div className="row">
+
+        <div className=" border-right">
+      <h1 className='errorTitle'>Denne organisasjonsnummer eksisterer i vårt system!</h1>
+
+      <div >
+      <p className='errorBody'>Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen. - {searchTerm}</p>
+      <p className='errorBody'>Ta kontakt med oss dersom du lurer på noe.</p>
+      </div>
+        </div>
+            </div>
+            )
+        )
+
+
+  }
+
+  if(e.uid === userID){
+    console.log('User has user registered')
+    setShowInfoText(true)
+    setPage(2)
+    // setTimeout(() =>{
+    //   setShowData('')
+    // },1000)
+    return(
+
+      setShowData(<div className="row">
+
+    <div className=" border-right">
+  <h1 className='errorTitle'>Denne brukeren har eksisterer en organisasjonsnummer tidligere: {enhetsRegisteretData.organisasjonsnummer}!</h1>
+  <div >
+  <p className='errorBody'>Ta kontakt med oss dersom du lurer på noe.</p>
+  </div>
+    </div>
+        </div>)
+    )
+
+  }
+  else{
+    try {
+
+      await setDoc(doc(db, "enhetsRegisteret", userID),{
+        uid:userID,
+        ...altinnData,
+        createdAt: serverTimestamp(),
+
+      });
+
+      setPage(page + 1)
+      console.log("Data fra enhetregisteret er lageret i database!")
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+    })
+
+
+
+
+
+  };
+
+  const handleNextPage = () => {
+
+    
+
+
+    if(socialMedia.youtube === undefined){
+      setSocialMedia({...socialMedia, 'youtube': null})
+    }else{
+      console.log('')
+    }
+
+
+    if(socialMedia.facebook === undefined){
+      setSocialMedia({...socialMedia, 'facebook': null})
+    }else{
+      console.log('')
+    }
+
+
+    if(socialMedia.instagram === undefined){
+      setSocialMedia({...socialMedia, 'instagram': null})
+    }else{
+      console.log('')
+    }
+
+
+    if(socialMedia.website === undefined){
+      setSocialMedia({...socialMedia, 'website': null})
+    }else{
+      console.log('')
+    }
+
+
+
+
+
+
+    setPage(page + 1)
+  };
+  const handlePrevPage = () => setPage(page - 1);
 
    // handle input change
   const handleInputChange = (e, index) => {
@@ -208,13 +476,13 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
   const handleAddClick = (e) => {
     if(inputList.length <= 6){
       setInputList([...inputList, {openingDays:"", openingHours:""}]);
-      
+
     }
     else{
       setHiddeAddIcon(true)
       console.log('All seven days')
     }
-    
+
   };
 
   // Search in API
@@ -224,77 +492,77 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
     .then(response => response.json())
     .then(data => {
       setAltinnData(data)
-      
+
       if(data.organisasjonsnummer !== '' || data.organisasjonsnummer !== undefined){
         return(
           setShowData(<div className="row">
-         
-          
-          
+
+
+
         <div className=" border-right">
-  
-  
+
+
   <div className="p-3 py-5">
-              
-                
+
+
   <div className="row mt-2">
-  
+
     <div className="col-md-7">
       <label className="labels" >Bedriftsnavn</label>
     <input type="text" id ="companyName" readOnly className="form-control"  value={data.navn}/>
     </div>
-  
+
     <div className="col-md-5">
       <label className="labels" >Registreringsdato Enhetsregisteret</label>
     <input  type="text" id="registrationDate" readOnly className="form-control"   value={data.registreringsdatoEnhetsregisteret}/>
     </div>
-  
+
   </div>
-  
+
   <div className="row mt-2">
-  
+
     <div className="col-md-7">
       <label className="labels">Virksomheten beskrivelse Form</label>
     <input type="text" id ="businessCodeDescription" readOnly className="form-control"  value={data.naeringskode1.beskrivelse} onChange={handleInput}/>
-    </div> 
-  
+    </div>
+
      <div className="col-md-5">
       <label className="labels" >Virksomheten kode</label>
     <input  type="text" id="businessCode" readOnly className="form-control"  value={data.naeringskode1.kode} onChange={handleInput}/>
     </div>
-  
+
   </div>
-  
+
   <div className="row mt-2">
-  
+
     <div className="col-md-5">
       <label className="labels" >Forettingsadresse</label>
     <input type="text" id ="businessStreetAddress" readOnly className="form-control"   value={data.forretningsadresse.adresse[0]}/>
     </div>
-  
+
     <div className="col-md-3">
       <label className="labels"  >Postnummer</label>
     <input  type="text" id="zipCode" className="form-control"  readOnly  value={data.forretningsadresse.postnummer}/>
     </div>
-  
+
     <div className="col-md-4">
       <label className="labels" >Post sted</label>
     <input  type="text" id="city" className="form-control" readOnly value={data.forretningsadresse.poststed}/>
     </div>
-  
+
   </div>
-  
-  
-  
+
+
+
   </div>
-  
-  
-        
-           
-          
+
+
+
+
+
         </div>
-        
-      
+
+
             </div>)
         )
 
@@ -302,70 +570,70 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
 
         return(
           setShowData(<div className="row">
-         
-          
-          
+
+
+
         <div className=" border-right">
-  
-  
+
+
       <h1>Noe gikk galt!</h1>
       <p>Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen.</p>
-  
-  
-  
 
-  
-  
-        
-           
-          
+
+
+
+
+
+
+
+
         </div>
-        
-      
+
+
             </div>)
         )
-        
+
       }
-      
-    
+
+
     }).catch(error => {
       setShowInfoText(true)
       return(
         setShowData(<div className="row">
-         
-          
-          
+
+
+
         <div className=" border-right">
-  
-  
+
+
       <h1 className='error'>Noe gikk galt!</h1>
       <p className='text-center ' >Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen. {searchTerm}</p>
-  
-  
-  
 
-  
-  
-        
-           
-          
+
+
+
+
+
+
+
+
         </div>
-        
-      
+
+
             </div>)
       )
     });
 
-   
-      
-   
-    
+
+
+
+
     }
 
     const handleChange = async event => {
       setSearchTerm(event.target.value);
-      
-      
+
+
       }
 
 
@@ -374,19 +642,22 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
 
    }
 
-   
+
 
     const handleAdd = async (e) => {
-      
+
       e.preventDefault();
       setRegisterButton(false)
+
+
+
       try {
 
         await setDoc(doc(db, "enhetsRegisteret", userID),{
-          id:userID,
+          uid:userID,
           ...altinnData,
           createdAt: serverTimestamp(),
-          uid:  auth.currentUser.uid,
+
         });
 
 
@@ -396,7 +667,9 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
     };
 
     const handleAddCompanyInfo = async (e) => {
-      
+
+
+
       e.preventDefault();
       setRegisterButton(false)
       try {
@@ -404,18 +677,33 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
         await setDoc(doc(db, "company", userID),{
           uid:userID,
           ...data,
+          ...openingsData,
+          ...aboutUs,
           ...industryData,
           ...country,
           ...phoneNumber,
+          ...socialMedia,
+          ...companiesAgreements,
+          ...performsTrucks,
+
           createdAt: serverTimestamp(),
- 
+
         });
 
-
+        navigate(-1)
       } catch (err) {
         console.log(err);
       }
     };
+
+    const handleSocialInput = (e) => {
+      const id = e.target.id;
+      const value = e.target.value;
+
+
+
+      setSocialMedia({ ...socialMedia, [id]:value})
+    }
 
     const handleInput = (e) => {
       const id = e.target.id;
@@ -423,7 +711,7 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
 
       setData({ ...data, [id]:value})
 
-  
+
     }
 
     const checkData = async () =>{
@@ -438,7 +726,7 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
         {buttonName}
       </Button>
 
- 
+
   <div>
       <Modal show={show} onHide={handleClose}>
         {page === 1 && (
@@ -453,7 +741,7 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
               {/* First page of the form */}
 
               <form onSubmit={handleSubmit2}>
-    
+
     <div className="col-md-12" key='orgNumber'><label className="labels">Organisasjonsnummer</label>
     <input type="number" id="orgNumber"  onChange={handleChange} className="form-control" placeholder="000000000" /></div>
     <div className='row'>
@@ -465,17 +753,17 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
 
 <div hidden={hiddenInfoText}>
   <h4 className='text-center' style={{margin:'30px'}}>Hvorfor data fra Enhetsregisteret?</h4>
-  <p className='text-center'>Denne informasjonen bruker vi til å verfisere bedriftsinformasjon. 
+  <p className='text-center'>Denne informasjonen bruker vi til å verfisere bedriftsinformasjon.
     Det er for å unngå misforståelser og identitetstyveri.
     <br/>
     Denne informasjon vil ikke være synlig for dine kunder.
   </p>
 </div>
-    
+
 
     {showData}
-    
-    
+
+
     {/* <button type="submit" className="btn btn-primary profile-button">Save data</button> */}
     </form>
 
@@ -494,7 +782,7 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
               <div className="col">
 
 
-              <Button style={{height:'auto', width:'100px'}} variant="primary" disabled={!dataIsNotEmpty}  onClick={handleNextPage}>
+              <Button style={{height:'auto', width:'100px'}} variant="primary" disabled={!dataIsNotEmpty}  onClick={handleEnhetregisteretNextPage}>
                 Gå videre
               </Button>
               </div>
@@ -552,7 +840,7 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
           </>
         )}
         {page === 3 && (
-          
+
           <>
 
             <Modal.Header closeButton>
@@ -560,55 +848,56 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
               <Modal.Title>Register bedriftsinformasjon 1/3</Modal.Title>
 
             </Modal.Header>
+            <form onSubmit={handleSubmit(handleNextPage)}>
             <Modal.Body>
             <ProgressBar now={40} variant="success" style={{margin:'10px'}} label={`40%`}/>
             <div className="">
-        
-   
-           
-            <img 
+
+
+
+            <img
               src={
-                
+
                 file
                   ? URL.createObjectURL(file)
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
-              alt="" className="rounded companyLogo mx-auto d-block rounded-circle mt-5" width="150px" 
+              alt="" className="rounded companyLogo mx-auto d-block rounded-circle mt-5" width="150px"
             />
-               <form onSubmit={handleSubmit(checkData)}>
+
                     {/* <span className="font-weight-bold">Bedriftslogo</span><span> </span> */}
                     <div className="col text-center" style={{paddingBottom:'20px'}}>
-                 
+
                     <label htmlFor="file" style={{paddingTop:'20px'}}>
                   Bilde: <CloudUploadOutlinedIcon className="icon" />
                 </label>
-  
+
                 <input
-                
+
                 type="file"
                 id="file"
                 onChange={(e) => setFile(e.target.files[0])}
                 style={{ display: "none" }}
               />
         </div>
-        
-     
+
+
             <div className="row mt-2">
                 <div className="col-md-6" key='orgNumber'><label className="labels">Org. nummer</label>
                 <input type="text" id="orgNumber" style={{backgroundColor:'#dde2eb'}}readOnly className="form-control" value={searchTerm}  onChange={handleInput}/></div>
 
                 <div className="col-md-6" key='CEO'><label className="labels">Dagligleder</label>
                 <input type="text" {...register("CEO", { required: true })}   className="form-control"  id='CEO'  onChange={handleInput}/>
-                {errors.ceo && <p style={{color:'red'}}>Dagligleder: Dette feltet er obligatorisk!</p>}
+                {errors.CEO && <p style={{color:'red'}}>Dagligleder: Dette feltet er obligatorisk!</p>}
                 </div>
-                
+
             </div>
             <div className="row mt-2">
                 <div className="col-md-6" key='companyName'><label className="labels">Bedriftsnavn</label>
                 <input type="text" id="companyName" {...register("companyName", { required: true })}   className="form-control" placeholder="bedriftsnavn ..." onChange={handleInput}/>
                 {errors.companyName && <p style={{color:'red'}}>Bedriftsnavn: Dette feltet er obligatorisk!</p>}
                 </div>
-                
+
                 <div className="col-md-6" key='email'><label className="labels">E-post</label>
                 <input  type="email" id="email" {...register("email", {
           required: "required",
@@ -619,14 +908,14 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
         })} className="form-control" placeholder="epost ..."  onChange={handleInput}/>
         {errors.email && <span style={{color:'red'}} role="alert">E-post: Dette feltet er obligatorisk!</span>}
         </div>
-           </div>    
+           </div>
             <div className="row mt-2">
                 <div className="col-md-6" key='phoneNumber'><label className="labels">Telefon nummer</label>
                 <MuiPhoneInput
                 name='phoneNumber'
                 // onChange={handleInput}
                 onChange={(value) => setPhoneNumber({'phoneNumber':value})}
-                className="form-control"               
+                className="form-control"
                 defaultCountry='no'
                 onlyCountries={['no', 'se', 'dk', 'is', 'fi']}
 />
@@ -635,17 +924,17 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
                 {errors?.phone && errors.phone.message} */}
           </div>
 
-          
-                
-                <div className="col-md-6" key='country'><label className="labels">Land</label>
-                
-                <Select 
-        placeholder='Velg land'
-        defaultValue={selectedCountry}
+
+
+                <div className="col-md-6" key={countries.value}><label className="labels">Land</label>
+
+                <Select
+        placeholder='Velg land...'
+        defaultValue={countries.value}
         onChange={(value) => setCountry({'country':value})}
         options={countries}
-        
-  
+
+
         name ="country"
       />
       {errors.country && <span style={{color:'red'}} role="alert">Land: Dette feltet er obligatorisk!</span>}
@@ -657,59 +946,60 @@ const weekDays = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag',
 
                 <div className="col-md-3" key='city'><label className="labels">Sted</label>
                 <input type="text" id ="city"  className="form-control" placeholder="Oslo"  onChange={handleInput}/></div>
-                
+
                 <div className="col-md-3" key='zipCode'><label className="labels">Postnummer</label>
                 <input type="text" id ="zipCode"  className="form-control" placeholder="1069" onChange={handleInput}/></div>
-            </div>    
-            
-      
+            </div>
+
+
 
 <div className="row mt-2" >
-<div className="col-md-12" ><label className="labels">Bransje</label>
-<Select 
+<div className="col-md-12"  key='industry'><label className="labels">Bransje</label>
+
+<Select
 placeholder='Legg til bransje'
-        isMulti 
+        isMulti
         defaultValue={selectedOption}
         onChange={(value) => setIndustryData({'industry':value.map(c => c.value)})}
         options={options}
         name='industry'
       />
     </div>
-  
-    </div> 
+
+    </div>
 
     <div className="" style={{margin:'10px'}}>
-    <input  type="checkbox"  className="form-check-input " id="performsTrucks"  onChange={handleInput}/>
+    <input  type="checkbox"  className="form-check-input " id="performsTrucks"  onChange={(e) => setPerformsTrucks(e.value)}/>
     <label style={{paddingLeft:'10px'}} className="col-md-3 form-check-label" key='performsTrucks' htmlFor="exampleCheck1">Utfører arbeid for lastebiler?</label>
-    <input type="checkbox"  className="form-check-input" id="companiesAgreements" onChange={handleInput}/>
+    <input type="checkbox"  className="form-check-input" id="companiesAgreements" onChange={(e) => setCompaniesAgreements(e.value)}/>
     <label style={{paddingLeft:'10px'}} className=" col-md-4 form-check-label" key='companiesAgreements'  htmlFor="exampleCheck1">Leverer du faste avtaler for bedrifter?</label>
     </div>
 
-    
 
-           
-              
 
-            
-     
-        <button type="submit"  className="btn btn-primary profile-button">Save data</button>
-        </form>
-    </div>  
+
+
+
+
+{/*
+        <button type="submit"  className="btn btn-primary profile-button">Save data</button> */}
+
+    </div>
             </Modal.Body>
             <Modal.Footer>
             <div className="row ">
              <div className="col">
-              <Button variant="secondary" onClick={handlePrevPage}>
+              <Button variant="secondary" >
                 Tilbake
               </Button>
               </div>
               <div className="col">
-              <Button variant="primary" style={{height:'auto', width:'100px'}} disabled={firstFormValidated} onClick={handleNextPage}>
+              <Button variant="primary" style={{height:'auto', width:'100px'}} disabled={firstFormValidated} type={"submit"}>
                 Gå videre
               </Button>
               </div></div>
             </Modal.Footer>
-
+            </form>
           </>
         )}
 
@@ -725,50 +1015,90 @@ placeholder='Legg til bransje'
             <div className="row mt-2">
 
             <div className="col-md-3" key='website'><label className="labels">Nettside</label>
-            <input type="text" id ="website" defaultValue={"www.nettside.no" } className="form-control" onChange={(value) => setSocialMedia({'website':value})}/></div>
+            <input type="text" id ="website" placeholder="www.nettside.no" className="form-control" onChange={handleSocialInput}/></div>
 
             <div className="col-md-3" key='instagram'><label className="labels">Instagram</label>
-            <input type="text"  id ="instagram" className="form-control"  defaultValue={"@instagram" } onChange={(value) => setSocialMedia({'instagram':value})}/></div>
+            <input type="text"  id ="instagram" className="form-control"  placeholder="@instagram" onChange={handleSocialInput}/></div>
 
 
 
             <div className="col-md-3" key='facebook'><label className="labels">Facebook</label>
-            <input type="text" id ="facebook" className="form-control" defaultValue={"www.facebook.com" }  onChange={(value) => setSocialMedia({'facebook':value})}/></div>
+            <input type="text" id ="facebook" className="form-control" placeholder="www.facebook.com"  onChange={handleSocialInput}/></div>
 
             <div className="col-md-3" key='youtube'><label className="labels">Youtube</label>
-            <input type="text" id ="youtube" className="form-control" defaultValue={"www.youtube.com" }    onChange={(value) => setSocialMedia({'youtube':value})}/></div>
+            <input type="text" id ="youtube" className="form-control" placeholder="www.youtube.com"    onChange={handleSocialInput}/></div>
 
             </div>
 
 {inputList.map((x, i) => {
         return (
           <div className="row mt-2">
-            <div className="col-md-5" key='openingDays'><label className="labels">Dag</label>
+            <div className="col-md-2" key='openingDays' >
             <input
               name="openingDays"
-         
+              style={{height:'55px', textAlign:'center'}}
               className='form-control'
               value={weekDays[i]}
+              readOnly
               onChange={e => handleInputChange(e, i)}
-           
+
             />
             </div>
-            <div className="col-md-5" key='openingHours'><label className="labels">Åpnings- stengetid</label>
+
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <div className="col-md-5" key='openingHours'>
+
+
+              <label className="labels"></label>
+
+            <TimePicker
+          renderInput={(params) => <TextField {...params} />}
+          value={date}
+          label="Åpningstid"
+          onChange={(newValue) => {
+            setDate(newValue);
+          }}
+          className='form-control'
+          minTime={dayjs('2022-04-07T10:15')}
+          maxTime={dayjs('2022-04-07T10:15')}
+        />
+
+</div>
+<div className="col-md-5" key='openingHours'><label className="labels"></label>
+            <TimePicker
+          renderInput={(params) => <TextField {...params} />}
+          value={date}
+          label="Stengetid"
+          onChange={(newValue) => {
+            setDate(newValue);
+          }}
+          className='form-control'
+          minTime={dayjs('2018-01-01T08:00')}
+          maxTime={dayjs('2018-01-01T18:45')}
+        />
+
+
+     </div>
+        </LocalizationProvider>
+
+{/*
             <input
               className='form-control'
               name="openingHours"
-   placeholder="Åpningstid eks. 10:00-20:00"
+              pattern="[0-9]{2}:[0-9]{2}"
               value={x.openingHours}
+              defaultValue='08:00'
               onChange={e => handleInputChange(e, i)}
               type='time'
-            />
-            </div>
-            <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
+            /> */}
+
+
+            {/* <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
               {inputList.length !== 1 && <DeleteIcon
                 className="mr10"
                 onClick={() => handleRemoveClick(i)}/>}
               {inputList.length - 1 === i && <AddBoxIcon hidden={hiddeAddIcon} onClick={handleAddClick}/>}
-            </div>
+            </div> */}
           </div>
         );
       })}
@@ -790,7 +1120,7 @@ placeholder='Legg til bransje'
           </>
         )}
 
-{page === 5 && (
+        {page === 5 && (
           <>
             <Modal.Header closeButton>
             <Modal.Title>Register bedriftsinformasjon 3/3</Modal.Title>
@@ -803,18 +1133,19 @@ placeholder='Legg til bransje'
 
        <div className="row mt-3" >
                 <div className="col-md" key='about'><label className="labels">Om oss</label>
-                <textarea type="text" className="form-control" style={{height:'200px'}} placeholder="Om oss ...." id="about" /></div>
+                <textarea type="text" className="form-control" style={{height:'200px'}} placeholder="Om oss ...." id="about" onChange={(e) => setAboutUs(e.value)}/></div>
 
             </div>
-        
+
             <RMIUploader
         isOpen={visible}
         hideModal={hideModal}
-        onSelect={onSelect}
+        onSelect={onUpload}
         onUpload={onUpload}
         onRemove={onRemove}
         dataSources={dataSources}
-       
+        onChange={onUpload}
+
       />
 
 
@@ -829,18 +1160,18 @@ placeholder='Legg til bransje'
               </Button>
               </div>
               <div className="col">
-              <Button variant="success">
+              <Button onClick={handleAddCompanyInfo} variant="success">
                 Lager
               </Button>
               </div>
               </div>
             </Modal.Footer>
             </div>
-            
+
           </>
-         
+
         )}
-      </Modal></div> 
+      </Modal></div>
     </>
   );
 }
