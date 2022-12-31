@@ -37,7 +37,7 @@ const Widget = ({ type }) => {
       break;
     case "order":
       data = {
-        title: "BESTILLINGER I DAG",
+        title: "BESTILLINGER",
         isMoney: false,
         link: "Se alle bestillinger",
         query:"booking",
