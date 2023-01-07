@@ -19,7 +19,7 @@
   }
 
   hr {
-    height: 0;
+    padding-top: 10%;
     border: 0.5px solid rgb(230, 227, 227);
   }
 
@@ -91,8 +91,10 @@
   }
 }
 
-img{
-  height: 50%;
-  width: 50%;
+.company_logo{
   
+  max-width: 30%;
+  max-height: 30%;
+  height: auto ;
+  width: auto;
 }

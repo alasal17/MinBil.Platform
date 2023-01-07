@@ -64,54 +64,55 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="wrapper">
+
         <div className="search">
           <input type="text" placeholder="Søk..." />
           <SearchOutlinedIcon />
         </div>
+        
         <div className="items">
+      
+     
+
           <div className="item">
             <LanguageOutlinedIcon className="icon" />
             Norsk
           </div>
-          <div className="item">
+
+          {/* <div className="item">
             <DarkModeOutlinedIcon
               className="icon"
               onClick={() => dispatch({ type: "TOGGLE" })}
             />
           </div>
-          <div className="item">
+           */}
+          {/* <div className="item">
             <FullscreenExitOutlinedIcon className="icon" />
-          </div>
+          </div> */}
           <div className="item">
             <NotificationsNoneOutlinedIcon className="icon" />
             <div className="counter">1</div>
           </div>
+          
+          
+         
+            
+              
           <div className="item">
             <ChatBubbleOutlineOutlinedIcon className="icon" />
             <div className="counter">2</div>
           </div>
+
           <div className="item">
-            {data.companyName}
-            {/* <ListOutlinedIcon className="icon" /> */}
+          {data.companyName}
+            <img
+            src={
+              data.companyLogo
+                ? data.companyLogo
+                : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+            } alt="" className="rounded avatar  d-block rounded-circle" />
           </div>
-         
-            <div className="item">
 
-
-              <img
-              src={
-                data.companyLogo
-                  ? data.companyLogo
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-              className="avatar"
-              />
-
-       
-              
-          </div>
-              
         </div>
       </div>
     </div>

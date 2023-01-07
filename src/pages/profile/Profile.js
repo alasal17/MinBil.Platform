@@ -100,7 +100,7 @@ const Profile = () => {
                 <div className="col-sm-6 mb-3">
                   <div className="card h-100">
                     <div className="card-body">
-                      <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i>Tilbud</h6>
+                      <h6 className="align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Tilbud</h6>
                       <small>Dekkskift</small>
                       <div className="progress mb-3" style={{height: "5px"}}>
                         <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
@@ -127,7 +127,7 @@ const Profile = () => {
                 <div className="col-sm-6 mb-3">
                   <div className="card h-100">
                     <div className="card-body">
-                      <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i>Produkter</h6>
+                      <h6 className="align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Produkter</h6>
                       <small>Dekkskift</small>
                       <div className="progress mb-3" style={{height: "5px"}}>
                         <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
@@ -169,7 +169,7 @@ const Profile = () => {
               <div className="col-sm-6 mb-3">
                 <div className="card h-100">
                   <div className="card-body">
-                    <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i>Tilbud</h6>
+                    <h6 className=" align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Tilbud</h6>
                     <small>Dekkskift</small>
                     <div className="progress mb-3" style={{height: "5px"}}>
                       <div className="progress-bar bg-primary" role="progressbar" style={{width: "80%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
@@ -196,7 +196,7 @@ const Profile = () => {
               <div className="col-sm-6 mb-3">
                 <div className="card h-100">
                   <div className="card-body">
-                    <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i>Produkter</h6>
+                    <h6 className="align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Produkter</h6>
                     <small>Dekkskift</small>
                     <div className="progress mb-3" style={{height: "5px"}}>
                       <div className="progress-bar bg-primary" role="progressbar" style={{width: "60%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>

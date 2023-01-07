@@ -71,18 +71,18 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-      <div className="top ">
+      <div className="top">
         <Link to="/" style={{ textDecoration: "none"}}>
           <img src={
                 data.companyLogo
                   ? data.companyLogo
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }  alt="" className="rounded mx-auto d-block rounded-circle mt-5" />
+              }  alt="" className="rounded company_logo mx-auto d-block rounded-circle mt-5" />
         </Link>
         
       </div>
-      <hr/>
-      <div className="center"  >
+
+      <div className="center" style={{paddingTop:'30%'}}  >
         <ul>
           <p className="title">MAIN</p>
           <Link to="/" style={{ textDecoration: "none" }}>
