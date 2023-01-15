@@ -22,13 +22,17 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import MuiPhoneInput from "material-ui-phone-number";
-import { json, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import setBodyColor from './setBodyColor'
+import { urlParams } from "via/lib/utils";
+import { style } from "@mui/system";
+import BackgroundImage2 from './form_background2.png'
+
 
 function RegistrationForm({ buttonName }) {
-  const [date, setDate] = React.useState(dayjs("2022-04-07T10:15"));
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
@@ -36,14 +40,16 @@ function RegistrationForm({ buttonName }) {
   const { currentUser } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [registerButton, setRegisterButton] = useState(false);
-  const [inputList, setInputList] = useState([
-    { openingDays: "", openingHours: "" },
-  ]);
+  const [inputList, setInputList] = useState({
+    openingDays: "",
+    openingTime: "",
+    closingTime: "",
+  });
   const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
-  const [enhetsRegisteretDB, setEnhetsRegisteretDB] = useState([]);
+  const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
   const [data2, setData2] = useState({});
   const [selectedOption, setSelectedOption] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState([]);
+  // const [selectedCountry, setSelectedCountry] = useState([]);
   const postsCollectionRef = collection(db, "enhetsRegisteret");
   const [per, setPerc] = useState(null);
   const [hiddenInfoText, setShowInfoText] = useState(false);
@@ -51,23 +57,31 @@ function RegistrationForm({ buttonName }) {
   const [visible, setVisible] = useState(false);
   const [showData, setShowData] = useState();
   const [file, setFile] = useState("");
-  
+  const areAllFieldsFilled = !(searchTerm === "") & !(searchTerm === undefined);
+  const dataIsNotEmpty =
+    (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true);
   const [industryData, setIndustryData] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [country, setCountry] = useState([]);
   const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
-  const [openingsData, setOpeningsData] = useState([]);
+  const [openingsData, setOpeningsData] = useState({});
   const [imagesData, setImagesData] = useState([]);
-  const [tempImagesData, setTempImagesData] = useState([]);
-  const [socialMedia, setSocialMedia] = useState({});
-  const [companiesAgreements, setCompaniesAgreements] = useState(false);
+  const [imagesData2, setImagesData2] = useState([]);
+  const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
+  const [recommendedOpeningDays, setRecommendedOpeningDays] = useState(false);
+  const [recommendedAboutUs, setRecommendedAboutUs] = useState(false);
+  const [socialMedia, setSocialMedia] = useState({
+    website: "",
+    instagram: "",
+    facebook: "",
+    youtube: "",
+  });
+  const [companiesAgreements, setCompaniesAgreements] = useState(true);
   const [performsTrucks, setPerformsTrucks] = useState(false);
-  const [aboutUs, setAboutUs] = useState(false);
-  const [enhetsRegisteretAPIDataSaved, setEnhetsRegisteretAPIDataSaved] = useState([]);
-  const  [requestFailed, setRequestFailed] = useState(true);
+  const [aboutUs, setAboutUs] = useState([]);
+  const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
   const userID = auth.currentUser.uid;
-  const areAllFieldsFilled = (!(searchTerm === "") & !(searchTerm === undefined));
-  const dataIsNotEmpty = (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true) & (enhetsRegisteretAPIData.status !== 400);
+  const changeBackground = true;
   const {
     register,
     handleSubmit,
@@ -93,6 +107,29 @@ function RegistrationForm({ buttonName }) {
     { label: "Island", value: "is" },
     { label: "Finland", value: "fi" },
   ];
+
+  const hours = [
+    { label: "06:00", value: "06:00" },
+    { label: "07:00", value: "07:00" },
+    { label: "08:00", value: "08:00" },
+    { label: "09:00", value: "09:00" },
+    { label: "10:00", value: "10:00" },
+    { label: "11:00", value: "11:00" },
+    { label: "12:00", value: "12:00" },
+    { label: "13:00", value: "13:00" },
+    { label: "14:00", value: "14:00" },
+    { label: "15:00", value: "15:00" },
+    { label: "16:00", value: "16:00" },
+    { label: "17:00", value: "17:00" },
+    { label: "18:00", value: "18:00" },
+    { label: "19:00", value: "19:00" },
+    { label: "20:00", value: "20:00" },
+    { label: "21:00", value: "21:00" },
+    { label: "22:00", value: "22:00" },
+    { label: "23:00", value: "23:00" },
+    { label: "00:00", value: "00:00" },
+  ];
+
   const dataSources = [
     {
       id: 1,
@@ -152,6 +189,34 @@ function RegistrationForm({ buttonName }) {
   const hideModal = () => {
     setVisible(false);
   };
+
+  const handleImagesInput = (e) => {
+    const list = [];
+    const list2 = [];
+
+    e.map((w) => {
+      if (w.file) {
+        if (!list.includes(w.dataURL)) {
+          list.push(w.dataURL);
+        } else {
+          console.log("In list!");
+        }
+      } else {
+        console.log("Not File");
+        if (!list2.includes(w.dataURL)) {
+          console.log("Not in list");
+          list2.push(w.dataURL);
+        } else {
+          console.log("In list!");
+        }
+      }
+    });
+
+    setImagesData2(list2);
+    setImagesData(list);
+  };
+
+  // ----------- FOR UPLOAD IMAGES -------------
   const onUpload = async (data) => {
     // console.log("Upload files", data.map((item) => item.dataURL));
     let list = [];
@@ -167,8 +232,6 @@ function RegistrationForm({ buttonName }) {
         } else {
           console.log("Not temp images");
           list.push(e.img.id);
-
-          setImagesData([...imagesData, e.dataURL]);
         }
       }
       if (e.file) {
@@ -182,6 +245,7 @@ function RegistrationForm({ buttonName }) {
           list.push(e.file.name);
           console.log("Temp images is in list");
           console.log("Temp images is in list", imagesData);
+          setImagesData([...imagesData, e.dataURL]);
         }
       } else {
         // console.log('someting else')
@@ -197,10 +261,12 @@ function RegistrationForm({ buttonName }) {
     console.log("OWN DATA", imagesData);
     // console.log("Image Data", imagesData);
   };
+
   // const onSelect = async (data) => {
   //   await setImagesData(...imagesData, data);
   //   console.log(imagesData)
   // };
+
   const onRemove = (id) => {
     console.log("Remove image id", id);
   };
@@ -208,6 +274,7 @@ function RegistrationForm({ buttonName }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  // ------------- FOR CALLING enhetsRegisteret DB -----------------
   useEffect(() => {
     // LISTEN (REALTIME)
 
@@ -223,13 +290,13 @@ function RegistrationForm({ buttonName }) {
           // }
 
           if (doc.id === userID) {
-            setPage(2);
+            setPage(4);
             setSearchTerm(doc.data().organisasjonsnummer);
           } else {
           }
         });
 
-        setEnhetsRegisteretDB(list);
+        setEnhetsRegisteretData(list);
       },
 
       (error) => {
@@ -242,6 +309,7 @@ function RegistrationForm({ buttonName }) {
     };
   }, []);
 
+  // ------------- FOR UPLOADING COMPANY LOGO -----------------
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;
@@ -321,149 +389,193 @@ function RegistrationForm({ buttonName }) {
   //   file && uploadFile();
   // }, [file]);
 
+  // ------------- CHECKING FOR ORG. NUMBER IS VALIDE -----------------
+
   const handleEnhetregisteretNextPage = () => {
     setRegisterButton(false);
 
-
-      console.log(enhetsRegisteretAPIData.uid);
-      
-      if (enhetsRegisteretDB.organisasjonsnummer === searchTerm) {
-        console.log("organisasjonsnummer already exists in db!");
-        setShowInfoText(true);
-        setPage(page);
-        
-        
-        // setTimeout(() =>{
-        //   setShowData('')
-        // },1000)
-        return setShowData(
-          <div className="row">
-            <div className=" border-right">
-              <h1 className="errorTitle">
-                Denne organisasjonsnummer eksisterer i vårt system!
-              </h1>
-
-              <div>
-                <p className="errorBody">
-                  Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
-                  igjen. - {searchTerm}
-                </p>
-                <p className="errorBody">
-                  Ta kontakt med oss dersom du lurer på noe.
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-      }
-
-      if (enhetsRegisteretDB.uid === userID) {
-        console.log("User has user registered");
-        setShowInfoText(true);
-        setPage(2);
-        // setTimeout(() =>{
-        //   setShowData('')
-        // },1000)
-        return setShowData(
-          <div className="row">
-            <div className=" border-right">
-              <h1 className="errorTitle">
-                Denne brukeren har eksisterer en organisasjonsnummer tidligere:{" "}
-                {enhetsRegisteretDB.organisasjonsnummer}!
-              </h1>
-              <div>
-                <p className="errorBody">
-                  Ta kontakt med oss dersom du lurer på noe.
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-      } else {
-        try {
-
-          
-          
-          setDoc(doc(db, "enhetsRegisteret", userID), {
-            uid: userID,
-            ...enhetsRegisteretAPIData,
-            createdAt: serverTimestamp(),
-          });
-          console.log("Data fra enhetregisteret er lageret i database!");
-          setEnhetsRegisteretAPIDataSaved(
+    // ## IF "organisasjonsnummer already exists in db!"
+    if (enhetsRegisteretData.organisasjonsnummer === searchTerm) {
+      console.log("organisasjonsnummer already exists in db!");
+      setShowInfoText(true);
+      setPage(page);
+      return setShowData(
+        <div className="row">
+          <div className=" border-right">
+            <h1 className="errorTitle">
+              Denne organisasjonsnummer eksisterer i vårt system!
+            </h1>
             <div>
-              
-              <div className="row">
-                <div className=" border-right">
-                  <div className="alert alert-success" role="alert">
-                    <span className="text-center">
-                      <h1>Velkommen!</h1>
-                      <p>{}</p>
-                      <p style={{fontWeight:' 800'}}>
-                      Nå er ditt organisasjonsnummer {searchTerm} registeret i vårt system.
-                      </p>
-                    </span>
-                  </div>
-                </div>
+              <p className="errorBody">
+                Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
+                igjen. - {searchTerm}
+              </p>
+              <p className="errorBody">
+                Ta kontakt med oss dersom du lurer på noe.
+              </p>
             </div>
           </div>
+        </div>
+      );
+    }
 
-            )
-          return(
-            
-            setTimeout(() => {
-              setPage(page + 1)}, 5000)
-          )
-          
-        } catch (err) {
-          console.log(err);
-        }
+    // - IF "User has user registered" IF TRUE ---> PAGE 2
+    if (enhetsRegisteretData.uid === userID) {
+      console.log("User has user registered");
+      setShowInfoText(true);
+      setPage(2);
+      // setTimeout(() =>{
+      //   setShowData('')
+      // },1000)
+      return setShowData(
+        <div className="row">
+          <div className=" border-right">
+            <h1 className="errorTitle">
+              Denne brukeren har eksisterer en organisasjonsnummer tidligere:{" "}
+              {enhetsRegisteretData.organisasjonsnummer}!
+            </h1>
+            <div>
+              <p className="errorBody">
+                Ta kontakt med oss dersom du lurer på noe.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+    // ## ELSE "Data fra enhetregisteret er lageret i database!" ---> PAGE 2
+    else {
+      try {
+        setPage(page + 1);
+        // setDoc(doc(db, "enhetsRegisteret", userID), {
+        //   uid: userID,
+        //   ...enhetsRegisteretAPIData,
+        //   createdAt: serverTimestamp(),
+        // });
+
+        console.log("Data fra enhetregisteret er lageret i database!");
+      } catch (err) {
+        console.log(err);
       }
-   
+    }
   };
-  const handleNextPage =() => {
-    setPage(page + 1);
-  }
 
-  const handlePageFourNextPage = () => {
-    if (socialMedia.youtube === undefined) {
-      setSocialMedia({ ...socialMedia, youtube: null });
-    } else {
-      console.log("");
-    }
-
-    if (socialMedia.facebook === undefined) {
-      setSocialMedia({ ...socialMedia, facebook: null });
-    } else {
-      console.log("");
-    }
-
-    if (socialMedia.instagram === undefined) {
-      setSocialMedia({ ...socialMedia, instagram: null });
-    } else {
-      console.log("");
-    }
-
-    if (socialMedia.website === undefined) {
-      setSocialMedia({ ...socialMedia, website: null });
-    } else {
-      console.log("");
-    }
-
-    setPage(page + 1);
+  const handleCompaniesAgreementsChange = () => {
+    setCompaniesAgreements(!companiesAgreements);
   };
+
+  const handlePerformsTrucksChange = () => {
+    setPerformsTrucks(!performsTrucks);
+  };
+
+  // useEffect(() =>{
+
+  //   inputList.map((e) => {
+
+  //     if(e.openingDays === '' || e.openingDays === 'Mandag' && e.openingTime === ''&& e.closingTime === '')
+  //     {
+  //       e.openingDays = 'Ikke Lagt til'
+  //       e.closingTime = 'Ikke Lagt til'
+  //       e.openingTime = 'Ikke Lagt til'
+  //       setRecommendedSocialMedia(false)
+  //     }
+
+  //   return recommendedSocialMedia
+
+  //   })
+  // }, [])
+
+  // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
+  const handleNextPage = () => {
+    setPage(page + 1);
+    console.log(openingsData);
+  };
+
+  // ------------- HADNLE FOR PREV PAGE ----------------
   const handlePrevPage = () => setPage(page - 1);
+
+  // ################# OPNINGS DAYS AND HOURS ##################
 
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...inputList];
-    list[index][name] = value;
-    list[index]["openingDays"] = weekDays[index];
-    setInputList([...inputList, { openingDays: "", openingHours: "" }]);
-    // setInputList({'OpningDays':weekDays[index], 'OpningHours':e.target.value });
+    if (value === undefined) {
+      list[index]["openingTime"] = "Stengt";
+      list[index]["closingTime"] = "";
+      list[index]["openingDays"] = weekDays[index];
+      setRecommendedOpeningDays(false);
+    } else {
+      list[index][name] = value;
+      list[index]["openingDays"] = weekDays[index];
+      setRecommendedOpeningDays(true);
+    }
+
+    // setInputList([...inputList, { openingTime: "", closingTime: ""}]);
+    // // setInputList({'OpningDays':weekDays[index], 'OpningHours':e.target.value });
 
     console.log(list);
+  };
+  const startOver = () => {
+    setPage(1);
+  };
+
+
+  
+  const handleInputOpeningsNextPage = () => {
+    // inputList.map((e) => {
+    //   if (
+    //     e.openingDays === "" ||
+    //     (e.openingDays !== "Mandag" &&
+    //       e.openingTime === "" &&
+    //       e.closingTime === "")
+    //   ) {
+    //     e.openingDays = "Ikke Lagt til";
+    //     e.closingTime = "Ikke Lagt til";
+    //     e.openingTime = "Ikke Lagt til";
+    //     console.log("FAILED");
+    //     setRecommendedOpeningDays(false);
+    //     setPage(page + 1);
+    //   } else {
+    //     setPage(page + 1);
+    //     setRecommendedOpeningDays(true);
+    //   }
+    // });
+      
+      setPage(page + 1)
+      
+      
+     
+      setBodyColor({backgroundImage:'url("./form_background2.png")'})
+    
+    
+
+  };
+
+// useEffect(() => {
+//   if(page ===5){
+//     setBodyColor({'background-image': 'url(' + {BackgroundImage2} + ')'})
+//     let modalcontent = document.getElementsByClassName('modal-content')[0]
+//     modalcontent.style.backgroundImage = "url('./form_background2.png')";
+//     console.log(modalcontent)
+//   }
+// })
+
+  const handleAboutUsInput = (e) => {
+    const id = e.target.id;
+    const value = e.target.value;
+
+    setAboutUs({ aboutUs: value });
+  };
+
+  const handleNextPageAboutUs = () => {
+    if (aboutUs.aboutUs === undefined || aboutUs.aboutUs === "") {
+      setRecommendedAboutUs(false);
+      setPage(page + 1);
+    } else {
+      setRecommendedAboutUs(true);
+      setPage(page + 1);
+    }
   };
 
   // handle click event of the Remove button
@@ -476,25 +588,35 @@ function RegistrationForm({ buttonName }) {
   // handle click event of the Add button
   const handleAddClick = (e) => {
     if (inputList.length <= 6) {
-      setInputList([...inputList, { openingDays: "", openingHours: "" }]);
+      setInputList(...inputList, {
+        openingDays: "",
+        openingTime: "",
+        closingTime: "",
+      });
     } else {
       setHiddeAddIcon(true);
       console.log("All seven days");
     }
   };
 
-  // Search in API
+  // ------------- SEARCH API. RETURNS DIFFENTES RENDERINGS RESUALT ----------------
   const handleAPIRequesest = async (event) => {
     event.preventDefault();
-    // console.log('Enhetsregisteret API call, SearchTerm: ', {searchTerm})
     fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
       .then((response) => response.json())
       .then((data) => {
         setEnhetsRegisteretAPIData(data);
-        
-        if (data.status !== 400 ) {
-          console.log('<---- data.organisasjonsnummer !== "" || data.organisasjonsnummer !== undefined ----> ')
-         
+        console.log(enhetsRegisteretData);
+
+        // CHECK IF 'data.organisasjonsnummer !== "" || data.organisasjonsnummer !== undefined'
+        if (
+          data.organisasjonsnummer !== "" ||
+          data.organisasjonsnummer !== undefined
+        ) {
+          console.log(
+            'data.organisasjonsnummer !== "" || data.organisasjonsnummer !== undefined'
+          );
+          // THis returns a filled out form
           return setShowData(
             <div className="row">
               <div className=" border-right">
@@ -508,7 +630,6 @@ function RegistrationForm({ buttonName }) {
                         readOnly
                         className="form-control"
                         value={data.navn}
-                        onChange={handleInput}
                       />
                     </div>
                     <div className="col-md-5">
@@ -562,7 +683,7 @@ function RegistrationForm({ buttonName }) {
                         id="businessStreetAddress"
                         readOnly
                         className="form-control"
-                        value={data.forretningsadresse.adresse.map((e) => e)}
+                        value={data.forretningsadresse.adresse[0]}
                         onChange={handleInput}
                       />
                     </div>
@@ -596,80 +717,43 @@ function RegistrationForm({ buttonName }) {
             </div>
           );
         }
-        if(searchTerm.length > 9 || searchTerm.length < 9)
-        {
-          console.log(`Organisasjonsnummer skal inneholde 9-siffer. Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen.`)
-
-          return setShowData(
-            <div className="row">
-              <div className=" border-right">
-              <div className="alert alert-danger" role="alert">
-              <span className="text-center">
-                <h1>Noe gikk galt!</h1><p>Status kode: {data.status}</p>
-                <p style={{fontWeight:' 800'}}>
-                  Organisasjonsnummer skal inneholde 9-siffer, du tastet {searchTerm.length}-siffer.<br/> Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
-                  igjen.<br/>
-                  
-                </p>
-                </span>
-                </div>
-                
-                
-            
-                
-                
-              </div>
-            </div>
-          );
-        }
-       
+        // 'Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen.'
         else {
-          console.log('Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen.')
+          console.log(
+            "Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv igjen."
+          );
           return setShowData(
             <div className="row">
               <div className=" border-right">
-              <div className="alert alert-danger" role="alert">
-              <span className="text-center">
-                <h1>Noe gikk galt!</h1><p>Status kode: {data.status}</p>
-                <p style={{fontWeight:' 800'}}>
+                <h1>Noe gikk galt!</h1>
+                <p>
                   Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
                   igjen.
                 </p>
-                </span>
-                </div>
               </div>
             </div>
           );
         }
       })
+
+      // 'API Crach'
       .catch((error) => {
         setShowInfoText(true);
-  
-        console.log('Organisasjonsnummer eksisterer ikke.')
-          return setShowData(
-            <div className="row">
-              <div className=" border-right">
-              <div className="alert alert-danger" role="alert">
-              <span className="text-center">
-                <h1>Noe gikk galt!</h1><p>Status kode: {data.status}</p>
-                <p style={{fontWeight:' 800'}}>
-                  Organisasjonsnummer eksisterer ikke. Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
-                  igjen. - {searchTerm}
-                </p>
-                </span>
-                </div>
-                
-                
-            
-                
-                
-              </div>
+        return setShowData(
+          <div className="row">
+            <div className=" border-right">
+              <h1 className="error">Noe gikk galt!</h1>
+              <p className="text-center ">
+                Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
+                igjen. {searchTerm}
+              </p>
             </div>
-          
+          </div>
         );
       });
   };
 
+  // Handle change in ORG. NUMBER Field
   const handleChange = async (event) => {
     setSearchTerm(event.target.value);
   };
@@ -680,11 +764,32 @@ function RegistrationForm({ buttonName }) {
     });
   };
 
-  const handleAdd = async (e) => {
+  // ADDING THE DATA FROM COMPANY FORM. SAMVE DATA IN DB ----> company
+  const handleAddToDatabase = async (e) => {
     e.preventDefault();
     setRegisterButton(false);
+    try {
+      await setDoc(doc(db, "company", userID), {
+        uid: userID,
+        ...data,
+        organisasjonsnummer: searchTerm,
+        ...openingsData,
+        ...aboutUs,
+        ...industryData,
+        ...country,
+        ...phoneNumber,
+        ...socialMedia,
+        ...companiesAgreements,
+        ...performsTrucks,
+        ...imagesData,
+        ...imagesData2,
+        ...openingsData,
 
-    setPage(page + 1);
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
     try {
       await setDoc(doc(db, "enhetsRegisteret", userID), {
         uid: userID,
@@ -696,47 +801,41 @@ function RegistrationForm({ buttonName }) {
     }
   };
 
-  const handleAddCompanyInfo = async (e) => {
-    e.preventDefault();
-    setRegisterButton(false);
-    try {
-      await setDoc(doc(db, "company", userID), {
-        uid: userID,
-        ...data,
-        ...openingsData,
-        ...aboutUs,
-        ...industryData,
-        ...country,
-        ...phoneNumber,
-        ...socialMedia,
-        ...companiesAgreements,
-        ...performsTrucks,
-        images:imagesData,
-        companyLogo: data.companyLogo ?? "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg",
-
-        createdAt: serverTimestamp(),
-      });
-
-      navigate(-1);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
+  // ADDING DATA TO setSocialMedia
   const handleSocialInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    setSocialMedia({ ...socialMedia, [id]: value });
+    setSocialMedia({ ...socialMedia, [id]: value ?? "" });
+
+    if (socialMedia.id === undefined || socialMedia.value === "") {
+      setRecommendedSocialMedia(true);
+    } else {
+      setRecommendedSocialMedia(false);
+    }
   };
 
+  const handleOpeningDataInput = (e) => {
+    const id = e.target.id;
+    const value = e.target.value;
+    const name = e.target.name;
+
+    if(name === 'mondayOpen' || name === 'mondayClose'){
+      setOpeningsData( { openingHours:{Monday:{ [id]: value},}, ...openingsData});
+    }
+    
+
+    console.log(openingsData);
+  };
+  // ######### WORNG
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    setData({ ...data, [id]: value });
-  };
 
+ 
+    setData({ ...data, [id]: value, orgNumber: searchTerm });
+  };
 
   return (
     <>
@@ -745,11 +844,16 @@ function RegistrationForm({ buttonName }) {
       </Button>
 
       <div>
-        <Modal show={show} onHide={handleClose}>
+        <Modal 
+        show={show} 
+        onHide={handleClose} 
+        animation={true} 
+        autoFocus={true}>
+
           {page === 1 && (
             <>
-              <Modal.Header closeButton>
-                <Modal.Title>Data fra Enhetsregisteret</Modal.Title>
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Data fra Enhetsregisteret</Modal.Title>
               </Modal.Header>
 
               <Modal.Body>
@@ -784,7 +888,7 @@ function RegistrationForm({ buttonName }) {
                     </div>
                   </div>
                 </form>
-                <form >
+                <form>
                   <div hidden={hiddenInfoText}>
                     <h4 className="text-center" style={{ margin: "30px" }}>
                       Hvorfor data fra Enhetsregisteret?
@@ -799,9 +903,9 @@ function RegistrationForm({ buttonName }) {
                   </div>
 
                   {showData}
-                  
+
                   {/* <button type="submit" className="btn btn-primary profile-button">Save data</button> */}
-                </form >
+                </form>
               </Modal.Body>
 
               <Modal.Footer>
@@ -827,8 +931,8 @@ function RegistrationForm({ buttonName }) {
           )}
           {page === 2 && (
             <>
-              <Modal.Header closeButton>
-                <Modal.Title>Register bedriftsinformasjon</Modal.Title>
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Register bedriftsinformasjon</Modal.Title>
               </Modal.Header>
 
               <Modal.Body>
@@ -902,8 +1006,8 @@ function RegistrationForm({ buttonName }) {
           )}
           {page === 3 && (
             <>
-              <Modal.Header closeButton>
-                <Modal.Title>Register bedriftsinformasjon 1/3</Modal.Title>
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Register bedriftsinformasjon 1/3</Modal.Title>
               </Modal.Header>
               <form onSubmit={handleSubmit(handleNextPage)}>
                 <Modal.Body>
@@ -931,7 +1035,7 @@ function RegistrationForm({ buttonName }) {
                       style={{ paddingBottom: "20px" }}
                     >
                       <label htmlFor="file" style={{ paddingTop: "20px" }}>
-                        Bilde: <CloudUploadOutlinedIcon className="icon" />
+                       <CloudUploadOutlinedIcon className="icon upload-image" />
                       </label>
 
                       <input
@@ -944,14 +1048,14 @@ function RegistrationForm({ buttonName }) {
 
                     <div className="row mt-2">
                       <div className="col-md-6" key="orgNumber">
-                        <label className="labels">Organisasjonsnummer</label>
+                        <label className="labels">Org. nummer</label>
                         <input
                           type="text"
                           id="orgNumber"
                           style={{ backgroundColor: "#dde2eb" }}
                           readOnly
                           className="form-control"
-                          value={searchTerm }
+                          value={searchTerm}
                           onChange={handleInput}
                         />
                       </div>
@@ -960,7 +1064,6 @@ function RegistrationForm({ buttonName }) {
                         <label className="labels">Dagligleder</label>
                         <input
                           type="text"
-                          placeholder="Ola Nordmann"
                           {...register("CEO", { required: true })}
                           className="form-control"
                           id="CEO"
@@ -981,7 +1084,7 @@ function RegistrationForm({ buttonName }) {
                           id="companyName"
                           {...register("companyName", { required: true })}
                           className="form-control"
-                          placeholder="Bilpleie AS"
+                          placeholder="bedriftsnavn ..."
                           onChange={handleInput}
                         />
                         {errors.companyName && (
@@ -1005,7 +1108,7 @@ function RegistrationForm({ buttonName }) {
                             },
                           })}
                           className="form-control"
-                          placeholder="post@bilpleie.no"
+                          placeholder="epost ..."
                           onChange={handleInput}
                         />
                         {errors.email && (
@@ -1019,14 +1122,20 @@ function RegistrationForm({ buttonName }) {
                       <div className="col-md-6" key="phoneNumber">
                         <label className="labels">Telefon nummer</label>
                         <MuiPhoneInput
-                         // onChange={handleInput}
-                          onChange={(value) => setPhoneNumber({ value })}
+                          name="phoneNumber"
+                          // onChange={handleInput}
+                          onChange={(value) =>
+                            setPhoneNumber({ phoneNumber: value })
+                          }
                           className="form-control"
                           defaultCountry="no"
                           onlyCountries={["no", "se", "dk", "is", "fi"]}
-                          
                         />
-                       
+                        {errors.phoneNumber && (
+                          <p style={{ color: "red" }}>
+                            Telefon nummber: Dette feltet er obligatorisk!
+                          </p>
+                        )}
                         {/* <input  id ="phoneNumber" type="tel" placeholder="Telefon nummer" {...register("phone",  {required: true, pattern:[/^[0-9+-]+$/, /[^a-zA-Z]/], minLength: 8, maxLength: 12})}    onChange={handleInput}/>
                 {errors?.phone && errors.phone.message} */}
                       </div>
@@ -1036,81 +1145,92 @@ function RegistrationForm({ buttonName }) {
 
                         <Select
                           placeholder="Velg land..."
-                          defaultValue={countries[0]}
-                          onChange={(value) => setCountry({ country: value })}
+                          defaultValue={countries.value}
+                          onChange={(value) =>
+                            setCountry({ country: value.label })
+                          }
                           options={countries}
                           name="country"
-                          id="country"
-                          closeMenuOnSelect={true}
+                          className="country-style"
                         />
-                       
+                        {errors.country && (
+                          <span style={{ color: "red" }} role="alert">
+                            Land: Dette feltet er obligatorisk!
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="row mt-2">
-                      <div className="col-md-6" key="address">
-                        <label className="labels">Adresse</label>
+                      <div className="col-md-6" key="streetAddress">
+                        <label className="labels">Gate adresse</label>
                         <input
-                        {...register("address", { required: true })}
                           type="text"
-                          id="address"
-                          name="address"
+                          id="streetAddress"
+                          {...register("streetAddress", {
+                            required: "required",
+                          })}
                           className="form-control"
                           placeholder="Oslo Gate 33"
                           onChange={handleInput}
                         />
-                        {errors.country && (
-                          <span style={{ color: "red" }} role="alert">
-                            Adresse: Dette feltet er obligatorisk!
-                          </span>
+                        {errors.companyName && (
+                          <p style={{ color: "red" }}>
+                            Gate adresse: Dette feltet er obligatorisk!
+                          </p>
                         )}
                       </div>
 
                       <div className="col-md-3" key="city">
                         <label className="labels">Sted</label>
                         <input
-                        {...register("city", { required: true })}
                           type="text"
-                          id="city"
-                          name="city"
+                          id="region"
+                          {...register("region", {
+                            required: "required",
+                          })}
                           className="form-control"
                           placeholder="Oslo"
                           onChange={handleInput}
                         />
-                        {errors.country && (
-                          <span style={{ color: "red" }} role="alert">
+                        {errors.companyName && (
+                          <p style={{ color: "red" }}>
                             Sted: Dette feltet er obligatorisk!
-                          </span>
+                          </p>
                         )}
                       </div>
 
                       <div className="col-md-3" key="zipCode">
                         <label className="labels">Postnummer</label>
                         <input
-                        {...register("zipCode", { required: true })}
                           type="text"
                           id="zipCode"
-                          name="zipCode"
                           className="form-control"
                           placeholder="1069"
+                          {...register("zipCode", {
+                            required: "required",
+                          })}
                           onChange={handleInput}
                         />
-                        {errors.country && (
-                          <span style={{ color: "red" }} role="alert">
+                        {errors.companyName && (
+                          <p style={{ color: "red" }}>
                             Postnummer: Dette feltet er obligatorisk!
-                          </span>
+                          </p>
                         )}
                       </div>
                     </div>
 
                     <div className="row mt-2">
                       <div className="col-md-12" key="industry">
-                        <label className="labels">Bransje</label>
+                        <label className="labels">
+                          Bransje (må velge minst ett bransje){" "}
+                        </label>
 
                         <Select
-                        // {...register("industry", { required: true })}
+                          {...register("industry", {})}
+                          id="industry"
                           placeholder="Legg til bransje"
                           isMulti
-                          defaultValue={selectedOption}
+                          required
                           onChange={(value) =>
                             setIndustryData({
                               industry: value.map((c) => c.value),
@@ -1118,13 +1238,12 @@ function RegistrationForm({ buttonName }) {
                           }
                           options={options}
                           name="industry"
-                          id='industry'
                         />
-                        {/* {errors.country && (
-                          <span style={{ color: "red" }} role="alert">
+                        {errors.companyName && (
+                          <p style={{ color: "red" }}>
                             Bransje: Dette feltet er obligatorisk!
-                          </span>
-                        )} */}
+                          </p>
+                        )}
                       </div>
                     </div>
 
@@ -1133,7 +1252,8 @@ function RegistrationForm({ buttonName }) {
                         type="checkbox"
                         className="form-check-input "
                         id="performsTrucks"
-                        onChange={(e) => setPerformsTrucks(e.value)}
+                        checked={performsTrucks}
+                        onChange={handlePerformsTrucksChange}
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
@@ -1147,7 +1267,8 @@ function RegistrationForm({ buttonName }) {
                         type="checkbox"
                         className="form-check-input"
                         id="companiesAgreements"
-                        onChange={(e) => setCompaniesAgreements(e.value)}
+                        checked={companiesAgreements}
+                        onChange={handleCompaniesAgreementsChange}
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
@@ -1159,8 +1280,7 @@ function RegistrationForm({ buttonName }) {
                       </label>
                     </div>
 
-                    {/*
-        <button type="submit"  className="btn btn-primary profile-button">Save data</button> */}
+                    {/*<button type="submit"  className="btn btn-primary profile-button">Save data</button> */}
                   </div>
                 </Modal.Body>
                 <Modal.Footer>
@@ -1185,19 +1305,22 @@ function RegistrationForm({ buttonName }) {
           )}
           {page === 4 && (
             <>
-              <Modal.Header closeButton>
-                <Modal.Title>Register bedriftsinformasjon 2/3</Modal.Title>
+            <form>
+              <Modal.Header >
+                <Modal.Title className="formMainLable data">Register bedriftsinformasjon 2/3</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <ProgressBar
-                  now={70}
+                  now={60}
                   variant="success"
-                  style={{ margin: "10px" }}
+                  animated 
+                  bsPrefix={''}
+                  style={{ margin: "10px",  fillColor:'#7451f8'}}
                   label={`70%`}
                 />
-
+                <h6 className="formTitle">Sosiale medier</h6>
                 <div className="row mt-2">
-                  <div className="col-md-3" >
+                  <div className="col-md-3" key="website">
                     <label className="labels">Nettside</label>
                     <input
                       type="text"
@@ -1208,7 +1331,7 @@ function RegistrationForm({ buttonName }) {
                     />
                   </div>
 
-                  <div className="col-md-3" >
+                  <div className="col-md-3" key="instagram">
                     <label className="labels">Instagram</label>
                     <input
                       type="text"
@@ -1219,7 +1342,7 @@ function RegistrationForm({ buttonName }) {
                     />
                   </div>
 
-                  <div className="col-md-3" >
+                  <div className="col-md-3" key="facebook">
                     <label className="labels">Facebook</label>
                     <input
                       type="text"
@@ -1230,7 +1353,7 @@ function RegistrationForm({ buttonName }) {
                     />
                   </div>
 
-                  <div className="col-md-3">
+                  <div className="col-md-3" key="youtube">
                     <label className="labels">Youtube</label>
                     <input
                       type="text"
@@ -1242,75 +1365,266 @@ function RegistrationForm({ buttonName }) {
                   </div>
                 </div>
 
-                {inputList.map((x, i) => {
-                  return (
-                    <div className="row mt-2">
-                      <div className="col-md-2" key={i}>
-                        <input
-                          name="openingDays"
-                          style={{ height: "55px", textAlign: "center" }}
-                          className="form-control"
-                          value={weekDays[i]}
-                          readOnly
-                          onChange={(e) => handleInputChange(e, i)}
-                        />
-                      </div>
+<br/>
+<br/>
 
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <div className="col-md-5" key={x}>
-                          <label className="labels"></label>
+<br/>
 
-                          <TimePicker
-                            renderInput={(params) => <TextField {...params} />}
-                            value={date}
-                            label="Åpningstid"
-                            onChange={(newValue) => {
-                              setDate(newValue);
-                            }}
-                            className="form-control"
-                            minTime={dayjs("2022-04-07T10:15")}
-                            maxTime={dayjs("2022-04-07T10:15")}
-                          />
-                        </div>
-                        <div className="col-md-5" >
-                          <label className="labels"></label>
-                          <TimePicker
-                            renderInput={(params) => <TextField {...params} />}
-                            value={date}
-                            label="Stengetid"
-                            onChange={(newValue) => {
-                              setDate(newValue);
-                            }}
-                            className="form-control"
-                            minTime={dayjs("2018-01-01T08:00")}
-                            maxTime={dayjs("2018-01-01T18:45")}
-                          />
-                        </div>
-                      </LocalizationProvider>
+                <h6 className="formTitleOpeningHours">Åpningstider</h6>
 
-                      {/*
-            <input
-              className='form-control'
-              name="openingHours"
-              pattern="[0-9]{2}:[0-9]{2}"
-              value={x.openingHours}
-              defaultValue='08:00'
-              onChange={e => handleInputChange(e, i)}
-              type='time'
-            /> */}
+                <div className="row rowOpeningHours">
+              
+                
 
-                       <div className="col-md-2 border-end  d-flex justify-content-left align-items-center"  key='opningDays' style={{ display: "flex", justifyContent: "start" }}>
-              {inputList.length !== 1 && <DeleteIcon
-                className="mr10"
-                onClick={() => handleRemoveClick(i)}/>}
-              {inputList.length - 1 === i && <AddBoxIcon hidden={hiddeAddIcon} onClick={handleAddClick}/>}
-            </div> 
-                    </div>
-                  );
-                })}
+                  <div className="row mt-2 bordOpeningsHours ">
+            
+                  <label className="labels text-center openingDaysLable">Mandag</label>
+                  <div className="col-md-6"  key="mondayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='mondayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                      
+                      
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="mondayclosingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='mondayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Tirsdag</label>
+                  <div className="col-md-6  " key="openingTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='tuesdayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="closingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='mondayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Tirsdag</label>
+                  <div className="col-md-6  " key="tuesdayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='tuesdayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="tuesdayclosingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='tuesdayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Onsdag</label>
+                  <div className="col-md-6  " key="wednesdayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='wednesdayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="wednesdayclosingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='wednesdayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Torsdag</label>
+                  <div className="col-md-6  " key="thursdayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='thursdayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="closingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='thursdayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Fredag</label>
+                  <div className="col-md-6  " key="fridayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='fridayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="fridayclosingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='fridayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Lørdag</label>
+                  <div className="col-md-6  " key="saturdayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='saturdayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="saturdayclosingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='saturdayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+
+                <div className="row mt-2 bordOpeningsHours">
+                  <label className="labels text-center openingDaysLable">Søndag</label>
+                  <div className="col-md-6  " key="sundayopeningTime">
+                    
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='sundayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                  </div>
+    
+                  <div className="col-md-6  " key="sundayclosingTime">
+                    
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='sundayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                             <label className="labels openingHoursLable text-center">Stengetid</label>
+                  </div>
+
+                </div>
+                
+                
+
+                </div>
+         
+
               </Modal.Body>
               <Modal.Footer>
-                <div className="row ">
+                <div className="row footerGutterX">
                   <div className="col">
                     <Button variant="secondary" onClick={handlePrevPage}>
                       Tilbake
@@ -1320,24 +1634,27 @@ function RegistrationForm({ buttonName }) {
                     <Button
                       variant="primary"
                       style={{ height: "auto", width: "100px" }}
-                      onClick={handlePageFourNextPage}
+                      onClick={handleInputOpeningsNextPage}
                     >
                       Gå videre
                     </Button>
                   </div>
                 </div>
               </Modal.Footer>
+              </form>
             </>
           )}
           {page === 5 && (
             <>
-              <Modal.Header closeButton>
-                <Modal.Title>Register bedriftsinformasjon 3/3</Modal.Title>
+            
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Register bedriftsinformasjon 3/3</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <ProgressBar
-                  now={100}
+                  now={80}
                   variant="success"
+                  animated
                   style={{ margin: "10px" }}
                   label={`100%`}
                 />
@@ -1351,19 +1668,20 @@ function RegistrationForm({ buttonName }) {
                       style={{ height: "200px" }}
                       placeholder="Om oss ...."
                       id="about"
-                      onChange={(e) => setAboutUs(e.value)}
+                      onChange={handleAboutUsInput}
                     />
                   </div>
                 </div>
 
                 <RMIUploader
+                  id
                   isOpen={visible}
                   hideModal={hideModal}
-                  onSelect={onUpload}
-                  onUpload={onUpload}
+                  onSelect={handleImagesInput}
+                  onUpload={handleImagesInput}
                   onRemove={onRemove}
                   dataSources={dataSources}
-                  onChange={onUpload}
+                  onChange={handleImagesInput}
                 />
               </Modal.Body>
               <div className="row mt-2">
@@ -1375,8 +1693,12 @@ function RegistrationForm({ buttonName }) {
                       </Button>
                     </div>
                     <div className="col">
-                      <Button onClick={handleAddCompanyInfo} variant="success">
-                        Lager
+                      <Button
+                        onClick={handleNextPageAboutUs}
+                        variant="primary"
+                        style={{ height: "auto", width: "100px" }}
+                      >
+                        Gå videre
                       </Button>
                     </div>
                   </div>
@@ -1386,8 +1708,8 @@ function RegistrationForm({ buttonName }) {
           )}
           {page === 6 && (
             <>
-              <Modal.Header closeButton>
-                <Modal.Title>Register bedriftsinformasjon 3/3</Modal.Title>
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Register bedriftsinformasjon 3/3</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <ProgressBar
@@ -1397,29 +1719,330 @@ function RegistrationForm({ buttonName }) {
                   label={`100%`}
                 />
 
-                <div className="row mt-3">
-                  <div className="col-md" key="about">
-                    <label className="labels">Om oss</label>
-                    <textarea
+                <div className="row mt-2">
+                  <div className="col-md-3"></div>
+                  <div className="col-md-6">
+                    <img
+                      src={
+                        file
+                          ? data.companyLogo
+                          : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                      }
+                      alt=""
+                      className="rounded companyLogoSummery mx-auto d-block rounded-circle mt-5"
+                      width="200px"
+                    />
+                  </div>
+
+                  <div className="col-md-3"></div>
+                </div>
+
+                <div className="row mt-2">
+                  <div className="col-md-4">
+                    <label className="labels">Organisasjonsnummer</label>
+                    <input
                       type="text"
+                      id="orgNumber"
                       className="form-control"
-                      style={{ height: "200px" }}
-                      placeholder="Om oss ...."
-                      id="about"
-                      onChange={(e) => setAboutUs(e.value)}
+                      readOnly
+                      value={data.orgNumber}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="labels">Bedriftsnavn</label>
+                    <input
+                      type="text"
+                      id="companyName"
+                      className="form-control"
+                      readOnly
+                      value={data.companyName}
+                    />
+                  </div>
+
+                  <div className="col-md-4">
+                    <label className="labels">Dagligleder</label>
+                    <input
+                      type="text"
+                      id="CEO"
+                      className="form-control"
+                      readOnly
+                      value={data.CEO}
                     />
                   </div>
                 </div>
 
-                <RMIUploader
-                  isOpen={visible}
-                  hideModal={hideModal}
-                  onSelect={onUpload}
-                  onUpload={onUpload}
-                  onRemove={onRemove}
-                  dataSources={dataSources}
-                  onChange={onUpload}
-                />
+                <div className="row mt-2">
+                  <div className="col-md-3">
+                    <label className="labels">Adresse</label>
+                    <input
+                      type="text"
+                      id="streetAddress"
+                      className="form-control"
+                      readOnly
+                      value={data.streetAddress}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="labels">Sted</label>
+                    <input
+                      type="text"
+                      id="region"
+                      className="form-control"
+                      readOnly
+                      value={data.region}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="labels">Postnummer</label>
+                    <input
+                      type="text"
+                      id="zipCode"
+                      className="form-control"
+                      readOnly
+                      value={data.zipCode}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="labels">Land</label>
+                    <input
+                      type="text"
+                      id="country"
+                      className="form-control"
+                      readOnly
+                      value={country.country}
+                    />
+                  </div>
+                </div>
+
+                <div className="row mt-2">
+                  <div className="col-md-3">
+                    <label className="labels">E-post</label>
+                    <input
+                      type="text"
+                      id="email"
+                      className="form-control"
+                      readOnly
+                      value={data.email}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="labels">Telefon nummer</label>
+                    <input
+                      type="text"
+                      id="phoneNumber"
+                      className="form-control"
+                      readOnly
+                      value={phoneNumber.phoneNumber}
+                    />
+                  </div>
+                  <div className="col-md-6">
+                    <label className="labels">Bransje</label>
+                    <input
+                      type="text"
+                      id="industry"
+                      className="form-control"
+                      readOnly
+                      placeholder="IKKE LAGT TIL"
+                      value={industryData.industry.map((e) => e)}
+                    />
+                  </div>
+                </div>
+
+                <div className="row mt-2" style={{ paddingTop: "20px" }}>
+                  <div className="col-md-1"></div>
+
+                  <div className="col-md-5">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="companiesAgreements"
+                      readOnly
+                      checked={companiesAgreements}
+                      value={companiesAgreements}
+                    />
+                    <label key="performsTrucks" htmlFor="exampleCheck1">
+                      Utfører arbeid for lastebiler?
+                    </label>
+                  </div>
+                  <div className="col-md-5">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="performsTrucks"
+                      readOnly
+                      checked={performsTrucks}
+                      value={performsTrucks}
+                    />
+                    <label key="companiesAgreements" htmlFor="exampleCheck1">
+                      Leverer du faste avtaler for bedrifter?
+                    </label>
+                  </div>
+                  <div className="" style={{ margin: "10px" }}>
+                    <div className="col-md-1"></div>
+                  </div>
+
+                  {/* 
+                      <div className="col-md-3" >
+                      <label className="labels">performsTrucks</label>
+                         <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="performsTrucks"
+                        readOnly
+                        checked={performsTrucks}
+                        value={performsTrucks}
+                       
+                      />
+
+                 
+                      </div> */}
+                </div>
+
+                <br />
+                <br />
+                <hr className="divLine" />
+                <br />
+                <br />
+                <div hidden={recommendedSocialMedia} className="bord">
+                  <h4 className="recommendedTitle">Anbefaling!</h4>
+                  <p className="recommendedBody">
+                    {" "}
+                    Vi anbefaler at du fyller inn dataen for dine sosiale medier
+                    og nettside. <br /> Det vil øker intressen hos dine kunder.
+                  </p>
+                </div>
+                <div className="row mt-2">
+                  <div className="col-md-3">
+                    <label className="labels">Nettside</label>
+                    <input
+                      type="text"
+                      id="website"
+                      className="form-control"
+                      readOnly
+                      placeholder="IKKE LAGT TIL"
+                      value={socialMedia.website}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="labels">Instagram</label>
+                    <input
+                      type="text"
+                      id="instagram"
+                      className="form-control"
+                      readOnly
+                      placeholder="IKKE LAGT TIL"
+                      value={socialMedia.instagram}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="labels">Facebook</label>
+                    <input
+                      type="text"
+                      id="facebook"
+                      className="form-control"
+                      readOnly
+                      placeholder="IKKE LAGT TIL"
+                      value={socialMedia.facebook}
+                    />
+                  </div>
+
+                  <div className="col-md-3">
+                    <label className="labels">Youtube</label>
+                    <input
+                      type="text"
+                      id="youtube"
+                      className="form-control"
+                      readOnly
+                      placeholder="IKKE LAGT TIL"
+                      value={socialMedia.youtube}
+                    />
+                  </div>
+                </div>
+                <div hidden={recommendedOpeningDays} className="bord">
+                  <h4
+                    className="recommendedTitle"
+                    style={{ paddingTop: "30px" }}
+                  >
+                    Anbefaling!
+                  </h4>
+                  <p className="recommendedBody">
+           
+                    Vi anbefaler at du fyller inn dataen for åpningstid og
+                    stengetid. <br /> Det vil øker intressen hos dine kunder.
+                  </p>
+                </div>
+                
+                  <div className="row mt-2">
+                    <div className="col-md-1"></div>
+
+                    <div className="col-md-3">
+                      <label className="labels">Mandag</label>
+                      <input
+                        type="text"
+                        id="Mandag"
+                        className="form-control"
+                        readOnly
+                        placeholder="IKKE LAGT TIL"
+                        value={openingsData.Mandag}
+                      />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="labels">Tirsdag</label>
+                      <input
+                        type="text"
+                        id="Tirsdag"
+                        className="form-control"
+                        readOnly
+                        placeholder="IKKE LAGT TIL"
+                        value={openingsData.Tirsdag}
+                      />
+                    </div>
+
+                    <div className="col-md-1"></div>
+                  </div>
+        
+
+                <br />
+                <hr className="divLine" />
+                <br />
+                <br />
+                <div hidden={recommendedAboutUs} className="bord">
+                  <h4 className="recommendedTitle">Anbefaling!</h4>
+                  <p className="recommendedBody">
+                    {" "}
+                    Vi anbefaler at du fyller inn informasjon om oss. Denne
+                    informasjon vil være synlig for dine kunder. <br /> Det vil
+                    øker intressen hos dine kunder.
+                  </p>
+                </div>
+                <div className="row mt-2">
+                  <div className="col-md-12">
+                    <h5 className="labels text-center">Om oss</h5>
+                    <div hidden={!recommendedAboutUs} className="aboutUsBord">
+                      <p className="aboutUsBordBody">{aboutUs.aboutUs}</p>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <br />
+                <hr className="divLine" />
+                <br />
+                <br />
+                <div className="row mt-2"></div>
+                <br />
+                <h3 className="text-center">Bilder</h3>
+                <div className="col">
+                  {imagesData.map((imgSrc, index) => (
+                    <img
+                      src={imgSrc}
+                      key={index}
+                      alt=""
+                      className="sumCompanyLogoSummery"
+                      height={"100px"}
+                      width={"100px"}
+                    />
+                  ))}
+                </div>
               </Modal.Body>
               <div className="row mt-2">
                 <Modal.Footer>
@@ -1429,8 +2052,20 @@ function RegistrationForm({ buttonName }) {
                         Tilbake
                       </Button>
                     </div>
+                    <div
+                      className="col"
+                      style={{ marginLeft: "50px", marginRight: "50px" }}
+                    >
+                      <Button
+                        onClick={startOver}
+                        variant="primary"
+                        style={{ height: "auto", width: "130px" }}
+                      >
+                        Start på nytt
+                      </Button>
+                    </div>
                     <div className="col">
-                      <Button onClick={handleAddCompanyInfo} variant="success">
+                      <Button onClick={handleAddToDatabase} variant="success">
                         Lager
                       </Button>
                     </div>
