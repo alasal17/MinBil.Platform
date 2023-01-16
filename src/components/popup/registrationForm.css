@@ -1,14 +1,21 @@
-
+/* 
 :root{
     --image:  url('./form_background.png') ;
 }
 
+<<<<<<< Updated upstream
 .customModalContent .modal-content {
     background-image: var(--image) ;
     background-size: cover;
+=======
+
+.customModal .modal-content{
+    background-image: var(--image) !important;
+
+>>>>>>> Stashed changes
     
     
-}
+} */
 
 .cButton{
     background-color:teal;
@@ -20,7 +27,11 @@ p{
 }
 
 .formMainLable{
-    color: #7451F8;
+    color: #1c417c;
+}
+
+.formMainLableInfo{
+    color: rgb(105, 104, 104) !important;
 }
 .companyLogo{
     height: 20%;
@@ -57,7 +68,21 @@ p{
 
 }
 
+<<<<<<< Updated upstream
 .formLabe label{
+=======
+
+
+.formInfoIcon{
+    background-color: #7551f88f;
+    fill:#7451f8;
+    color: #ffff;
+
+}
+
+label{
+
+>>>>>>> Stashed changes
     padding: 10px;
     font-weight: 700;
     color: #1c417c;
@@ -69,11 +94,19 @@ p{
 }
 
 .btn-primary{
-    background-color: #474BAE;
+    background-color: #0068C3;
 }
+<<<<<<< Updated upstream
 .formControl .form-control{
     border: 1px solid #51B9F8;
     background-color: #e3f0fb;
+=======
+
+.fromControlCompanyForm{
+    border: 1px solid #1f6eb4;
+    
+
+>>>>>>> Stashed changes
 }
 .recommendedBody{
     color:rgb(0, 0, 0);
@@ -81,16 +114,22 @@ p{
     
 }
 
+<<<<<<< Updated upstream
 .formmodal .modal{
+=======
+
+/* .modalFotterCompanyForm {
+
+>>>>>>> Stashed changes
     --bs-modal-footer-border-color: #b1b4f5;
     --bs-modal-footer-bg:#b1b4f5;
-}
+} */
 
 
-.bord{
+/* .bord{
     margin: 30px;
     border: 2px solid rgb(209, 136, 0);
-}
+} */
 
 .aboutUsBord{
     margin: 30px;
@@ -102,8 +141,10 @@ p{
     
 }
 
+
+
 .formTitle{
-    color: #1c417c;
+    color: #4e4e4e;
     text-align: center;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -127,6 +168,7 @@ p{
   --bs-gutter-x: 1.5rem;
   margin: 20px;
 }
+<<<<<<< Updated upstream
 .footerGutterX{
     --bs-gutter-x: 1rem;
 }
@@ -140,9 +182,23 @@ p{
     color:#ffffff !important;
     font-weight: 700 !important;
     background-color: #207FFF!important;
+=======
+
+
+.progress{
+    background-color: #75757515;
+    border: 1px solid #7551f857;
+    height: 20px;
+}
+.bg-success{
+    color:#ffffff !important;
+    font-weight: 500;
+    background-color: #0068C3!important;
+
+>>>>>>> Stashed changes
 }
 .progress-bar-animated {
-    animation: 0.5s linear reverse infinite progress-bar-stripes;
+    animation: 0.9s linear reverse infinite progress-bar-stripes;
 }
 .bordOpeningsHoursBody{
     margin: 20px;
@@ -188,8 +244,8 @@ p{
 
     border: 1px solid #51B9F8 !important;
     background-color: #e3f0fb !important;
-    border: 1px solid #7551f857 !important;
-    display: block;
+   
+
     width: 100%;
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
@@ -203,7 +259,7 @@ p{
     -moz-appearance: none;
     appearance: none;
     border-radius: 0.375rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
    
 }
 .css-13cymwt-control{
@@ -224,7 +280,7 @@ p{
     width: 50px !important;
 }
 .rowOpeningHours {
-    --bs-gutter-x: 1.5rem;
+   
     --bs-gutter-y: 0;
     display: flex;
     flex-wrap: wrap;
@@ -244,17 +300,38 @@ p{
 
 
 .openingHoursLable{
-    font-family: Georgia, serif;
+
 font-size: 12px;
 letter-spacing: 2px;
 word-spacing: 2px;
 color: #000000;
 font-weight: normal;
 text-decoration: none solid rgb(68, 68, 68);
-font-style: italic;
 font-variant: normal;
 text-transform: none;
 }
+
+
+
+.daysInWeekRow {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    /* margin-top: auto; */
+    /* margin-left: calc(-.5 * var(--bs-gutter-x)); */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-end;
+    align-content: stretch;
+}
+
+.daysInWeekDiv{
+    background-color: #ced4da;
+
+
+}
+
 /* p.ant-upload-text{
     visibility: hidden;
     position: relative;

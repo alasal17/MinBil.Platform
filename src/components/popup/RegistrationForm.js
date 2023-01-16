@@ -30,8 +30,10 @@ import setBodyColor from './setBodyColor'
 import { urlParams } from "via/lib/utils";
 import { style } from "@mui/system";
 import BackgroundImage2 from './form_background2.png'
-
-
+import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
+import Tooltip from 'react-bootstrap/Tooltip';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover'
 function RegistrationForm({ buttonName }) {
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
@@ -64,7 +66,15 @@ function RegistrationForm({ buttonName }) {
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [country, setCountry] = useState([]);
   const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
-  const [openingsData, setOpeningsData] = useState({});
+  const [openingsData, setOpeningsData] = useState({
+    Monday: {openingTime:'', closingTime:''},
+    Tuesday: {openingTime:'', closingTime:''},
+    Wednesday: {openingTime:'', closingTime:''},
+    Thursday: {openingTime:'', closingTime:''},
+    Friday: {openingTime:'', closingTime:''},
+    Saturday: {openingTime:'', closingTime:''},
+    Sunday: {openingTime:'', closingTime:''},
+  });
   const [imagesData, setImagesData] = useState([]);
   const [imagesData2, setImagesData2] = useState([]);
   const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
@@ -522,35 +532,7 @@ function RegistrationForm({ buttonName }) {
 
 
   
-  const handleInputOpeningsNextPage = () => {
-    // inputList.map((e) => {
-    //   if (
-    //     e.openingDays === "" ||
-    //     (e.openingDays !== "Mandag" &&
-    //       e.openingTime === "" &&
-    //       e.closingTime === "")
-    //   ) {
-    //     e.openingDays = "Ikke Lagt til";
-    //     e.closingTime = "Ikke Lagt til";
-    //     e.openingTime = "Ikke Lagt til";
-    //     console.log("FAILED");
-    //     setRecommendedOpeningDays(false);
-    //     setPage(page + 1);
-    //   } else {
-    //     setPage(page + 1);
-    //     setRecommendedOpeningDays(true);
-    //   }
-    // });
-      
-      setPage(page + 1)
-      
-      
-     
-      setBodyColor({backgroundImage:'url("./form_background2.png")'})
-    
-    
-
-  };
+ 
 
 // useEffect(() => {
 //   if(page ===5){
@@ -837,6 +819,46 @@ function RegistrationForm({ buttonName }) {
     setData({ ...data, [id]: value, orgNumber: searchTerm });
   };
 
+  const handleOnChangeOpeningsHours = e => {
+   
+    setOpeningsData({...openingsData, [e.target.name]: e.target.value})
+   
+      };
+
+  const handleInputOpeningsNextPage = e => {
+   
+    setOpeningsData({...openingsData, [e.target.name]: e.target.value})
+   
+      };
+
+
+  const popPageThreeInfo = (
+    <Popover id="popover-basic">
+      <Popover.Header className="formInfoIcon" as="h3">Popover right</Popover.Header>
+      <Popover.Body>
+      Vi <strong>anbefaler</strong>  at du fyller inn informasjon om oss. Denne informasjon vil være synlig for dine kunder. 
+      </Popover.Body>
+<br/>
+      <Popover.Header className="formInfoIcon" as="h3">Popover right</Popover.Header>
+      <Popover.Body>
+      Vi <strong>anbefaler</strong>  at du fyller inn informasjon om oss. Denne informasjon vil være synlig for dine kunder. 
+      </Popover.Body>
+    </Popover>
+  );
+
+  
+
+  const popPageFourInfo = (
+    <Popover id="popover-basic" >
+      <Popover.Header className="formInfoIcon" as="h3">Sosiale medier</Popover.Header>
+      <Popover.Body>
+      Vi <strong>anbefaler</strong> at du fyller inn dataen for dine sosiale medier og nettside.   <br/>  Det vil øker intressen hos dine kunder.    </Popover.Body>
+<br/>
+      <Popover.Header className="formInfoIcon" as="h3">Åpningstider</Popover.Header>
+      <Popover.Body>
+      Vi <strong>anbefaler</strong>  at du fyller inn dataen for åpningstid og stengetid.<br/>  Det vil øker intressen hos dine kunder.           </Popover.Body>
+    </Popover>
+  );
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -848,8 +870,9 @@ function RegistrationForm({ buttonName }) {
         show={show} 
         onHide={handleClose} 
         animation={true} 
-        autoFocus={true}>
-
+        autoFocus={true}
+        className='customModal'>
+        
           {page === 1 && (
             <>
               <Modal.Header >
@@ -908,7 +931,7 @@ function RegistrationForm({ buttonName }) {
                 </form>
               </Modal.Body>
 
-              <Modal.Footer>
+              <Modal.Footer className="modalFotterCompanyForm">
                 <div className="row ">
                   <div className="col">
                     <Button variant="secondary" onClick={handleClose}>
@@ -1283,7 +1306,7 @@ function RegistrationForm({ buttonName }) {
                     {/*<button type="submit"  className="btn btn-primary profile-button">Save data</button> */}
                   </div>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="modalFotterCompanyForm">
                   <div className="row ">
                     <div className="col">
                       <Button variant="secondary">Tilbake</Button>
@@ -1307,7 +1330,17 @@ function RegistrationForm({ buttonName }) {
             <>
             <form>
               <Modal.Header >
-                <Modal.Title className="formMainLable data">Register bedriftsinformasjon 2/3</Modal.Title>
+                <Modal.Title className="formMainLable data">Register bedriftsinformasjon 2/3
+                <span >
+                <OverlayTrigger
+                    key={'right'}
+                    placement={'right'}
+                    overlay={popPageFourInfo}
+            >  
+                  <ErrorOutlineTwoToneIcon className="formMainLableInfo" style={{left: '95%',  position: 'absolute'}}/>
+                  </OverlayTrigger>
+                </span>
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <ProgressBar
@@ -1316,18 +1349,25 @@ function RegistrationForm({ buttonName }) {
                   animated 
                   bsPrefix={''}
                   style={{ margin: "10px",  fillColor:'#7451f8'}}
+<<<<<<< Updated upstream
                   label={`60%`}
                   filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+=======
+
+                  label={`60%`}
+                  filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
+
+>>>>>>> Stashed changes
                 />
                 <h6 className="formTitle">Sosiale medier</h6>
                 <div className="row mt-2">
                   <div className="col-md-3" key="website">
-                    <label className="labels">Nettside</label>
+                    <label className="labels customLabel">Nettside</label>
                     <input
                       type="text"
                       id="website"
                       placeholder="www.nettside.no"
-                      className="form-control"
+                      className="form-control fromControlCompanyForm"
                       onChange={handleSocialInput}
                     />
                   </div>
@@ -1337,7 +1377,7 @@ function RegistrationForm({ buttonName }) {
                     <input
                       type="text"
                       id="instagram"
-                      className="form-control"
+                      className="form-control fromControlCompanyForm"
                       placeholder="@instagram"
                       onChange={handleSocialInput}
                     />
@@ -1348,7 +1388,7 @@ function RegistrationForm({ buttonName }) {
                     <input
                       type="text"
                       id="facebook"
-                      className="form-control"
+                      className="form-control fromControlCompanyForm"
                       placeholder="www.facebook.com"
                       onChange={handleSocialInput}
                     />
@@ -1359,7 +1399,7 @@ function RegistrationForm({ buttonName }) {
                     <input
                       type="text"
                       id="youtube"
-                      className="form-control"
+                      className="form-control fromControlCompanyForm"
                       placeholder="www.youtube.com"
                       onChange={handleSocialInput}
                     />
@@ -1377,246 +1417,49 @@ function RegistrationForm({ buttonName }) {
               
                 
 
-                  <div className="row mt-2 bordOpeningsHours ">
+     
+
+                <div className="row mt-2 ">
+                  
+                <div className="col-md-3 daysInWeekRow " key="openingTime">
+           
+                  
+                  <h6 className="text-center ">Mandag</h6>
+                  
+                  </div>
+                  <div className="col-md-4  " key="openingTime">
+                    
+                  <label className="labels openingHoursLable text-center">ÅpningsTid</label>
+                    <input
+                      type="text"
+                      id="openingTime"
+                      name='tuesdayOpen'
+                      className="form-control text-center"
+                      placeholder="07:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                           
+                  </div>
+    
+                  <div className="col-md-4"  key="closingTime">
+                  <label className="labels openingHoursLable text-center">Stengetid</label>
+                    <input
+                      type="text"
+                      id="closingTime"
+                      name='mondayClose'
+                      className="form-control text-center"
+                      placeholder="22:00"
+                      onChange={handleOpeningDataInput}
+                    />
+                      
+                  </div>
+
+                </div>
+          
+
             
-                  <label className="labels text-center openingDaysLable">Mandag</label>
-                  <div className="col-md-6"  key="mondayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='mondayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                      
-                      
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="mondayclosingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='mondayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
 
-                </div>
-
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Tirsdag</label>
-                  <div className="col-md-6  " key="openingTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='tuesdayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="closingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='mondayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Tirsdag</label>
-                  <div className="col-md-6  " key="tuesdayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='tuesdayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="tuesdayclosingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='tuesdayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
-
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Onsdag</label>
-                  <div className="col-md-6  " key="wednesdayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='wednesdayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="wednesdayclosingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='wednesdayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
-
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Torsdag</label>
-                  <div className="col-md-6  " key="thursdayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='thursdayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="closingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='thursdayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
-
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Fredag</label>
-                  <div className="col-md-6  " key="fridayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='fridayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="fridayclosingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='fridayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Lørdag</label>
-                  <div className="col-md-6  " key="saturdayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='saturdayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="saturdayclosingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='saturdayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
-
-                <div className="row mt-2 bordOpeningsHours">
-                  <label className="labels text-center openingDaysLable">Søndag</label>
-                  <div className="col-md-6  " key="sundayopeningTime">
-                    
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='sundayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                  </div>
-    
-                  <div className="col-md-6  " key="sundayclosingTime">
-                    
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='sundayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                             <label className="labels openingHoursLable text-center">Stengetid</label>
-                  </div>
-
-                </div>
+                
                 
                 
 
@@ -1624,14 +1467,21 @@ function RegistrationForm({ buttonName }) {
          
 
               </Modal.Body>
-              <Modal.Footer>
-                <div className="row footerGutterX">
+              <br/>
+              <br/>
+              <Modal.Footer className="modalFotterCompanyForm" style={{paddingTop:'20px'}}>
+                <div className="row">
+
+
+
                   <div className="col">
                     <Button variant="secondary" onClick={handlePrevPage}>
                       Tilbake
                     </Button>
                   </div>
-                  <div className="col">
+
+
+                  <div className="col" >
                     <Button
                       variant="primary"
                       style={{ height: "auto", width: "100px" }}
@@ -1646,10 +1496,24 @@ function RegistrationForm({ buttonName }) {
             </>
           )}
           {page === 5 && (
+             
+            
             <>
             
               <Modal.Header >
-                <Modal.Title className="formMainLable">Register bedriftsinformasjon 3/3</Modal.Title>
+                <Modal.Title className="formMainLable">Register bedriftsinformasjon 3/3 
+                
+                <span >
+                <OverlayTrigger
+                    key={'right'}
+                    placement={'right'}
+                    overlay={popPageThreeInfo}
+            >  
+                  <ErrorOutlineTwoToneIcon className="formMainLableInfo" style={{left: '95%',  position: 'absolute'}}/>
+                  </OverlayTrigger>
+                </span>
+                
+                </Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <ProgressBar
@@ -1662,7 +1526,10 @@ function RegistrationForm({ buttonName }) {
 
                 <div className="row mt-3">
                   <div className="col-md" key="about">
-                    <label className="labels">Om oss</label>
+                    
+                    <label className="labels">Om oss 
+                    </label>
+                    
                     <textarea
                       type="text"
                       className="form-control"
@@ -1686,7 +1553,7 @@ function RegistrationForm({ buttonName }) {
                 />
               </Modal.Body>
               <div className="row mt-2">
-                <Modal.Footer>
+              <Modal.Footer className="modalFotterCompanyForm">
                   <div className="row ">
                     <div className="col">
                       <Button variant="secondary" onClick={handlePrevPage}>
@@ -1844,7 +1711,7 @@ function RegistrationForm({ buttonName }) {
                       className="form-control"
                       readOnly
                       placeholder="IKKE LAGT TIL"
-                      value={industryData.industry.map((e) => e)}
+                      // value={industryData.industry.map((e) => e) ?? ''}
                     />
                   </div>
                 </div>
