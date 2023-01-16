@@ -1316,7 +1316,8 @@ function RegistrationForm({ buttonName }) {
                   animated 
                   bsPrefix={''}
                   style={{ margin: "10px",  fillColor:'#7451f8'}}
-                  label={`70%`}
+                  label={`60%`}
+                  filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
                 />
                 <h6 className="formTitle">Sosiale medier</h6>
                 <div className="row mt-2">

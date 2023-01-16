@@ -3,7 +3,7 @@
     --image:  url('./form_background.png') ;
 }
 
-.modal-content {
+.customModalContent .modal-content {
     background-image: var(--image) ;
     background-size: cover;
     
@@ -57,7 +57,7 @@ p{
 
 }
 
-label{
+.formLabe label{
     padding: 10px;
     font-weight: 700;
     color: #1c417c;
@@ -67,10 +67,11 @@ label{
     color:rgb(209, 136, 0);
     text-align: center;
 }
+
 .btn-primary{
     background-color: #474BAE;
 }
-.form-control{
+.formControl .form-control{
     border: 1px solid #51B9F8;
     background-color: #e3f0fb;
 }
@@ -80,7 +81,7 @@ label{
     
 }
 
-.modal{
+.formmodal .modal{
     --bs-modal-footer-border-color: #b1b4f5;
     --bs-modal-footer-bg:#b1b4f5;
 }
@@ -127,16 +128,18 @@ label{
   margin: 20px;
 }
 .footerGutterX{
-    --bs-gutter-x: 0rem !important;
+    --bs-gutter-x: 1rem;
 }
 .progress{
-    background-color: #ffef84;
     border: 1px solid #7551f857;
+    height: 25px;
+    
 }
 .bg-success{
-    color:#000000 !important;
-    font-weight: 500;
-    background-color: #DBA507!important;
+
+    color:#ffffff !important;
+    font-weight: 700 !important;
+    background-color: #207FFF!important;
 }
 .progress-bar-animated {
     animation: 0.5s linear reverse infinite progress-bar-stripes;
