@@ -34,6 +34,7 @@ import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
 import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover'
+import { idText } from "typescript";
 function RegistrationForm({ buttonName }) {
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
@@ -42,11 +43,11 @@ function RegistrationForm({ buttonName }) {
   const { currentUser } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
   const [registerButton, setRegisterButton] = useState(false);
-  const [inputList, setInputList] = useState({
-    openingDays: "",
-    openingTime: "",
-    closingTime: "",
-  });
+  // const [inputList, setInputList] = useState({
+  //   openingDays: "",
+  //   openingTime: "",
+  //   closingTime: "",
+  // });
   const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
   const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
   const [data2, setData2] = useState({});
@@ -65,16 +66,16 @@ function RegistrationForm({ buttonName }) {
   const [industryData, setIndustryData] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [country, setCountry] = useState([]);
-  const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
-  const [openingsData, setOpeningsData] = useState({
-    Monday: {openingTime:'', closingTime:''},
-    Tuesday: {openingTime:'', closingTime:''},
-    Wednesday: {openingTime:'', closingTime:''},
-    Thursday: {openingTime:'', closingTime:''},
-    Friday: {openingTime:'', closingTime:''},
-    Saturday: {openingTime:'', closingTime:''},
-    Sunday: {openingTime:'', closingTime:''},
-  });
+  // const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
+  // const [openingsData, setOpeningsData] = useState({
+  //   Monday: {openingTime:'', closingTime:''},
+  //   Tuesday: {openingTime:'', closingTime:''},
+  //   Wednesday: {openingTime:'', closingTime:''},
+  //   Thursday: {openingTime:'', closingTime:''},
+  //   Friday: {openingTime:'', closingTime:''},
+  //   Saturday: {openingTime:'', closingTime:''},
+  //   Sunday: {openingTime:'', closingTime:''},
+  // });
   const [imagesData, setImagesData] = useState([]);
   const [imagesData2, setImagesData2] = useState([]);
   const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
@@ -92,6 +93,7 @@ function RegistrationForm({ buttonName }) {
   const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
   const userID = auth.currentUser.uid;
   const changeBackground = true;
+  const [days, setDays] = useState([{day: "", open: "", close: ""}]);
   const {
     register,
     handleSubmit,
@@ -225,6 +227,42 @@ function RegistrationForm({ buttonName }) {
     setImagesData2(list2);
     setImagesData(list);
   };
+
+
+
+const handleChangeBusnissHours = (index, e) => {
+  const { name, value } = e.target;
+  const updatedDays = [...days];
+  updatedDays[index][name] = value;
+  console.log(updatedDays)
+  setDays(updatedDays);
+}
+
+
+const handleChangeDay = (index, event) => {
+  const updatedDays = [...days];
+  updatedDays[index].day = event.target.value;
+  console.log(updatedDays)
+  setDays(updatedDays);
+}
+const handleChangeOpen = (index, event) => {
+  const updatedDays = [...days];
+  updatedDays[index][event.target.name] = event.target.value;
+  console.log(updatedDays)
+  setDays(updatedDays);
+}
+const handleChangeClose = (index, event) => {
+  const updatedDays = [...days];
+  updatedDays[index].close = event.target.value;
+  console.log(updatedDays)
+  setDays(updatedDays);
+}
+
+
+const handleAddDay = () => {
+  console.log(days)
+  setDays([...days, {day: "", open: "", close: ""}]);
+}
 
   // ----------- FOR UPLOAD IMAGES -------------
   const onUpload = async (data) => {
@@ -498,7 +536,6 @@ function RegistrationForm({ buttonName }) {
   // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
   const handleNextPage = () => {
     setPage(page + 1);
-    console.log(openingsData);
   };
 
   // ------------- HADNLE FOR PREV PAGE ----------------
@@ -507,25 +544,25 @@ function RegistrationForm({ buttonName }) {
   // ################# OPNINGS DAYS AND HOURS ##################
 
   // handle input change
-  const handleInputChange = (e, index) => {
-    const { name, value } = e.target;
-    const list = [...inputList];
-    if (value === undefined) {
-      list[index]["openingTime"] = "Stengt";
-      list[index]["closingTime"] = "";
-      list[index]["openingDays"] = weekDays[index];
-      setRecommendedOpeningDays(false);
-    } else {
-      list[index][name] = value;
-      list[index]["openingDays"] = weekDays[index];
-      setRecommendedOpeningDays(true);
-    }
+  // const handleInputChange = (e, index) => {
+  //   const { name, value } = e.target;
+  //   const list = [...inputList];
+  //   if (value === undefined) {
+  //     list[index]["openingTime"] = "Stengt";
+  //     list[index]["closingTime"] = "";
+  //     list[index]["openingDays"] = weekDays[index];
+  //     setRecommendedOpeningDays(false);
+  //   } else {
+  //     list[index][name] = value;
+  //     list[index]["openingDays"] = weekDays[index];
+  //     setRecommendedOpeningDays(true);
+  //   }
 
-    // setInputList([...inputList, { openingTime: "", closingTime: ""}]);
-    // // setInputList({'OpningDays':weekDays[index], 'OpningHours':e.target.value });
+  //   // setInputList([...inputList, { openingTime: "", closingTime: ""}]);
+  //   // // setInputList({'OpningDays':weekDays[index], 'OpningHours':e.target.value });
 
-    console.log(list);
-  };
+  //   console.log(list);
+  // };
   const startOver = () => {
     setPage(1);
   };
@@ -561,25 +598,25 @@ function RegistrationForm({ buttonName }) {
   };
 
   // handle click event of the Remove button
-  const handleRemoveClick = (index) => {
-    const list = [...inputList];
-    list.splice(index, 1);
-    setInputList(list);
-  };
+  // const handleRemoveClick = (index) => {
+  //   const list = [...inputList];
+  //   list.splice(index, 1);
+  //   setInputList(list);
+  // };
 
-  // handle click event of the Add button
-  const handleAddClick = (e) => {
-    if (inputList.length <= 6) {
-      setInputList(...inputList, {
-        openingDays: "",
-        openingTime: "",
-        closingTime: "",
-      });
-    } else {
-      setHiddeAddIcon(true);
-      console.log("All seven days");
-    }
-  };
+  // // handle click event of the Add button
+  // const handleAddClick = (e) => {
+  //   if (inputList.length <= 6) {
+  //     setInputList(...inputList, {
+  //       openingDays: "",
+  //       openingTime: "",
+  //       closingTime: "",
+  //     });
+  //   } else {
+  //     setHiddeAddIcon(true);
+  //     console.log("All seven days");
+  //   }
+  // };
 
   // ------------- SEARCH API. RETURNS DIFFENTES RENDERINGS RESUALT ----------------
   const handleAPIRequesest = async (event) => {
@@ -755,7 +792,7 @@ function RegistrationForm({ buttonName }) {
         uid: userID,
         ...data,
         organisasjonsnummer: searchTerm,
-        ...openingsData,
+        // ...openingsData,
         ...aboutUs,
         ...industryData,
         ...country,
@@ -765,7 +802,7 @@ function RegistrationForm({ buttonName }) {
         ...performsTrucks,
         ...imagesData,
         ...imagesData2,
-        ...openingsData,
+        
 
         createdAt: serverTimestamp(),
       });
@@ -802,12 +839,11 @@ function RegistrationForm({ buttonName }) {
     const value = e.target.value;
     const name = e.target.name;
 
-    if(name === 'mondayOpen' || name === 'mondayClose'){
-      setOpeningsData( { openingHours:{Monday:{ [id]: value},}, ...openingsData});
-    }
+    // if(name === 'mondayOpen' || name === 'mondayClose'){
+    //   setOpeningsData( { openingHours:{Monday:{ [id]: value},}, ...openingsData});
+    // }
     
 
-    console.log(openingsData);
   };
   // ######### WORNG
   const handleInput = (e) => {
@@ -819,15 +855,10 @@ function RegistrationForm({ buttonName }) {
     setData({ ...data, [id]: value, orgNumber: searchTerm });
   };
 
-  const handleOnChangeOpeningsHours = e => {
-   
-    setOpeningsData({...openingsData, [e.target.name]: e.target.value})
-   
-      };
 
   const handleInputOpeningsNextPage = e => {
    
-    setOpeningsData({...openingsData, [e.target.name]: e.target.value})
+    // setOpeningsData({...openingsData, [e.target.name]: e.target.value})
    
       };
 
@@ -1349,15 +1380,8 @@ function RegistrationForm({ buttonName }) {
                   animated 
                   bsPrefix={''}
                   style={{ margin: "10px",  fillColor:'#7451f8'}}
-<<<<<<< Updated upstream
                   label={`60%`}
-                  filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
-=======
-
-                  label={`60%`}
-                  filledBackground="linear-gradient(to right, #fefb72, #f0bb31)"
-
->>>>>>> Stashed changes
+                  filledbackground="linear-gradient(to right, #fefb72, #f0bb31)"
                 />
                 <h6 className="formTitle">Sosiale medier</h6>
                 <div className="row mt-2">
@@ -1408,10 +1432,10 @@ function RegistrationForm({ buttonName }) {
 
 <br/>
 <br/>
+<hr className="divLine"/>
 
-<br/>
 
-                <h6 className="formTitleOpeningHours">Åpningstider</h6>
+                <h6 className="formTitle">Åpningstider</h6>
 
                 <div className="row rowOpeningHours">
               
@@ -1421,39 +1445,92 @@ function RegistrationForm({ buttonName }) {
 
                 <div className="row mt-2 ">
                   
-                <div className="col-md-3 daysInWeekRow " key="openingTime">
-           
-                  
-                  <h6 className="text-center ">Mandag</h6>
+                {/* <div className="col-md-3" key="monday">
+
+                <label className="labels openingHoursLable text-center">Dag</label>
+
+                <input
+                      type="text"
+                      id="monday"
+                      name='monday'
+                      className="form-control text-center"
+                      defaultValue={'Mandag'}
+                      value='Mandag'
+                      readOnly
+                      onChange={handleOpeningDataInput}
+                    />
                   
                   </div>
-                  <div className="col-md-4  " key="openingTime">
+                  <div className="col-md-3  " key="openingTime">
                     
                   <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-                    <input
-                      type="text"
-                      id="openingTime"
-                      name='tuesdayOpen'
-                      className="form-control text-center"
-                      placeholder="07:00"
-                      onChange={handleOpeningDataInput}
-                    />
-                           
+
+                  <Select
+                          id="openingTime"
+                          placeholder="--:--"
+                          options={hours}
+                          name="mondayOpen"
+                          className="css-13cymwt-control"
+                          style={{width:'100% !important'}}
+                        />
+             
                   </div>
     
-                  <div className="col-md-4"  key="closingTime">
-                  <label className="labels openingHoursLable text-center">Stengetid</label>
-                    <input
-                      type="text"
-                      id="closingTime"
-                      name='mondayClose'
-                      className="form-control text-center"
-                      placeholder="22:00"
-                      onChange={handleOpeningDataInput}
-                    />
+                  <div className="col-md-3"  key="closingTime">
+                  <label className="labels openingHoursLable text-center">Stengetid
+                  </label>
+                  <Select
+                          id="closingTime"
+                          placeholder="--:--"
+                          options={hours}
+                          name="mondayClose"
+                          className="css-13cymwt-control"
+                        style={{width:'100%'}}
+                        />
+
+                      
+                  </div> */}
+
+{days.map((day, index) => (
+    <div key={index}>
+        <label> Day: </label>
+            <select name='day' id="day" onChange={e => handleChangeBusnissHours(index, e)}>
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+       
+        <label> Opening Time: </label>
+            <input
+                type="text"
+                name="open"
+                
+                onChange={e => handleChangeBusnissHours(index, e)}
+            />
+       
+        <label>
+            Closing Time: </label>
+            <input
+                name="close"
+                type="text"
+                
+                onChange={e => handleChangeBusnissHours(index, e)}
+            />
+       
+    </div>
+))}
+
+                  <div className="col-md-3" >
+                  <label className="labels openingHoursLable text-center">
+                  </label>
+                  
+<button onClick={handleAddDay}>Add Day</button>
                       
                   </div>
-
                 </div>
           
 
@@ -1843,7 +1920,7 @@ function RegistrationForm({ buttonName }) {
                   <div className="row mt-2">
                     <div className="col-md-1"></div>
 
-                    <div className="col-md-3">
+                    {/* <div className="col-md-3">
                       <label className="labels">Mandag</label>
                       <input
                         type="text"
@@ -1864,7 +1941,7 @@ function RegistrationForm({ buttonName }) {
                         placeholder="IKKE LAGT TIL"
                         value={openingsData.Tirsdag}
                       />
-                    </div>
+                    </div> */}
 
                     <div className="col-md-1"></div>
                   </div>

@@ -1,30 +1,24 @@
-/* 
+/*
 :root{
     --image:  url('./form_background.png') ;
 }
 
-<<<<<<< Updated upstream
+
 .customModalContent .modal-content {
     background-image: var(--image) ;
     background-size: cover;
-=======
 
-.customModal .modal-content{
-    background-image: var(--image) !important;
 
->>>>>>> Stashed changes
-    
-    
 } */
 
 .cButton{
     background-color:teal;
     color:white;
 }
-
+/* 
 p{
-    content: ant-upload-textClick ('whatever it is you want to add')  !important;  
-}
+    content: ant-upload-textClick ('whatever it is you want to add')  !important;
+} */
 
 .formMainLable{
     color: #1c417c;
@@ -64,25 +58,12 @@ p{
 
 
 .divLine{
-    border: 2px solid #008585;
+    border: 2px solid #207FFF;
 
 }
 
-<<<<<<< Updated upstream
 .formLabe label{
-=======
 
-
-.formInfoIcon{
-    background-color: #7551f88f;
-    fill:#7451f8;
-    color: #ffff;
-
-}
-
-label{
-
->>>>>>> Stashed changes
     padding: 10px;
     font-weight: 700;
     color: #1c417c;
@@ -96,31 +77,25 @@ label{
 .btn-primary{
     background-color: #0068C3;
 }
-<<<<<<< Updated upstream
-.formControl .form-control{
-    border: 1px solid #51B9F8;
-    background-color: #e3f0fb;
-=======
+
 
 .fromControlCompanyForm{
     border: 1px solid #1f6eb4;
-    
+    /* border-radius: 10% !important; */
 
->>>>>>> Stashed changes
+
+
 }
 .recommendedBody{
     color:rgb(0, 0, 0);
     text-align: center;
-    
+
 }
 
-<<<<<<< Updated upstream
-.formmodal .modal{
-=======
 
 /* .modalFotterCompanyForm {
 
->>>>>>> Stashed changes
+
     --bs-modal-footer-border-color: #b1b4f5;
     --bs-modal-footer-bg:#b1b4f5;
 } */
@@ -138,7 +113,7 @@ label{
 
 .aboutUsBordBody{
     margin: 2px;
-    
+
 }
 
 
@@ -154,48 +129,64 @@ label{
 .formTitleOpeningHours{
     color: #1c417c;
     text-align: center;
-    
+
     padding-bottom: 20px;
     font-size: 20px;
 }
 
 
 .bordOpeningsHours{
- 
+
   width: 300px;
   background-color:  #ffffff;
   border: 1px solid #7551f857;
   --bs-gutter-x: 1.5rem;
   margin: 20px;
 }
-<<<<<<< Updated upstream
+
 .footerGutterX{
     --bs-gutter-x: 1rem;
 }
 .progress{
     border: 1px solid #7551f857;
     height: 25px;
-    
+
 }
+/* .css-13cymwt-control {
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    cursor: default;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0!important;
+    position: relative;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    background-color: hsl(0, 0%, 100%);
+    border-color: hsl(0, 0%, 80%);
+    border-radius: 0.375rem !important;
+    border-style: none !important;
+    border-width: 0 !important;
+    box-sizing: border-box;
+} */
 .bg-success{
 
     color:#ffffff !important;
     font-weight: 700 !important;
     background-color: #207FFF!important;
-=======
 
-
-.progress{
-    background-color: #75757515;
-    border: 1px solid #7551f857;
-    height: 20px;
-}
-.bg-success{
-    color:#ffffff !important;
-    font-weight: 500;
-    background-color: #0068C3!important;
-
->>>>>>> Stashed changes
 }
 .progress-bar-animated {
     animation: 0.9s linear reverse infinite progress-bar-stripes;
@@ -216,8 +207,8 @@ label{
 .form-check-input:checked {
     background-color: #DBA507;
     border-color: #DBA507;
-    
- 
+
+
 }
 .ant-row{
     background:''!important;
@@ -240,11 +231,43 @@ label{
     border: 0 !important;
     vertical-align: top !important;
 }
+.css-t3ipsp-control{
+    width: 100% !important;
+}
+
+.css-13cymwt-control {
+  
+    width: 100% !important;
+    align-items: center;
+    cursor: default;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    min-height: 38px;
+    outline: 0!important;
+    position: relative;
+    -webkit-transition: all 100ms;
+    transition: all 100ms;
+    border: 1px solid #1f6eb4 !important;
+ 
+}
+.css-qbdosj-Input{
+    width: 100% !important;
+
+}
 .css-1ptx2yq-MuiInputBase-root-MuiInput-root {
 
     border: 1px solid #51B9F8 !important;
     background-color: #e3f0fb !important;
-   
+
 
     width: 100%;
     padding: 0.375rem 0.75rem;
@@ -258,44 +281,27 @@ label{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    border-radius: 0.375rem;
+    /* border-radius: 0.375rem; */
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
-   
+
 }
-.css-13cymwt-control{
-    border: 1px solid #51B9F8 !important;
-    background-color: #e3f0fb !important;
-}
-.css-1fdsijx-ValueContainer{
-    
-    background-color: #e3f0fb !important;
-}
-.css-qbdosj-Input{
+
+/* .css-qbdosj-Input{
 
     background-color: #e3f0fb !important;
-}
+} */
 .upload-image{
     fill:#DBA507 !important;
     height: 50px !important;
     width: 50px !important;
 }
-.rowOpeningHours {
-   
-    --bs-gutter-y: 0;
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: calc(-1 * var(--bs-gutter-y));
-    margin-right: calc(-.5 * var(--bs-gutter-x));
-    margin-left: calc(-.5 * var(--bs-gutter-x));
-    justify-content: space-around;
-    
-}
+
 .rounded-circle{
     border:1px solid #7551f857;
-} 
+}
 
 .openingHoursBox{
-    
+width: 100%;
 }
 
 
@@ -335,20 +341,20 @@ text-transform: none;
 /* p.ant-upload-text{
     visibility: hidden;
     position: relative;
-      
+
 }
 
 .ant-upload-hint{
     visibility: hidden;
     position: relative;
     align-items: center;
-       
+
 }
 .ant-upload-text::before{
     position:absolute;
     visibility: visible;
     align-items: center;
-    content: "Klikk eller dra filen til dette området for å laste opp";    
+    content: "Klikk eller dra filen til dette området for å laste opp";
 }
 
 
@@ -358,5 +364,5 @@ text-transform: none;
 .ant-upload-hint::before{
     position:relative;
     visibility: visible;
-    content: "Støtte for enkelt og masseopplasting.";    
+    content: "Støtte for enkelt og masseopplasting.";
 } */
