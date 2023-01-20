@@ -81,6 +81,7 @@ function RegistrationForm({ buttonName }) {
   const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
   const [recommendedOpeningDays, setRecommendedOpeningDays] = useState(false);
   const [recommendedAboutUs, setRecommendedAboutUs] = useState(false);
+  const [recommendedColor, setRecommendedColor] = useState('');
   const [socialMedia, setSocialMedia] = useState({
     website: "",
     instagram: "",
@@ -92,8 +93,10 @@ function RegistrationForm({ buttonName }) {
   const [aboutUs, setAboutUs] = useState([]);
   const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
   const userID = auth.currentUser.uid;
-  const changeBackground = true;
+  const [addFieldIcon, setAddFieldIcon] = useState(false);
+  const [addFieldIcon2, setAddFieldIcon2] = useState(false);
   const [days, setDays] = useState([{day: "", open: "", close: ""}]);
+  const [days2, setDays2] = useState({});
   const {
     register,
     handleSubmit,
@@ -230,12 +233,12 @@ function RegistrationForm({ buttonName }) {
 
 
 
-const handleChangeBusnissHours = (index, e) => {
-  const { name, value } = e.target;
+const handleChangeBusnissHours = (e, index) => {
+
   const updatedDays = [...days];
-  updatedDays[index][name] = value;
-  console.log(updatedDays)
+  updatedDays[index][e.target.name] = e.target.value;
   setDays(updatedDays);
+
 }
 
 
@@ -247,7 +250,7 @@ const handleChangeDay = (index, event) => {
 }
 const handleChangeOpen = (index, event) => {
   const updatedDays = [...days];
-  updatedDays[index][event.target.name] = event.target.value;
+  updatedDays[index].open = event.target.value;
   console.log(updatedDays)
   setDays(updatedDays);
 }
@@ -259,10 +262,59 @@ const handleChangeClose = (index, event) => {
 }
 
 
-const handleAddDay = () => {
-  console.log(days)
-  setDays([...days, {day: "", open: "", close: ""}]);
+
+
+const handleNextPagefem = () =>{
+  if (days.length < 7) {
+    
+    setPage(page + 1);
+  } else {
+    
+    setPage(page + 1);
+  }
 }
+
+
+useEffect(() => {
+  if(days.length < 7){
+    setRecommendedOpeningDays(false);
+    setAddFieldIcon(false)
+    console.log('ww')
+  } else if(days.length === 7){
+    setAddFieldIcon(true)
+    setRecommendedOpeningDays(true);
+    console.log('else if')
+  } else{
+    setAddFieldIcon(false)
+    console.log('else')
+  }
+
+  
+
+})
+
+const handleAddDay = () => {
+  if(days.length < 7){
+    setDays([...days, {day: "", open: "", close: ""}]);
+
+    setAddFieldIcon(false)
+  } else if(days.length === 7){
+    setAddFieldIcon(true)
+  } else{
+    setAddFieldIcon(false)
+  }
+
+  
+
+  console.log(days)
+
+}
+
+const handleRemoveClick = index => {
+  const list = [...days];
+  list.splice(index, 1);
+  setDays(list);
+};
 
   // ----------- FOR UPLOAD IMAGES -------------
   const onUpload = async (data) => {
@@ -397,48 +449,6 @@ const handleAddDay = () => {
     file && uploadFile();
   }, [file]);
 
-  // useEffect(() => {
-
-  //   const uploadFile = () => {
-  //     const name = new Date().getTime() + file.name;
-
-  //     console.log(name);
-  //     const storageRef = ref(storage, file.name);
-  //     const uploadTask = uploadBytesResumable(storageRef, file);
-
-  //     uploadTask.on(
-  //       "state_changed",
-  //       (snapshot) => {
-  //         const progress =
-  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //         console.log("Upload is " + progress + "% done");
-  //         setPerc(progress);
-  //         switch (snapshot.state) {
-  //           case "paused":
-  //             console.log("Upload is paused");
-  //             break;
-  //           case "running":
-  //             console.log("Upload is running");
-  //             break;
-  //           default:
-  //             break;
-  //         }
-  //       },
-  //       (error) => {
-  //         console.log(error);
-  //       },
-  //       () => {
-  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-  //           setData2((prev) => ({ ...prev, companyLogo: downloadURL }));
-  //         });
-  //       }
-  //     );
-  //   };
-  //   file && uploadFile();
-  // }, [file]);
-
-  // ------------- CHECKING FOR ORG. NUMBER IS VALIDE -----------------
-
   const handleEnhetregisteretNextPage = () => {
     setRegisterButton(false);
 
@@ -516,22 +526,6 @@ const handleAddDay = () => {
     setPerformsTrucks(!performsTrucks);
   };
 
-  // useEffect(() =>{
-
-  //   inputList.map((e) => {
-
-  //     if(e.openingDays === '' || e.openingDays === 'Mandag' && e.openingTime === ''&& e.closingTime === '')
-  //     {
-  //       e.openingDays = 'Ikke Lagt til'
-  //       e.closingTime = 'Ikke Lagt til'
-  //       e.openingTime = 'Ikke Lagt til'
-  //       setRecommendedSocialMedia(false)
-  //     }
-
-  //   return recommendedSocialMedia
-
-  //   })
-  // }, [])
 
   // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
   const handleNextPage = () => {
@@ -590,9 +584,11 @@ const handleAddDay = () => {
   const handleNextPageAboutUs = () => {
     if (aboutUs.aboutUs === undefined || aboutUs.aboutUs === "") {
       setRecommendedAboutUs(false);
+      setRecommendedColor('red')
       setPage(page + 1);
     } else {
       setRecommendedAboutUs(true);
+      setRecommendedColor('black')
       setPage(page + 1);
     }
   };
@@ -802,6 +798,8 @@ const handleAddDay = () => {
         ...performsTrucks,
         ...imagesData,
         ...imagesData2,
+        openingHours: {...days},
+       
         
 
         createdAt: serverTimestamp(),
@@ -809,15 +807,15 @@ const handleAddDay = () => {
     } catch (err) {
       console.log(err);
     }
-    try {
-      await setDoc(doc(db, "enhetsRegisteret", userID), {
-        uid: userID,
-        ...enhetsRegisteretAPIData,
-        createdAt: serverTimestamp(),
-      });
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   await setDoc(doc(db, "enhetsRegisteret", userID), {
+    //     uid: userID,
+    //     ...enhetsRegisteretAPIData,
+    //     createdAt: serverTimestamp(),
+    //   });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   // ADDING DATA TO setSocialMedia
@@ -1437,101 +1435,54 @@ const handleAddDay = () => {
 
                 <h6 className="formTitle">Åpningstider</h6>
 
-                <div className="row rowOpeningHours">
               
                 
 
      
 
-                <div className="row mt-2 ">
-                  
-                {/* <div className="col-md-3" key="monday">
-
-                <label className="labels openingHoursLable text-center">Dag</label>
-
-                <input
-                      type="text"
-                      id="monday"
-                      name='monday'
-                      className="form-control text-center"
-                      defaultValue={'Mandag'}
-                      value='Mandag'
-                      readOnly
-                      onChange={handleOpeningDataInput}
-                    />
-                  
-                  </div>
-                  <div className="col-md-3  " key="openingTime">
-                    
-                  <label className="labels openingHoursLable text-center">ÅpningsTid</label>
-
-                  <Select
-                          id="openingTime"
-                          placeholder="--:--"
-                          options={hours}
-                          name="mondayOpen"
-                          className="css-13cymwt-control"
-                          style={{width:'100% !important'}}
-                        />
-             
-                  </div>
-    
-                  <div className="col-md-3"  key="closingTime">
-                  <label className="labels openingHoursLable text-center">Stengetid
-                  </label>
-                  <Select
-                          id="closingTime"
-                          placeholder="--:--"
-                          options={hours}
-                          name="mondayClose"
-                          className="css-13cymwt-control"
-                        style={{width:'100%'}}
-                        />
-
-                      
-                  </div> */}
-
-{days.map((day, index) => (
-    <div key={index}>
-        <label> Day: </label>
-            <select name='day' id="day" onChange={e => handleChangeBusnissHours(index, e)}>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-                <option value="Saturday">Saturday</option>
-                <option value="Sunday">Sunday</option>
-            </select>
-       
-        <label> Opening Time: </label>
-            <input
-                type="text"
-                name="open"
                 
-                onChange={e => handleChangeBusnissHours(index, e)}
-            />
-       
-        <label>
-            Closing Time: </label>
-            <input
-                name="close"
-                type="text"
-                
-                onChange={e => handleChangeBusnissHours(index, e)}
-            />
-       
-    </div>
-))}
-
-                  <div className="col-md-3" >
-                  <label className="labels openingHoursLable text-center">
-                  </label>
                   
-<button onClick={handleAddDay}>Add Day</button>
-                      
-                  </div>
-                </div>
+              
+{days.map((field, index) => (
+  <div className="row mt-2 " key={index}>
+
+<div className="col-md-1">
+
+</div>
+
+          <div className="col-md-3" key="day">
+          <label className="labels customLabel text-center">Dag</label>
+          <select name="day" className="form-control text-center fromControlCompanyForm" value={field.day} onChange={e => handleChangeBusnissHours(e, index)}>
+            <option value="">Velg dag...</option>
+            {weekDays.map(day => <option key={day} value={day}>{day}</option>)}
+          </select>
+          </div>
+
+
+          <div className="col-md-3" key="open">
+          <label className="labels customLabel text-center">Åpningstid</label>
+          <input type="text" className="form-control text-center fromControlCompanyForm"  name="open" value={field.open} onChange={e => handleChangeBusnissHours(e, index)} />
+          </div>
+
+          <div className="col-md-3" key='close'>
+          <label className="labels customLabel text-center ">Stengetid</label>
+          <input type="text"  pattern="[0-9]+:[0-9]$" className="form-control text-center fromControlCompanyForm"  name="close" value={field.close} onChange={e => handleChangeBusnissHours(e, index)} />
+          {/* <button type="button" onClick={() => handleRemove(index)}>Remove</button> */}
+        </div>
+
+        <div className="col-md-1">
+          {days.length !== 1 && 
+        <DeleteIcon onClick={handleRemoveClick} style={{color:'#ae0000'}} className=' mx-auto  mt-4'/>
+          }   {days.length - 1 === index && <AddBoxIcon className=' mx-auto  mt-4' style={{color:'#0068C3'}} onClick={handleAddDay} hidden={addFieldIcon}/>}
+          
+        </div>
+        </div>
+
+      ))}
+  
+
+           
+              
           
 
             
@@ -1540,7 +1491,7 @@ const handleAddDay = () => {
                 
                 
 
-                </div>
+ 
          
 
               </Modal.Body>
@@ -1562,7 +1513,7 @@ const handleAddDay = () => {
                     <Button
                       variant="primary"
                       style={{ height: "auto", width: "100px" }}
-                      onClick={handleInputOpeningsNextPage}
+                      onClick={handleNextPagefem}
                     >
                       Gå videre
                     </Button>
@@ -1848,6 +1799,7 @@ const handleAddDay = () => {
                 <hr className="divLine" />
                 <br />
                 <br />
+                <h6 className="formTitle">Sosiale medier</h6>
                 <div hidden={recommendedSocialMedia} className="bord">
                   <h4 className="recommendedTitle">Anbefaling!</h4>
                   <p className="recommendedBody">
@@ -1863,9 +1815,10 @@ const handleAddDay = () => {
                       type="text"
                       id="website"
                       className="form-control"
+                      style={{color:recommendedColor}}
                       readOnly
                       placeholder="IKKE LAGT TIL"
-                      value={socialMedia.website}
+                      value={socialMedia.website || "IKKE LAGT TIL"}
                     />
                   </div>
                   <div className="col-md-3">
@@ -1874,9 +1827,10 @@ const handleAddDay = () => {
                       type="text"
                       id="instagram"
                       className="form-control"
+                      style={{color:recommendedColor}}
                       readOnly
                       placeholder="IKKE LAGT TIL"
-                      value={socialMedia.instagram}
+                      value={socialMedia.instagram || "IKKE LAGT TIL"}
                     />
                   </div>
                   <div className="col-md-3">
@@ -1885,9 +1839,9 @@ const handleAddDay = () => {
                       type="text"
                       id="facebook"
                       className="form-control"
+                      style={{color:recommendedColor}}
                       readOnly
-                      placeholder="IKKE LAGT TIL"
-                      value={socialMedia.facebook}
+                      value={socialMedia.facebook || "IKKE LAGT TIL"}
                     />
                   </div>
 
@@ -1897,9 +1851,10 @@ const handleAddDay = () => {
                       type="text"
                       id="youtube"
                       className="form-control"
+                      style={{color:recommendedColor}}
                       readOnly
                       placeholder="IKKE LAGT TIL"
-                      value={socialMedia.youtube}
+                      value={socialMedia.youtube || "IKKE LAGT TIL"}
                     />
                   </div>
                 </div>
@@ -1917,35 +1872,35 @@ const handleAddDay = () => {
                   </p>
                 </div>
                 
+           
+                <br />
+                
+                <br />
+                <h6 className="formTitle">Åpningstider</h6>
+                       
                   <div className="row mt-2">
-                    <div className="col-md-1"></div>
 
-                    {/* <div className="col-md-3">
-                      <label className="labels">Mandag</label>
+                   {days.map(e => (
+                      <div className="col-md-3">
+                      <label className="labels">{e.day}</label>
                       <input
                         type="text"
                         id="Mandag"
                         className="form-control"
                         readOnly
                         placeholder="IKKE LAGT TIL"
-                        value={openingsData.Mandag}
+                        value={e.open + '-' + e.close || "IKKE LAGT TIL"}
+
                       />
                     </div>
-                    <div className="col-md-3">
-                      <label className="labels">Tirsdag</label>
-                      <input
-                        type="text"
-                        id="Tirsdag"
-                        className="form-control"
-                        readOnly
-                        placeholder="IKKE LAGT TIL"
-                        value={openingsData.Tirsdag}
-                      />
-                    </div> */}
+                    ))}
 
-                    <div className="col-md-1"></div>
+                   
+
+                   
+                    
                   </div>
-        
+
 
                 <br />
                 <hr className="divLine" />
