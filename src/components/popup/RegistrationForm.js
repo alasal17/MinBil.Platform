@@ -35,6 +35,11 @@ import Tooltip from 'react-bootstrap/Tooltip';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover'
 import { idText } from "typescript";
+import Confetti from "react-confetti";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import SuccessMessages from "./SuccessMessages";
+import { set } from "date-fns";
+
 function RegistrationForm({ buttonName }) {
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
@@ -94,7 +99,7 @@ function RegistrationForm({ buttonName }) {
   const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
   const userID = auth.currentUser.uid;
   const [addFieldIcon, setAddFieldIcon] = useState(false);
-  const [addFieldIcon2, setAddFieldIcon2] = useState(false);
+  const [openingHoursError, setOpeningHoursError] = useState(true);
   const [days, setDays] = useState([{day: "", open: "", close: ""}]);
   const [days2, setDays2] = useState({});
   const {
@@ -144,7 +149,29 @@ function RegistrationForm({ buttonName }) {
     { label: "23:00", value: "23:00" },
     { label: "00:00", value: "00:00" },
   ];
-
+  const hours_list = [
+    "06:00",
+    "07:00",
+    "08:00",
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+    "18:00",
+    "19:00",
+    "20:00",
+    "21:00",
+    "22:00",
+    "23:00",
+    "00:00",
+    "Stengt"
+  ];
+  
   const dataSources = [
     {
       id: 1,
@@ -236,55 +263,68 @@ function RegistrationForm({ buttonName }) {
 const handleChangeBusnissHours = (e, index) => {
 
   const updatedDays = [...days];
-  updatedDays[index][e.target.name] = e.target.value;
+  updatedDays[index][e.target.name] = e.target.value ?? '';
   setDays(updatedDays);
+  days.map((e)=> {
+    
+    
+    
+})
 
+console.log(days)
 }
 
-
-const handleChangeDay = (index, event) => {
-  const updatedDays = [...days];
-  updatedDays[index].day = event.target.value;
-  console.log(updatedDays)
-  setDays(updatedDays);
-}
-const handleChangeOpen = (index, event) => {
-  const updatedDays = [...days];
-  updatedDays[index].open = event.target.value;
-  console.log(updatedDays)
-  setDays(updatedDays);
-}
-const handleChangeClose = (index, event) => {
-  const updatedDays = [...days];
-  updatedDays[index].close = event.target.value;
-  console.log(updatedDays)
-  setDays(updatedDays);
-}
 
 
 
 
 const handleNextPagefem = () =>{
-  if (days.length < 7) {
-    
-    setPage(page + 1);
-  } else {
-    
-    setPage(page + 1);
+  if(days.length < 6){
+    setPage(page)
+    setOpeningHoursError(false)
+    console.log('Under 7')
+  }else{
+    setOpeningHoursError(true)
+    try{
+
+      setDays2({'Mandag':{open:days[0].open || '', close:days[0].close || ''},
+        'Tirsdag':{open:days[1].open ?? '', close:days[1].close || ''},
+        'Onsdag':{open:days[2].open ?? '', close:days[2].close} ?? '',
+        'Torsdag':{open:days[3].open || '', close:days[3].close || ''},
+        'Fredag':{open:days[4].open || '', close:days[4].close} || '',
+        'Lørdag':{open:days[5].open || '', close:days[5].close} || '',
+        'Søndag':{open:days[6].open || '', close:days[6].close || ''}
+        
+        })
+
+        setPage(page + 1)
+      
+      }catch (err) {
+        console.log(err);
+      }
   }
+  
+      
+   
 }
 
 
 useEffect(() => {
+
+
+
   if(days.length < 7){
     setRecommendedOpeningDays(false);
     setAddFieldIcon(false)
+  
     console.log('ww')
   } else if(days.length === 7){
     setAddFieldIcon(true)
+    setOpeningHoursError(true)
     setRecommendedOpeningDays(true);
     console.log('else if')
   } else{
+    setOpeningHoursError(true)
     setAddFieldIcon(false)
     console.log('else')
   }
@@ -362,10 +402,7 @@ const handleRemoveClick = index => {
     // console.log("Image Data", imagesData);
   };
 
-  // const onSelect = async (data) => {
-  //   await setImagesData(...imagesData, data);
-  //   console.log(imagesData)
-  // };
+
 
   const onRemove = (id) => {
     console.log("Remove image id", id);
@@ -377,7 +414,7 @@ const handleRemoveClick = index => {
   // ------------- FOR CALLING enhetsRegisteret DB -----------------
   useEffect(() => {
     // LISTEN (REALTIME)
-
+   
     const unsub = onSnapshot(
       collection(db, "enhetsRegisteret"),
       (snapShot) => {
@@ -390,8 +427,8 @@ const handleRemoveClick = index => {
           // }
 
           if (doc.id === userID) {
-            setPage(4);
-            setSearchTerm(doc.data().organisasjonsnummer);
+         
+            setSearchTerm(doc.data().orgNumber);
           } else {
           }
         });
@@ -535,54 +572,22 @@ const handleRemoveClick = index => {
   // ------------- HADNLE FOR PREV PAGE ----------------
   const handlePrevPage = () => setPage(page - 1);
 
-  // ################# OPNINGS DAYS AND HOURS ##################
 
-  // handle input change
-  // const handleInputChange = (e, index) => {
-  //   const { name, value } = e.target;
-  //   const list = [...inputList];
-  //   if (value === undefined) {
-  //     list[index]["openingTime"] = "Stengt";
-  //     list[index]["closingTime"] = "";
-  //     list[index]["openingDays"] = weekDays[index];
-  //     setRecommendedOpeningDays(false);
-  //   } else {
-  //     list[index][name] = value;
-  //     list[index]["openingDays"] = weekDays[index];
-  //     setRecommendedOpeningDays(true);
-  //   }
-
-  //   // setInputList([...inputList, { openingTime: "", closingTime: ""}]);
-  //   // // setInputList({'OpningDays':weekDays[index], 'OpningHours':e.target.value });
-
-  //   console.log(list);
-  // };
+ 
   const startOver = () => {
     setPage(1);
   };
 
 
-  
- 
-
-// useEffect(() => {
-//   if(page ===5){
-//     setBodyColor({'background-image': 'url(' + {BackgroundImage2} + ')'})
-//     let modalcontent = document.getElementsByClassName('modal-content')[0]
-//     modalcontent.style.backgroundImage = "url('./form_background2.png')";
-//     console.log(modalcontent)
-//   }
-// })
-
   const handleAboutUsInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
 
-    setAboutUs({ aboutUs: value });
+    setAboutUs({ about: value });
   };
 
   const handleNextPageAboutUs = () => {
-    if (aboutUs.aboutUs === undefined || aboutUs.aboutUs === "") {
+    if (aboutUs.about === undefined || aboutUs.about === "") {
       setRecommendedAboutUs(false);
       setRecommendedColor('red')
       setPage(page + 1);
@@ -787,7 +792,7 @@ const handleRemoveClick = index => {
       await setDoc(doc(db, "company", userID), {
         uid: userID,
         ...data,
-        organisasjonsnummer: searchTerm,
+        orgNumber: searchTerm,
         // ...openingsData,
         ...aboutUs,
         ...industryData,
@@ -796,26 +801,34 @@ const handleRemoveClick = index => {
         ...socialMedia,
         ...companiesAgreements,
         ...performsTrucks,
-        ...imagesData,
-        ...imagesData2,
-        openingHours: {...days},
-       
-        
-
+        numberOfEmployees:null,
+        linkedin:'',
+        images:[...imagesData],
+        openingHours: {...days2},
+        companiesAgreements:companiesAgreements,
+        performsTrucks:performsTrucks,
+        status:true,
         createdAt: serverTimestamp(),
       });
     } catch (err) {
       console.log(err);
     }
-    // try {
-    //   await setDoc(doc(db, "enhetsRegisteret", userID), {
-    //     uid: userID,
-    //     ...enhetsRegisteretAPIData,
-    //     createdAt: serverTimestamp(),
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      await setDoc(doc(db, "enhetsRegisteret", userID), {
+        uid: userID,
+        ...enhetsRegisteretAPIData,
+        createdAt: serverTimestamp(),
+      });
+    } catch (err) {
+      console.log(err);
+    }
+
+    setPage(page + 1 )
+    setTimeout(() =>{
+      navigate('/')
+    }, 6000)
+
+    
   };
 
   // ADDING DATA TO setSocialMedia
@@ -875,17 +888,25 @@ const handleRemoveClick = index => {
     </Popover>
   );
 
+  // const openingHoursErrorMessage = (
+   
+  // );
   
 
   const popPageFourInfo = (
     <Popover id="popover-basic" >
-      <Popover.Header className="formInfoIcon" as="h3">Sosiale medier</Popover.Header>
+      <Popover.Header className="formInfoRecommention" as="h3">Sosiale medier</Popover.Header>
       <Popover.Body>
-      Vi <strong>anbefaler</strong> at du fyller inn dataen for dine sosiale medier og nettside.   <br/>  Det vil øker intressen hos dine kunder.    </Popover.Body>
-<br/>
-      <Popover.Header className="formInfoIcon" as="h3">Åpningstider</Popover.Header>
+        Vi <strong>anbefaler</strong> at du fyller inn dataen for dine sosiale medier og nettside.   
+      <br/>  Det vil øker intressen hos dine kunder.    </Popover.Body>
+      <br/>
+        
+
+      <Popover.Header className="formInfoRequered" as="h3">Åpningstider (obligatorisk)</Popover.Header>
       <Popover.Body>
-      Vi <strong>anbefaler</strong>  at du fyller inn dataen for åpningstid og stengetid.<br/>  Det vil øker intressen hos dine kunder.           </Popover.Body>
+       Fyll inn tiden for alle dagene i uka. man-søn.</Popover.Body>
+
+   
     </Popover>
   );
   return (
@@ -1272,24 +1293,24 @@ const handleRemoveClick = index => {
                     </div>
 
                     <div className="row mt-2">
-                      <div className="col-md-12" key="industry">
+                      <div className="col-md-12" key="industryType">
                         <label className="labels">
                           Bransje (må velge minst ett bransje){" "}
                         </label>
 
                         <Select
-                          {...register("industry", {})}
-                          id="industry"
+                          {...register("industryType", {})}
+                          id="industryType"
                           placeholder="Legg til bransje"
                           isMulti
                           required
                           onChange={(value) =>
                             setIndustryData({
-                              industry: value.map((c) => c.value),
+                              industryType: value.map((c) => c.value),
                             })
                           }
                           options={options}
-                          name="industry"
+                          name="industryType"
                         />
                         {errors.companyName && (
                           <p style={{ color: "red" }}>
@@ -1357,7 +1378,7 @@ const handleRemoveClick = index => {
           )}
           {page === 4 && (
             <>
-            <form>
+            <form onSubmit={handleSubmit(handleNextPagefem)}>
               <Modal.Header >
                 <Modal.Title className="formMainLable data">Register bedriftsinformasjon 2/3
                 <span >
@@ -1436,10 +1457,17 @@ const handleRemoveClick = index => {
                 <h6 className="formTitle">Åpningstider</h6>
 
               
-                
+                <div hidden={openingHoursError} className="bord">
+                  <h4 className="errorTitle">Anbefaling!</h4>
+                  <p className="recommendedBody">
+                    {" "}
+                    Feltene for alle dagene må være fylt inn. Mandag-Søndag. 
+                  </p>
+                </div>
 
      
-
+<br/>
+<br/>
                 
                   
               
@@ -1452,24 +1480,39 @@ const handleRemoveClick = index => {
 
           <div className="col-md-3" key="day">
           <label className="labels customLabel text-center">Dag</label>
-          <select name="day" className="form-control text-center fromControlCompanyForm" value={field.day} onChange={e => handleChangeBusnissHours(e, index)}>
+          <select name="day" className="form-control text-center fromControlCompanyForm" value={field.day || ''} onChange={e => handleChangeBusnissHours(e, index)}>
             <option value="">Velg dag...</option>
             {weekDays.map(day => <option key={day} value={day}>{day}</option>)}
           </select>
           </div>
 
-
           <div className="col-md-3" key="open">
           <label className="labels customLabel text-center">Åpningstid</label>
-          <input type="text" className="form-control text-center fromControlCompanyForm"  name="open" value={field.open} onChange={e => handleChangeBusnissHours(e, index)} />
+          <select  name="open" className="form-control text-center fromControlCompanyForm" value={field.open || ''} onChange={e => handleChangeBusnissHours(e, index)}>
+            <option value="">Velg tid...</option>
+            {hours_list.map(open => <option key={open} value={open}>{open}</option>)}
+          </select>
           </div>
+
+          <div className="col-md-3" key="close">
+          <label className="labels customLabel text-center">Åpningstid</label>
+          <select name="close" className="form-control text-center fromControlCompanyForm" value={field.close || ''} onChange={e => handleChangeBusnissHours(e, index)}>
+            <option value="">Velg tid...</option>
+            {hours_list.map(close => <option key={close} value={close}>{close}</option>)}
+          </select>
+          </div>
+
+          {/* <div className="col-md-3" key="open">
+          <label className="labels customLabel text-center">Åpningstid</label>
+          <input type="text" className="form-control text-center fromControlCompanyForm"  name="open" value={field.open || ''} onChange={e => handleChangeBusnissHours(e, index) } />
+          </div> 
 
           <div className="col-md-3" key='close'>
           <label className="labels customLabel text-center ">Stengetid</label>
-          <input type="text"  pattern="[0-9]+:[0-9]$" className="form-control text-center fromControlCompanyForm"  name="close" value={field.close} onChange={e => handleChangeBusnissHours(e, index)} />
-          {/* <button type="button" onClick={() => handleRemove(index)}>Remove</button> */}
+          <input type="text"  pattern="[0-9]+:[0-9]$" className="form-control text-center fromControlCompanyForm"  name="close" value={field.close || ''} onChange={e => handleChangeBusnissHours(e, index)} />
+   
         </div>
-
+*/}
         <div className="col-md-1">
           {days.length !== 1 && 
         <DeleteIcon onClick={handleRemoveClick} style={{color:'#ae0000'}} className=' mx-auto  mt-4'/>
@@ -1480,20 +1523,6 @@ const handleRemoveClick = index => {
 
       ))}
   
-
-           
-              
-          
-
-            
-
-                
-                
-                
-
- 
-         
-
               </Modal.Body>
               <br/>
               <br/>
@@ -1513,7 +1542,7 @@ const handleRemoveClick = index => {
                     <Button
                       variant="primary"
                       style={{ height: "auto", width: "100px" }}
-                      onClick={handleNextPagefem}
+                      type={"submit"}
                     >
                       Gå videre
                     </Button>
@@ -1919,7 +1948,7 @@ const handleRemoveClick = index => {
                   <div className="col-md-12">
                     <h5 className="labels text-center">Om oss</h5>
                     <div hidden={!recommendedAboutUs} className="aboutUsBord">
-                      <p className="aboutUsBordBody">{aboutUs.aboutUs}</p>
+                      <p className="aboutUsBordBody">{aboutUs.about}</p>
                     </div>
                   </div>
                 </div>
@@ -1972,6 +2001,17 @@ const handleRemoveClick = index => {
                   </div>
                 </Modal.Footer>
               </div>
+            </>
+          )}
+           {page === 7 && (
+
+      
+            <>
+              
+
+              <div>
+             <SuccessMessages/>
+</div>
             </>
           )}
         </Modal>

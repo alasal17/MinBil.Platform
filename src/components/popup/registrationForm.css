@@ -19,7 +19,10 @@
 p{
     content: ant-upload-textClick ('whatever it is you want to add')  !important;
 } */
-
+.formSuccessLable{
+    color: #4f8b13;
+    font-size: 40px;
+}
 .formMainLable{
     color: #1c417c;
 }
@@ -74,6 +77,13 @@ p{
     text-align: center;
 }
 
+
+.errorTitle{
+    margin: 20px;
+    color:rgb(209, 0, 0);
+    text-align: center;
+}
+
 .btn-primary{
     background-color: #0068C3;
 }
@@ -116,7 +126,15 @@ p{
 
 }
 
+.formInfoRecommention{
+    color:black;
+    background-color: orange;
+}
 
+.formInfoRequered{
+    color: black;
+    background-color: red;
+}
 
 .formTitle{
     color: #4e4e4e;
