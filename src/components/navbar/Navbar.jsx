@@ -9,7 +9,8 @@ import { DarkModeContext } from "../../context/darkModeContext";
 import { useContext, useState,useEffect } from "react";
 import { db} from "../../firebase";
 import { AuthContext} from "../../context/AuthContext";
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import {
   collection,
   onSnapshot,
@@ -73,13 +74,13 @@ const Navbar = () => {
         <div className="items">
       
      
-
+{/*
           <div className="item">
             <LanguageOutlinedIcon className="icon" />
             Norsk
           </div>
 
-          {/* <div className="item">
+           <div className="item">
             <DarkModeOutlinedIcon
               className="icon"
               onClick={() => dispatch({ type: "TOGGLE" })}
@@ -104,13 +105,30 @@ const Navbar = () => {
           </div>
 
           <div className="item">
-          {data.companyName}
-            <img
+          
+      <Dropdown>
+      <Dropdown.Toggle className="profileImage" variant='' style={{backgroundColor:''}} id="dropdown-basic">
+      <img
             src={
               data.companyLogo
                 ? data.companyLogo
                 : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-            } alt="" className="rounded avatar  d-block rounded-circle" />
+            } alt="" className="rounded avatar  d-block rounded-circle"/>
+      </Dropdown.Toggle>
+
+      <Dropdown.Menu>
+        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+        <Dropdown.Item href="#/action-3">Natt modus:  <DarkModeOutlinedIcon
+              className="icon"
+              onClick={() => dispatch({ type: "TOGGLE" })}
+            /></Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+
+
+
+            
           </div>
 
         </div>

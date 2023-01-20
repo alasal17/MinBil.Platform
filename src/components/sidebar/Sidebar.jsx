@@ -1,11 +1,11 @@
 import "./sidebar.scss";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import StoreIcon from "@mui/icons-material/Store";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
-import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import SettingsSystemDaydreamOutlinedIcon from "@mui/icons-material/SettingsSystemDaydreamOutlined";
@@ -24,7 +24,21 @@ import {
   query
 } from "firebase/firestore";
 import { db} from "../../firebase";
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined';
+import CategoryOutlinedIcon from '@mui/icons-material/CategoryOutlined';
+import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
+import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
+import ContactPageOutlinedIcon from '@mui/icons-material/ContactPageOutlined';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
+import NewspaperOutlinedIcon from '@mui/icons-material/NewspaperOutlined';
+import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
+import CandlestickChartOutlinedIcon from '@mui/icons-material/CandlestickChartOutlined';
+import DonutSmallOutlinedIcon from '@mui/icons-material/DonutSmallOutlined';
 const Sidebar = () => {
   
 
@@ -72,37 +86,46 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="top">
+        
         <Link to="/" style={{ textDecoration: "none"}}>
           <img src={
                 data.companyLogo
                   ? data.companyLogo
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }  alt="" className="rounded company_logo mx-auto d-block rounded-circle mt-5" />
+              }  alt="" className="rounded company_logo mx-auto d-block rounded-circle mt-2" />
         </Link>
-        
+        <p className="companyNameTitle">{data.companyName}</p>
+      </div>
+      <div className="text-center" style={{paddingTop:'30%'}}  >
+      
       </div>
 
       <div className="center" style={{paddingTop:'30%'}}  >
         <ul>
-          <p className="title">MAIN</p>
+          <p className="title">OVERSIKT</p>
           <Link to="/" style={{ textDecoration: "none" }}>
           <li>
-            <DashboardIcon className="icon" />
-            <span>Dashbord</span>
+            <DashboardOutlinedIcon className="icon" />
+            <span >Kontrollpanel</span>
           </li>
           </Link>
-          <p className="title">LISTER</p>
+          <p className="title">ADMINISTRASJON</p>
           
-          <Link to="/employee" style={{ textDecoration: "none" }}>
+          {/* <Link to="/employee" style={{ textDecoration: "none" }}>
             <li>
               <PersonOutlineIcon className="icon" />
               <span>Ansatte</span>
             </li>
-          </Link>
+          </Link> */}
+
+          <li>
+            <AddShoppingCartOutlinedIcon className="icon" />
+            <span>Kommende</span>
+          </li>
 
           <Link to="/service" style={{ textDecoration: "none" }}>
             <li>
-              <StoreIcon className="icon" />
+              <CategoryOutlinedIcon className="icon" />
               <span>Tjenester</span>
             </li>
           </Link>
@@ -114,45 +137,110 @@ const Sidebar = () => {
           </li></Link>
 
           <li>
-            <LocalShippingIcon className="icon" />
+            <AssignmentTurnedInOutlinedIcon className="icon" />
             <span>Utført</span>
           </li>
-          <p className="title">NYTTIG</p>
+
+
+
+          <p className="title">KOMMUNIKASJON & KUNDEKONTAKT</p>
           <li>
-            <InsertChartIcon className="icon" />
-            <span>Stats</span>
+            <PostAddOutlinedIcon className="icon" />
+            <span>Innlegg </span>
           </li>
           <li>
             <NotificationsNoneIcon className="icon" />
-            <span>Varsler</span>
+            <span>Oppslag </span>
           </li>
-          <p className="title">SERVICE</p>
+
           <li>
-            <SettingsSystemDaydreamOutlinedIcon className="icon" />
-            <span>Systemhelse</span>
-          </li>
-          <li>
-            <PsychologyOutlinedIcon className="icon" />
-            <span>Logger </span>
+            <ContactPageOutlinedIcon className="icon" />
+            <span>Følgere </span>
           </li>
           <li>
-            <SettingsApplicationsIcon className="icon" />
-            <span>Innstillinger</span>
+            <GroupsOutlinedIcon className="icon" />
+            <span>Kunder </span>
           </li>
-          <p className="title">USER</p>
-          <Link to="/profile" style={{ textDecoration: "none" }}>
+
+
+
+          <li>
+            <MailOutlinedIcon className="icon" />
+            <span>Innboks </span>
+          </li>
+          <li>
+            <NewspaperOutlinedIcon className="icon" />
+            <span>Nyhetsbrev </span>
+          </li>
+
+
+
+
+          <p className="title">STATISTIKK & BESØKSMÅLING</p>
+          <li>
+            <DonutSmallOutlinedIcon className="icon" />
+            <span>Bedriftsstatistikk</span>
+          </li>
+          <li>
+            <TableChartOutlinedIcon className="icon" />
+            <span>Produkt statistikk </span>
+          </li>
+          <li>
+            <TroubleshootOutlinedIcon className="icon" />
+            <span>Kampanje statistikk</span>
+          </li>
+
+       
+          <li>
+            <CandlestickChartOutlinedIcon className="icon" />
+            <span>Ansatt statistikk</span>
+          </li>
+
+
+          <p className="title">VERKTØY & INNSTILLINGER</p>
+
+         
+<li>
+          <Dropdown>
+            
+      <Dropdown.Toggle className="profileImage " style={{content:''}} variant='' id="dropdown-basic">
+      <SettingsOutlinedIcon className="icon" />
+      <span>Instillinger </span>
+      </Dropdown.Toggle>
+      <ArrowForwardIosIcon style={{fontSize: '12px', paddingLeft:'5px'}}/>
+<Dropdown.Menu>
+  
+  <Dropdown.Item href="#/action-1"><Link to="/profile" style={{ textDecoration: "none" }}>
           <li>
             <AccountCircleOutlinedIcon className="icon" />
-            <span>Profil</span>
+            <span>Profil informasjon</span>
           </li>
-          </Link>
+          </Link></Dropdown.Item>
+  <Dropdown.Item href="#/action-2">          <li>
+            <SettingsOutlinedIcon className="icon" />
+            <span>Bedriftsinnstillinger</span>
+          </li></Dropdown.Item>
+  <Dropdown.Item href="#/action-2">  <li>
+            <SettingsOutlinedIcon className="icon" />
+            <span>Betalingsinnstillinger</span>
+          </li></Dropdown.Item>
+
+</Dropdown.Menu>
+</Dropdown> 
+</li>
+
+
+
+
+
+        
           <li>
             <ExitToAppIcon className="icon" />
             <span onClick={signUserOut}>Logg ut</span>
           </li>
         </ul>
       </div>
-      <div className="bottom">
+      {/* <div className="bottom">
         <div
           className="colorOption"
           onClick={() => dispatch({ type: "LIGHT" })}
@@ -161,7 +249,7 @@ const Sidebar = () => {
           className="colorOption"
           onClick={() => dispatch({ type: "DARK" })}
         ></div>
-      </div>
+      </div> */}
     </div>
   );
 };
