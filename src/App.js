@@ -19,6 +19,8 @@ import React  from 'react';
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
 import AuthPage from "./pages/login/AuthPage";
+import PlatfromSettings from "./pages/settings/platfromSettings/PlatfromSettings";
+import AccountSettings from "./pages/settings/accountSettings/AccountSettings";
 
 
 // const EmployeesList = React.lazy(() => import("./pages/list/EmployeesList"));
@@ -150,8 +152,22 @@ function App() {
                 }
               />
 
-
-            
+              <Route
+                path="/platform-settings"
+                element={
+                  <RequireAuth>
+                    <PlatfromSettings />
+                  </RequireAuth>
+                }
+              />
+            <Route
+                path="/account-settings"
+                element={
+                  <RequireAuth>
+                    <AccountSettings />
+                  </RequireAuth>
+                }
+              />
          
             {/* <Route path="/register">
               <Route

@@ -18,7 +18,8 @@ import {
   query
 } from "firebase/firestore";
 import React  from 'react';
-
+import { Link } from "react-router-dom";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 
 
 
@@ -66,10 +67,10 @@ const Navbar = () => {
     <div className="navbar">
       <div className="wrapper">
 
-        <div className="search">
+        {/* <div className="search">
           <input type="text" placeholder="Søk..." />
           <SearchOutlinedIcon />
-        </div>
+        </div> */}
         
         <div className="items">
       
@@ -90,11 +91,11 @@ const Navbar = () => {
           {/* <div className="item">
             <FullscreenExitOutlinedIcon className="icon" />
           </div> */}
+
           <div className="item">
             <NotificationsNoneOutlinedIcon className="icon" />
             <div className="counter">1</div>
-          </div>
-          
+          </div> 
           
          
             
@@ -105,8 +106,8 @@ const Navbar = () => {
           </div>
 
           <div className="item">
-          
-      <Dropdown>
+          <ul className="navbarUl">
+     <Dropdown>
       <Dropdown.Toggle className="profileImage" variant='' style={{backgroundColor:''}} id="dropdown-basic">
       <img
             src={
@@ -117,15 +118,22 @@ const Navbar = () => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
-        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+        <Dropdown.Item href="#/action-1">
+        <Link to="/profile" style={{ textDecoration: "none" }}>
+          <li className="navbarLi">
+            <AccountCircleOutlinedIcon className="navbarIcon" />
+            <span className="navbarSpan">Profil</span>
+          </li>
+          </Link>
+        </Dropdown.Item>
         <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
         <Dropdown.Item href="#/action-3">Natt modus:  <DarkModeOutlinedIcon
               className="icon"
               onClick={() => dispatch({ type: "TOGGLE" })}
             /></Dropdown.Item>
       </Dropdown.Menu>
-    </Dropdown>
-
+    </Dropdown> 
+    </ul>
 
 
             

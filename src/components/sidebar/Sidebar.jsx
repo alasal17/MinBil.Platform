@@ -39,6 +39,11 @@ import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import TroubleshootOutlinedIcon from '@mui/icons-material/TroubleshootOutlined';
 import CandlestickChartOutlinedIcon from '@mui/icons-material/CandlestickChartOutlined';
 import DonutSmallOutlinedIcon from '@mui/icons-material/DonutSmallOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import RoomPreferencesOutlinedIcon from '@mui/icons-material/RoomPreferencesOutlined';
+import SettingsApplicationsOutlinedIcon from '@mui/icons-material/SettingsApplicationsOutlined';
+import DisplaySettingsOutlinedIcon from '@mui/icons-material/DisplaySettingsOutlined';
+
 const Sidebar = () => {
   
 
@@ -92,15 +97,13 @@ const Sidebar = () => {
                 data.companyLogo
                   ? data.companyLogo
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }  alt="" className="rounded company_logo mx-auto d-block rounded-circle mt-2" />
+              }  alt="" className=" company_logo mx-auto d-block rounded-circle mt-2" />
         </Link>
         <p className="companyNameTitle">{data.companyName}</p>
       </div>
-      <div className="text-center" style={{paddingTop:'30%'}}  >
-      
-      </div>
 
-      <div className="center" style={{paddingTop:'30%'}}  >
+
+      <div className="center" style={{paddingTop:'45%'}}  >
         <ul>
           <p className="title">OVERSIKT</p>
           <Link to="/" style={{ textDecoration: "none" }}>
@@ -140,7 +143,14 @@ const Sidebar = () => {
             <AssignmentTurnedInOutlinedIcon className="icon" />
             <span>Utført</span>
           </li>
-
+         
+          <Link to="/profile" style={{ textDecoration: "none" }}>
+          <li>
+            <AccountCircleOutlinedIcon className="icon" />
+            <span>Profil</span>
+          </li>
+          </Link>
+        
 
 
           <p className="title">KOMMUNIKASJON & KUNDEKONTAKT</p>
@@ -201,30 +211,52 @@ const Sidebar = () => {
 
          
 <li>
-          <Dropdown>
-            
-      <Dropdown.Toggle className="profileImage " style={{content:''}} variant='' id="dropdown-basic">
-      <SettingsOutlinedIcon className="icon" />
-      <span>Instillinger </span>
-      </Dropdown.Toggle>
-      <ArrowForwardIosIcon style={{fontSize: '12px', paddingLeft:'5px'}}/>
+
+          <Dropdown className="dropdownSidebar">
+          <Dropdown.Toggle className="profileImage " style={{content:''}} variant='' id="dropdown-basic">
+          <div className="row mt-2">
+          
+                      <div className="col-md-8">
+                      
+                      <SettingsOutlinedIcon className="icon" />
+                      <span>Instillinger </span>
+                      
+                      
+                        </div>
+                        <div className="col-md-3" >
+                        <ArrowForwardIosIcon style={{fontSize: '12px', paddingRight:'3px'}}/>
+                        </div>
+                     
+                        </div>       
+                        </Dropdown.Toggle>
+                        
 <Dropdown.Menu>
   
-  <Dropdown.Item href="#/action-1"><Link to="/profile" style={{ textDecoration: "none" }}>
+  <Dropdown.Item href="#/action-1">
+  <Link to="/account-settings" style={{ textDecoration: "none" }}>
           <li>
-            <AccountCircleOutlinedIcon className="icon" />
+            <ManageAccountsOutlinedIcon className="icon" />
             <span>Profil informasjon</span>
           </li>
-          </Link></Dropdown.Item>
+  </Link>
+          </Dropdown.Item>
   <Dropdown.Item href="#/action-2">          <li>
-            <SettingsOutlinedIcon className="icon" />
+            <RoomPreferencesOutlinedIcon className="icon" />
             <span>Bedriftsinnstillinger</span>
           </li></Dropdown.Item>
   <Dropdown.Item href="#/action-2">  <li>
-            <SettingsOutlinedIcon className="icon" />
+            <SettingsApplicationsOutlinedIcon className="icon" />
             <span>Betalingsinnstillinger</span>
           </li></Dropdown.Item>
-
+          <Dropdown.Item href="#/action-2">
+          <Link to="/platform-settings" style={{ textDecoration: "none" }}>
+              <li>
+            <DisplaySettingsOutlinedIcon className="icon" />
+            <span>Plattform innstillinger</span>
+          </li>
+          </Link>
+          </Dropdown.Item>
+          
 </Dropdown.Menu>
 </Dropdown> 
 </li>
@@ -234,12 +266,23 @@ const Sidebar = () => {
 
 
         
-          <li>
+          {/* <li>
+            <ExitToAppIcon className="icon" />
+            <span onClick={signUserOut}>Logg ut</span>
+          </li> */}
+        </ul>
+      </div>
+      <hr className="sidebarhr"/>
+<div className="bottom">
+        <ul>
+        <li>
             <ExitToAppIcon className="icon" />
             <span onClick={signUserOut}>Logg ut</span>
           </li>
         </ul>
-      </div>
+      
+        </div>
+
       {/* <div className="bottom">
         <div
           className="colorOption"

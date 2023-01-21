@@ -1,0 +1,137 @@
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Grid,
+  Typography
+} from '@mui/material';
+
+export const SettingsNotifications = (props) => (
+  <form {...props}>
+    <Card>
+      <CardHeader
+        subheader="Administrer varslene"
+        title="Varsleringer"
+      />
+      <Divider />
+      <CardContent>
+        <Grid
+          container
+          spacing={6}
+          wrap="wrap"
+        >
+          <Grid
+            item
+            md={4}
+            sm={6}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+            xs={12}
+          >
+            <Typography
+              color="textPrimary"
+              gutterBottom
+              variant="h6"
+            >
+              Varsel
+            </Typography>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  defaultChecked
+                />
+              )}
+              label="E-post"
+            />
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  defaultChecked
+                />
+              )}
+              label="Push-varsler"
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Tekstmeldinger"
+            />
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  defaultChecked
+                />
+              )}
+              label="
+              Telefonsamtaler"
+            />
+          </Grid>
+          <Grid
+            item
+            md={4}
+            sm={6}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+            xs={12}
+          >
+            <Typography
+              color="textPrimary"
+              gutterBottom
+              variant="h6"
+            >
+              Meldinger
+            </Typography>
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  defaultChecked
+                />
+              )}
+              label="E-post"
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Push-vasler"
+            />
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  color="primary"
+                  defaultChecked
+                />
+              )}
+              label="Telefonsamtaler"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+      <Divider />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          p: 2
+        }}
+      >
+        <Button
+          color="primary"
+          variant="contained"
+        >
+          Lagre
+        </Button>
+      </Box>
+    </Card>
+  </form>
+);

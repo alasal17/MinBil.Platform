@@ -1,18 +1,38 @@
 .navbar {
- 
-  height: 80px;
-  border-bottom: 0.5px solid rgb(231, 228, 228);
+  height: 65px;
   display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #555;
+  align-items: stretch;
+  background-color: #f2f5fd;
+  position: static;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: space-around;
+ 
+  border-bottom: 0.5px solid rgb(231, 228, 228);
+  // border-bottom-right-radius: 2000px;
+
+
+
+
+
+
+  
 
   .wrapper {
+    // width: 100%;
+    // padding: 20px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: space-between;
     width: 100%;
     padding: 20px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
+    flex-direction: row-reverse;
+    flex-wrap: nowrap;
+    align-content: space-between;
+
 
     .search {
       display: flex;
@@ -34,12 +54,17 @@
     .items {
       display: flex;
       align-items: center;
+      
 
       .item {
         display: flex;
         align-items: center;
         margin-right: 20px;
         position: relative;
+        align-items: center;
+        padding: 3px;
+        cursor: pointer;
+        padding-bottom: 9px;
 
         .icon {
           font-size: 20px;
@@ -51,6 +76,7 @@
           border-radius: 50%;
           padding-left: 10px;
         }
+        
 
         .counter {
           width: 15px;
@@ -66,6 +92,8 @@
           position: absolute;
           top: -5px;
           right: -5px;
+
+          
         }
       }
     }
@@ -134,4 +162,41 @@ background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
   border-radius: none !important;
   background-color: none !important;
   transition: none !important;;
+}
+
+
+
+.navbarUl {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+}
+
+ 
+
+.navbarLi {
+    // display: flex;
+    align-items: center;
+    padding: 3px;
+    cursor: pointer;
+    padding-bottom: 9px;
+  }
+
+  .navbarIcon {
+    font-size: 40px;
+    // color: #7451f8;
+    color: #2f49d1;
+  }
+
+.navbarSpan{
+    font-size: 20px;
+    font-weight: 500;
+    color: #888;
+    // color: #2f49d1;
+    margin-left: 15px;
+}
+
+.navbarLi:hover {
+  background-color: #ece8ff;
 }
