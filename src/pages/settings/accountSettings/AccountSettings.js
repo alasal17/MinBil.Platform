@@ -1,4 +1,4 @@
-import Head from 'next/head';
+
 import { Box, Container, Grid, Typography } from '@mui/material';
 import { AccountProfile } from './account-profile';
 import { AccountProfileDetails } from './account-profile-details';
