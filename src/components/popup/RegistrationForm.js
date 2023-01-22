@@ -939,7 +939,7 @@ const handleRemoveClick = index => {
                 {/* First page of the form */}
 
                 <form onSubmit={handleAPIRequesest}>
-                  <div className="col-md-12" >
+                  <div className="col-md-12" key="orgNumber">
                     <label className="labels">Organisasjonsnummer</label>
                     <input
                       type="number"
