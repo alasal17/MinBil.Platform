@@ -30,6 +30,7 @@ import {
 import MuiPhoneInput from "material-ui-phone-number";
 import { AuthContext} from "../../../context/AuthContext";
 import { auth, db, storage } from "../../../firebase";
+import { AccountOpeningHoursDetails } from './account-openinghours-details';
 
 function AccountSettings() {
     const [key, setKey] = useState('profile');
@@ -51,10 +52,7 @@ function AccountSettings() {
           id="controlled-tab-example "
           activeKey={key}
           onSelect={(k) => setKey(k)}
-          className="mb-1"
-     
-        
-    >
+          className="mb-1">
       <Tab eventKey="profile" title="Profile" >
         
       <Box
@@ -146,15 +144,22 @@ function AccountSettings() {
         </Typography>
         <Grid
           container
-          spacing={3}
+          spacing={0}
         >
+          <Grid
+            item
+            lg={4}
+            md={6}
+            xs={12}
+          >
          
+          </Grid>
           <Grid
             item
             lg={10}
            
           >
-       
+            <AccountOpeningHoursDetails/>
           </Grid>
         </Grid>
       </Container>

@@ -89,7 +89,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar">
+    <div className="sidebar stickyBar">
       <div className="top">
         
         <Link to="/" style={{ textDecoration: "none"}}>

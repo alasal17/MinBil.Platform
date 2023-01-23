@@ -1,29 +1,32 @@
 .sidebar {
   // background-color: #0f0e3e;
   // background-color: #f2f3f9;
+
   flex: 0.75 ;
   border-right: 0.5px solid rgb(230, 227, 227);
-  min-height: 100vh;
+  height: 100vh !important;
+  max-height: 150vh !important;
   background-color: #f2f5fd;
- 
+
+  
   .top {
-    // height: 50px;
-    // display: flex;
-    // align-items: center;
-    // justify-content: center;
-    // margin: 5px;
-
-    // padding-top:20px ;
-    // height: 50px;
-    // display: flex;
-    // align-items: stretch;
-    // justify-content: center;
-    // margin: 5px;
-
-    // flex-direction: row;
-    // flex-wrap: wrap;
-
+    
     height: 50px;
+
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+
+    padding-top:20px ;
+    height: 50px;
+
+    align-items: stretch;
+    justify-content: center;
+    margin: 5px;
+
+
+
+
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -188,4 +191,14 @@
   padding-left: 21px;
   border-top: 2px solid rgb(199, 197, 197);
   opacity: .25;
+}
+
+
+.stickyBar{
+  overflow-y: hidden;
+  overflow: hidden;
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  flex-wrap: wrap;
 }

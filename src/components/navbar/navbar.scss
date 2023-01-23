@@ -7,7 +7,9 @@
   justify-content: center;
   flex-wrap: wrap;
   align-content: space-around;
- 
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
   border-bottom: 0.5px solid rgb(231, 228, 228);
   // border-bottom-right-radius: 2000px;
 

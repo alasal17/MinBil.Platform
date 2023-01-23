@@ -97,7 +97,7 @@ export const AccountProfileDetails = (props) => {
         setIndustryType(...industry_list)
         setCompaniesAgreements(companyData[0].companiesAgreements)
         setPerformsTrucks(companyData[0].performsTrucks)
-        console.log(...industryType);
+      
       },
 
       (error) => {
@@ -135,7 +135,7 @@ export const AccountProfileDetails = (props) => {
      
       <Card>
         
-        <CardHeader subheader="Informasjonen kan redigeres" title="Profil" />
+        <CardHeader subheader="Informasjonen kan endres" title="Profil" />
         
         <Divider />
         <CardContent>
