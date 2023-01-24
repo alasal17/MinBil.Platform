@@ -50,7 +50,8 @@ const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
   const [data, setData] = useState({});
   const {currentUser} = useContext(AuthContext);
-  
+  const [colorTheme, setColorTheme] = useState('green-theme');
+  const userID = currentUser.uid;
   useEffect(() => {
     // LISTEN (REALTIME)
    
@@ -81,6 +82,47 @@ const Sidebar = () => {
       unsub();
     };
   }, );
+
+
+  useEffect(() => {
+    // LISTEN (REALTIME)
+   
+    const unsub = onSnapshot(
+      collection(db, "userTheme"),
+      (snapShot) => {
+        let list = [];
+
+        snapShot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+          //   if(doc.id === userID){
+          //     list.push({id: doc.id, ...doc.data()});
+          // }
+          
+
+          if (doc.id === userID) {
+            setColorTheme(list)
+
+            console.log(colorTheme[0].backgroundColor)
+        
+          } else {
+
+            console.log('Faild')
+          }
+        });
+
+       
+      },
+
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
   const signUserOut = () => {
     signOut(auth).then(() => {
       localStorage.clear();
@@ -89,7 +131,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="sidebar stickyBar">
+    <div className={`sidebar stickyBar ${colorTheme[0].backgroundColor}`}>
       <div className="top">
         
         <Link to="/" style={{ textDecoration: "none"}}>

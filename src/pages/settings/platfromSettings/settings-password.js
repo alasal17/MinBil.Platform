@@ -18,14 +18,14 @@ export const SettingsPassword = (props) => {
     <form {...props}>
       <Card>
         <CardHeader
-          subheader="Oppdater passord"
+          subheader="Endre passord"
           title="Passord"
         />
         <Divider />
         <CardContent>
           <TextField
             fullWidth
-            label="Passord"
+            label="Nye passord"
             margin="normal"
             name="passord"
             onChange={handleChange}
