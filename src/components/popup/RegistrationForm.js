@@ -312,7 +312,7 @@ const handleNextPagefem = () =>{
 useEffect(() => {
 
 
-  setPage(6)
+ 
   if(days.length < 7){
     setRecommendedOpeningDays(false);
     setAddFieldIcon(false)
