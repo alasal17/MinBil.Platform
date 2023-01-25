@@ -5,10 +5,61 @@ import "react-circular-progressbar/dist/styles.css";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpOutlinedIcon from "@mui/icons-material/KeyboardArrowUpOutlined";
 import React from 'react';
-
+import {
+  collection,
+  onSnapshot,
+  where,
+  query
+} from "firebase/firestore";
+import { useContext, useState,useEffect } from "react";
+import { AuthContext} from "../../context/AuthContext";
+import { db} from "../../firebase";
 const Featured = () => {
+  const {currentUser} = useContext(AuthContext)
+  const [colorTheme, setColorTheme] = useState('green-theme');
+  const userID = currentUser.uid;
+
+
+  useEffect(() => {
+    // LISTEN (REALTIME)
+   
+    const unsub = onSnapshot(
+      collection(db, "userTheme"),
+      (snapShot) => {
+        let list = [];
+  
+        snapShot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+          //   if(doc.id === userID){
+          //     list.push({id: doc.id, ...doc.data()});
+          // }
+          
+  
+          if (doc.id === userID) {
+            setColorTheme(list)
+  
+            console.log(colorTheme)
+        
+          } else {
+  
+            console.log('Faild')
+          }
+        });
+  
+       console.log()
+      },
+  
+      (error) => {
+        console.log(error);
+      }
+    );
+  
+    return () => {
+      unsub();
+    };
+  }, []);
   return (
-    <div className="featured">
+    <div className={`featured ${colorTheme[0].backgroundColor}`}>
       <div className="top">
         <h1 className="title">Totale inntekter</h1>
         <MoreVertIcon fontSize="small" />

@@ -75,6 +75,50 @@ export const AccountProfileDetails = (props) => {
   };
 
   const { currentUser } = useContext(AuthContext);
+
+
+  const [colorTheme, setColorTheme] = useState('green-theme');
+  const userID = currentUser.uid;
+
+
+  useEffect(() => {
+    // LISTEN (REALTIME)
+   
+    const unsub = onSnapshot(
+      collection(db, "userTheme"),
+      (snapShot) => {
+        let list = [];
+  
+        snapShot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+          //   if(doc.id === userID){
+          //     list.push({id: doc.id, ...doc.data()});
+          // }
+          
+  
+          if (doc.id === userID) {
+            setColorTheme(list)
+  
+            console.log(colorTheme)
+        
+          } else {
+  
+            console.log('Faild')
+          }
+        });
+  
+       console.log()
+      },
+  
+      (error) => {
+        console.log(error);
+      }
+    );
+  
+    return () => {
+      unsub();
+    };
+  }, []);
   useEffect(() => {
     // LISTEN (REALTIME)
 
@@ -360,7 +404,7 @@ export const AccountProfileDetails = (props) => {
             p: 2,
           }}
         >
-          <Button color="primary" variant="contained" >
+          <Button color="primary" variant="contained" style={{backgroundColor:colorTheme[0].baseColor}}>
             Lagre endringen
           </Button>
         </Box> 

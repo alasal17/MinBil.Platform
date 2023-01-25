@@ -76,6 +76,52 @@ export const AccountOpeningHoursDetails = (props) => {
   };
 
   const { currentUser } = useContext(AuthContext);
+
+
+
+  const [colorTheme, setColorTheme] = useState('green-theme');
+  const userID = currentUser.uid;
+
+
+  useEffect(() => {
+    // LISTEN (REALTIME)
+   
+    const unsub = onSnapshot(
+      collection(db, "userTheme"),
+      (snapShot) => {
+        let list = [];
+  
+        snapShot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+          //   if(doc.id === userID){
+          //     list.push({id: doc.id, ...doc.data()});
+          // }
+          
+  
+          if (doc.id === userID) {
+            setColorTheme(list)
+  
+            console.log(colorTheme)
+        
+          } else {
+  
+            console.log('Faild')
+          }
+        });
+  
+       console.log()
+      },
+  
+      (error) => {
+        console.log(error);
+      }
+    );
+  
+    return () => {
+      unsub();
+    };
+  }, []);
+
   useEffect(() => {
     // LISTEN (REALTIME)
 
@@ -144,98 +190,16 @@ export const AccountOpeningHoursDetails = (props) => {
         <CardHeader subheader="Informasjonen kan endres" title="openingHours" />
         
         <Divider />
-        <CardContent>
+        <CardContent className={`${colorTheme[0].backgroundColor}`}>
 
 
 
-          {/* <div className="row mt-2">
-          
-            <div className="col-md-3">
-              <label className="labels">Org. nummer</label>
-              <input
-                name="orgNumber"
-                onChange={handleChange}
-                defaultValue={companyData[0].orgNumber}
-                className="form-control"
-              />
-            </div>
-          
-            <div className="col-md-3">
-            <label className="labels">Bedriftsnavn</label>
-              <input
-                name="companyName"
-                onChange={handleChange}
-                className="form-control"
-                defaultValue={companyData[0].companyName}
-              />
-            </div>
-          
-
-            <div className="col-md-3">
-              <label className="labels">Org. nummer</label>
-              <input
-                name="orgNumber"
-                onChange={handleChange}
-                defaultValue={companyData[0].orgNumber}
-                className="form-control"
-              />
-            </div>
-          
-            <div className="col-md-3">
-            <label className="labels">Bedriftsnavn</label>
-              <input
-                name="companyName"
-                onChange={handleChange}
-                className="form-control"
-                defaultValue={companyData[0].companyName}
-              />
-            </div>
-          </div> */}
-          
-          
-          {/* <div className="row mt-2">
-          
-            <div className="col-md-6">
-            <label className="labels">E-post</label>
-              <input
-                name="email"
-                onChange={handleChange}
-                className="form-control"
-                defaultValue={companyData[0].email || ""}
-         
-              />
-            </div>
-            <div className="col-md-6">
-            <label className="labels">Telefon nummer</label> */}
-             
-            {/* <MuiPhoneInput
-                          name="phoneNumber"
-                          // onChange={handleInput}
-                          defaultValue={companyData[0].phoneNumber}
-                          className="form-control companyInfoAccountPhoneNumber"
-                          defaultCountry="no"
-                          onlyCountries={["no", "se", "dk", "is", "fi"]}
-                        /> */}
-         
-
-            
-             
-              {/* <input
-                name="phoneNumber"
-                onChange={handleChange}
-                type="tel"
-                className="form-control"
-                defaultValue={companyData[0].phoneNumber || ""}
-              />
-            </div>
-
-          </div> */}
 {openingsData.map((e) => (
 
-<div>
+<div className={``}>
 
 {/* ---------------------------------------------------------------------------- */}
-          <div className="row mt-2">
+          <div className={`row mt-2 `}>
           
             <div className="col-md-4">
             <label className="labels">Dag</label>

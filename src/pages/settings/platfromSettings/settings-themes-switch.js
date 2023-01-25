@@ -91,15 +91,50 @@ import CallToActionIcon from '@mui/icons-material/CallToAction';
     const handleAddToDatabase = async (e) => {
         e.preventDefault();
  
-        try {
-          await setDoc(doc(db, "userTheme", userID), {
-            uid: userID,
-            backgroundColor:colorTheme,
-            createdAt: serverTimestamp(),
-          });
-        } catch (err) {
-          console.log(err);
+        if(colorTheme === 'purple-theme'){
+          try {
+            await setDoc(doc(db, "userTheme", userID), {
+              
+              uid: userID,
+              backgroundColor:colorTheme,
+              chartColor:'#b73ec7',
+              baseColor:'#a331a3',
+              createdAt: serverTimestamp(),
+            });
+          } catch (err) {
+            console.log(err);
+          }
+
         }
+        if(colorTheme === 'green-theme'){
+          try {
+            await setDoc(doc(db, "userTheme", userID), {
+              
+              uid: userID,
+              backgroundColor:colorTheme,
+              chartColor:'#a6e4b1',
+              createdAt: serverTimestamp(),
+            });
+          } catch (err) {
+            console.log(err);
+          }
+
+        }
+        if(colorTheme === 'blue-theme'){
+          try {
+            await setDoc(doc(db, "userTheme", userID), {
+              
+              uid: userID,
+              backgroundColor:colorTheme,
+              chartColor:'#205295',
+              createdAt: serverTimestamp(),
+            });
+          } catch (err) {
+            console.log(err);
+          }
+
+        }
+        
        
       };
 
@@ -192,6 +227,9 @@ import CallToActionIcon from '@mui/icons-material/CallToAction';
         
         <MenuItem value={'purple-theme'}> 
         <CallToActionIcon style={{color:'purple'}} name="purple-theme"/>&nbsp; Purple</MenuItem>
+        
+        <MenuItem value={'blue-theme'}> 
+        <CallToActionIcon style={{color:'#205295'}} name="blue-theme"/>&nbsp; Blue</MenuItem>
       
       </Select>
     </FormControl>
