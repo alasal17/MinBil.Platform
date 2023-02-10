@@ -2,22 +2,22 @@ import "./new.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useEffect, useState } from "react";
+
 import {
   addDoc,
   collection,
-
+  onSnapshot,
   serverTimestamp,
 
 } from "firebase/firestore";
 
-
+import Select from "react-select";
 import { auth, db, storage } from "../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
-import React  from 'react';
+import React, { useState, useContext, useEffect }  from 'react';
 import Dropdown from "./Dropdown";
-
+import { AuthContext } from "../../context/AuthContext";
 
 
 
@@ -25,11 +25,13 @@ import Dropdown from "./Dropdown";
 const AddServices = ({ inputs, title}) => {
   const [file, setFile] = useState("");
   const [data, setData] = useState({});
+
   const [per, setPerc] = useState(null);
   const [tagsData, setTags] = useState([]);
+
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "services");
- 
+
 
   
   const options = [
@@ -51,7 +53,9 @@ const AddServices = ({ inputs, title}) => {
     { value: "Rens av matter, gummi etc", label:"Rens av matter, gummi etc" },
     { value: "Polering", label: "Polering" }
 ];
-  
+
+
+
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;
@@ -141,7 +145,6 @@ const AddServices = ({ inputs, title}) => {
         title:data.title,
         status:true,
         calculatedEstimatedTime:data.calculatedEstimatedTime,
-        price:{ 'smallCar':parseFloat(data.smallCar), 'normalCar':parseFloat(data.normalCar), 'bigCar':parseFloat(data.bigCar)},
         ...tagsData,
         createdAt: serverTimestamp(),
         uid:  auth.currentUser.uid,
@@ -164,7 +167,7 @@ const AddServices = ({ inputs, title}) => {
           <h1>{title}</h1>
         </div>
         <div className="bottom">
-          <div className="left">
+          <div className="left" style={{marginTop:'40px'}}>
             <img 
               src={
                 
@@ -174,11 +177,8 @@ const AddServices = ({ inputs, title}) => {
               }
               alt=""
             />
-          </div>
-          <div className="right">
-            <form onSubmit={handleAdd}>
-              <div className="formInput">
-                <label htmlFor="file">
+              <div className="row mt-2">
+             <label htmlFor="file">
                   Image: <DriveFolderUploadOutlinedIcon className="icon" />
                 </label>
                 <input
@@ -188,74 +188,69 @@ const AddServices = ({ inputs, title}) => {
                   onChange={(e) => setFile(e.target.files[0])}
                   style={{ display: "none" }}
                 />
-              </div>
+          </div>   </div>
+          <div className="right">
+            <form onSubmit={handleAdd}>
+              <div className="formInput">
 
+               
+              </div>
+              <div className="row mt-2">
+                      
               {inputs.map((input) => (
-                <div className="formInput" key={input.id}>
+             
+                 <div className="col-md-6">
+                <div className="" key={input.id}>
+               
                   <label>{input.label}</label>
                   <input
                     id={input.id}
                     type={input.type}
-                    
+                    className="form-control"
                     options={options}
                     placeholder={input.placeholder}
                     onChange={handleInput}
                   /> 
                 
-                </div>
-
-              ))}
-          
-              <div className="formInput" >
-                  <label>Pris liten bil</label>
-                  <input
-                    id='smallCar'
-                    type='int'
-                    placeholder='1000'
-                    onChange={handleInput}
-                  /> 
-                
-                </div>
-
-                <div className="formInput" >
-                  <label>Pris vanlig bil</label>
-                  <input
-                    id='normalCar'
-                    type='int'
-                    placeholder='1000'
-                    onChange={handleInput}
-                  /> 
-                
-                </div>
-
-                <div className="formInput" >
-                  <label>Pris stor bil</label>
-                  <input
-                    id='bigCar'
-                    type='int'
-                    placeholder='1000'
-                    onChange={handleInput}
-                  /> 
-                
-                </div>
-        
-
+      
+                </div>     </div>
               
 
 
-<div className="formInput" key='tags'>
-<Dropdown
-                  isSearchable
-                  isMulti
-                  placeHolder="Velg..."
-                  options={options}
-                  id='tags'
-                  onChange={(value) => setTags({'tags':value.map(c => c.value)}) }
-                />
+              ))} 
+            <div className="col-md-6">
+            <label>Pris</label>
+            <input
+                          type="text"
+                          className="form-control"
+                          id="price"
+                          onChange={handleInput}
+                        />
+                  </div>   
+
+        
+
+       
+                <div className="col-md-12">
+                <label>Tags</label>
+            <Select
+                          placeholder="Tags..."
+                          defaultValue={options.value}
+                          onChange={(value) => setTags({'tags':value.map(c => c.value)}) }
+                          options={options}
+                          isMulti
+                          name="tags"
+                 
+                        />
+                </div>
+
               </div>
+              <div className="row mt-2">
+              <div className="col-md-6">
               <button disabled={per !== null && per < 100} type="submit">
                 Send
               </button>
+                 </div></div>
             </form>
           </div>
         </div>

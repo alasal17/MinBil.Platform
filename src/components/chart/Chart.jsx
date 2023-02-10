@@ -85,12 +85,12 @@ const Chart = ({ aspect, title }) => {
           width={730}
           height={280}
           data={data}
-          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          margin={{ top: 10, right: 0, left: 120, bottom: 0 }}
         >
           <defs>
             <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={colorTheme[0].chartColor} stopOpacity={0.8} />
-              <stop offset="95%" stopColor={colorTheme[0].chartColor} stopOpacity={0} />
+              <stop offset="5%" stopColor={colorTheme[0].chartColor || '#13547a'} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={colorTheme[0].chartColor || '#13547a'} stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="name" stroke="gray" />

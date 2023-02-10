@@ -312,18 +312,21 @@ const Sidebar = () => {
             <ExitToAppIcon className="icon" />
             <span onClick={signUserOut}>Logg ut</span>
           </li> */}
-        </ul>
-      </div>
-      <hr className="sidebarhr"/>
-<div className="bottom">
-        <ul>
+
+<hr className="sidebarhr"/>
+
+ 
         <li>
             <ExitToAppIcon className="icon" />
             <span onClick={signUserOut}>Logg ut</span>
           </li>
-        </ul>
+
       
-        </div>
+    
+
+        </ul>
+      </div>
+ 
 
       {/* <div className="bottom">
         <div

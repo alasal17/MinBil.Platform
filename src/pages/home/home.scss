@@ -150,3 +150,24 @@ only screen and (-webkit-min-device-pixel-ratio : 1.5),
 only screen and (min-device-pixel-ratio : 1.5) {
 /* Styles */
 }
+
+
+
+
+
+
+
+
+
+
+.st1 {
+  fill: none;
+  stroke: #eeeeee;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
+}
+
+svg {
+  transform: translateX(-56px);
+}

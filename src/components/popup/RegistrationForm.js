@@ -71,16 +71,7 @@ function RegistrationForm({ buttonName }) {
   const [industryData, setIndustryData] = useState([]);
   const [phoneNumber, setPhoneNumber] = useState([]);
   const [country, setCountry] = useState([]);
-  // const [hiddeAddIcon, setHiddeAddIcon] = useState(false);
-  // const [openingsData, setOpeningsData] = useState({
-  //   Monday: {openingTime:'', closingTime:''},
-  //   Tuesday: {openingTime:'', closingTime:''},
-  //   Wednesday: {openingTime:'', closingTime:''},
-  //   Thursday: {openingTime:'', closingTime:''},
-  //   Friday: {openingTime:'', closingTime:''},
-  //   Saturday: {openingTime:'', closingTime:''},
-  //   Sunday: {openingTime:'', closingTime:''},
-  // });
+
   const [imagesData, setImagesData] = useState([]);
   const [imagesData2, setImagesData2] = useState([]);
   const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
