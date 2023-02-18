@@ -89,13 +89,7 @@ p{
 }
 
 
-.fromControlCompanyForm{
-    border: 1px solid #1f6eb4;
-    /* border-radius: 10% !important; */
 
-
-
-}
 .recommendedBody{
     color:rgb(0, 0, 0);
     text-align: center;
@@ -274,7 +268,7 @@ p{
     position: relative;
     -webkit-transition: all 100ms;
     transition: all 100ms;
-    border: 1px solid #1f6eb4 !important;
+  
  
 }
 .css-qbdosj-Input{

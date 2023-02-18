@@ -1,262 +1,420 @@
-import "./new.scss";
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
-import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 
-import {
-  addDoc,
-  collection,
-  onSnapshot,
-  serverTimestamp,
 
-} from "firebase/firestore";
 
-import Select from "react-select";
-import { auth, db, storage } from "../../firebase";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { useNavigate } from "react-router-dom";
-import React, { useState, useContext, useEffect }  from 'react';
-import Dropdown from "./Dropdown";
+import React, { useState, useContext, useEffect } from "react";
+import { Modal, Button } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
+import {
+  doc,
+  collection,
+  serverTimestamp,
+  setDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { auth, db, storage } from "../../firebase";
+import { RMIUploader } from "react-multiple-image-uploader";
+import ProgressBar from "react-bootstrap/ProgressBar";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/Delete";
+import "../../components/popup/registrationForm.css";
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import Select from "react-select";
+import { useForm, Controller } from "react-hook-form";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import MuiPhoneInput from "material-ui-phone-number";
+import { useNavigate } from "react-router-dom";
+
+import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover'
+
+import SuccessMessages from "../../components/popup/SuccessMessages";
+import CarWashPackages from "./CarWashPackages";
+import Repair from "./Repair";
 
 
-
-
-const AddServices = ({ inputs, title}) => {
-  const [file, setFile] = useState("");
+function AddServices({ buttonName }) {
+  const [show, setShow] = useState(false);
+  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
   const [data, setData] = useState({});
+  const { currentUser } = useContext(AuthContext);
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const [registerButton, setRegisterButton] = useState(false);
+
+  const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
+  const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
+  const [data2, setData2] = useState({});
+  const [selectedOption, setSelectedOption] = useState([]);
+  // const [selectedCountry, setSelectedCountry] = useState([]);
+  const postsCollectionRef = collection(db, "enhetsRegisteret");
   const [per, setPerc] = useState(null);
-  const [tagsData, setTags] = useState([]);
+  const [hiddenInfoText, setShowInfoText] = useState(false);
+  const [firstFormValidated, setFirstFormValidated] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [showData, setShowData] = useState();
+  const [file, setFile] = useState("");
+  const areAllFieldsFilled = !(searchTerm === "") & !(searchTerm === undefined);
+  const dataIsNotEmpty =
+    (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true);
+  const [industryData, setIndustryData] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState([]);
+  const [country, setCountry] = useState([]);
 
-  const navigate = useNavigate()
-  const postsCollectionRef = collection(db, "services");
+  const [imagesData, setImagesData] = useState([]);
+  const [imagesData2, setImagesData2] = useState([]);
+  const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
+  const [recommendedOpeningDays, setRecommendedOpeningDays] = useState(false);
+  const [recommendedAboutUs, setRecommendedAboutUs] = useState(false);
+  const [recommendedColor, setRecommendedColor] = useState('');
+  const [socialMedia, setSocialMedia] = useState({
+    website: "",
+    instagram: "",
+    facebook: "",
+    youtube: "",
+  });
+  const [packageService, setPackageService] = useState(true);
+  const [serviceOnDiscountm, serServiceOnDiscount] = useState(true);
+  const [performsTrucks, setPerformsTrucks] = useState(false);
+  const [aboutUs, setAboutUs] = useState([]);
+  const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
+  const [addFieldIcon, setAddFieldIcon] = useState(false);
+  const [openingHoursError, setOpeningHoursError] = useState(true);
+  const [days, setDays] = useState([{day: "", open: "", close: ""}]);
+  const [days2, setDays2] = useState({});
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  // const onSubmit = (data) => {
+  //   console.log(data);
+  // };
 
 
-  
+
   const options = [
-    { value: "Dekkskift", label: "Dekkskift" },
-    { value: "Polering", label: "Polering" },
-    { value: "Service", label: "Service" },
-    { value: "Mekanikk", label: "Mekanikk" },
-    { value: "Bilvask", label: "Bilvask" },
-    { value: "Lakering", label: "Lakering" },
-    { value: "EU-kontroll", label: "EU-Kontroll" },
-    { value: "Fjerne-rust", label: "Fjerne rust" },
-    { value: "Sjekk-lufttrykk", label: "Sjekk lufttrykk" },
+    { label: "Reparasjon", value: "Reparasjon" },
+    { label: "Polering", value: "Polering" },
+    { label: "Bilpleie", value: "Bilpleie" },
+    { label: "Mekanikk", value: "Mekanikk" },
+    { label: "Lakering", value: "Lakering" },
+    { label: "Bilvask", value: "Bilvask" },
+    { label: "Dekk & Felg", value: "Dekk & Felg" },
+    { label: "EU-Kontroll", value: "EU-Kontroll" },
+    { label: "AC-Service", value: "AC-Service" },
+  ];
+
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+   // ------------- FOR CALLING enhetsRegisteret DB -----------------
+   useEffect(() => {
+    // LISTEN (REALTIME)
+
     
-    { value: "Utvendig vask", label: "Utvendig vask" },
-    { value: "Innvendig vask", label: "Innvendig vask" },
-    { value: "Motorvask", label: "Motorvask" },
-    { value: "Innvendig rens", label: "Innvendig rens" },
-    { value: "Lakkrens", label: "Lakkrens" },
-    { value: "Rens av matter, gummi etc", label:"Rens av matter, gummi etc" },
-    { value: "Polering", label: "Polering" }
-];
+    
+
+   
+  }, );
+ 
+
+  const handleCompaniesAgreementsChange = () => {
+    setPackageService(!packageService);
+  };
+
+  const handlePerformsTrucksChange = () => {
+    setPerformsTrucks(!performsTrucks);
+  };
+
+
+  // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
+  const handleNextPage2 = ({}) => {
+    setPage(page + 1);
+      
+   
+  };
+
+  const handleSelectedNextPage = () => {
+
+    const formSelected = document.getElementsByName('service');
+    {formSelected.forEach((e) =>
+     
+    
+      {if(e.value === 'Bilvask'){
+        setPage(3)
+        console.log(page)
+      }else if (e.value === 'Reparasjon'){
+        setPage(4)
+        console.log(page)
+      }
+      else{
+        console.log('not')
+      }}
+      
+      
+      )}
+      
+   
+  };
+  // ------------- HADNLE FOR PREV PAGE ----------------
+  const handlePrevPage = () => setPage(page - 1);
 
 
 
-  useEffect(() => {
-    const uploadFile = () => {
-      const name = new Date().getTime() + file.name;
-
-      console.log(name);
-      const storageRef = ref(storage, file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setPerc(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setData((prev) => ({ ...prev, imageUrl: downloadURL }));
-          });
-        }
-      );
-    };
-    file && uploadFile();
-  }, [file]);
-
-
-  
-  console.log(data);
-
+  // ######### WORNG
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
-  
 
-
-    setData({ ...data, [id]:value})
-    if(id ==='price' || id === 'estimatedTime'){
-      setData({ ...data, [id]: Number(value)})
-    }
-
-    if(id === 'estimatedTime'){
-     
-      if (value >= 60){
-        setData({ ...data, estimatedTime:value, calculatedEstimatedTime: (String(parseInt(value)/ 60 +' t'))})
-      }
-      if(value%60 !== 0 ){
-        setData({ ...data,estimatedTime:value,  calculatedEstimatedTime: (String(parseInt(parseInt(value)/ 60) +' t ' + Number(value)%60 + ' min'))})
-      }
-    else{
-      setData({ ...data,estimatedTime:value, calculatedEstimatedTime: (String(parseInt(value)/ 60 +' t'))})
-    }
-      
-    }
-
-      
-  
-    else{
-      setData({ ...data, [id]: value, calculatedEstimatedTime:0});}
-
-  };
-
-  console.log(data)
-
-
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    try {
-      
-      await addDoc(postsCollectionRef, {
-        description:data.description,
-        estimatedTime:data.estimatedTime,
-        imageUrl:data.imageUrl,
-        title:data.title,
-        status:true,
-        calculatedEstimatedTime:data.calculatedEstimatedTime,
-        ...tagsData,
-        createdAt: serverTimestamp(),
-        uid:  auth.currentUser.uid,
-      });
-      navigate(-1)
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
  
+    setData({ ...data, [id]: value, orgNumber: searchTerm });
+  };
 
+
+
+
+
+  // const openingHoursErrorMessage = (
+   
+  // );
+  
 
   return (
-    <div className="new">
-      <Sidebar />
-      <div className="newContainer">
-        <Navbar img={data.imageUrl}/>
-        <div className="top">
-          <h1>{title}</h1>
-        </div>
-        <div className="bottom">
-          <div className="left" style={{marginTop:'40px'}}>
-            <img 
-              src={
-                
-                file
-                  ? URL.createObjectURL(file)
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }
-              alt=""
-            />
-              <div className="row mt-2">
-             <label htmlFor="file">
-                  Image: <DriveFolderUploadOutlinedIcon className="icon" />
-                </label>
-                <input
-                
-                  type="file"
-                  id="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-          </div>   </div>
-          <div className="right">
-            <form onSubmit={handleAdd}>
-              <div className="formInput">
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        {buttonName}
+      </Button>
 
-               
-              </div>
-              <div className="row mt-2">
-                      
-              {inputs.map((input) => (
-             
-                 <div className="col-md-6">
-                <div className="" key={input.id}>
-               
-                  <label>{input.label}</label>
-                  <input
-                    id={input.id}
-                    type={input.type}
-                    className="form-control"
-                    options={options}
-                    placeholder={input.placeholder}
-                    onChange={handleInput}
-                  /> 
-                
-      
-                </div>     </div>
-              
-
-
-              ))} 
-            <div className="col-md-6">
-            <label>Pris</label>
-            <input
-                          type="text"
-                          className="form-control"
-                          id="price"
-                          onChange={handleInput}
-                        />
-                  </div>   
-
+      <div>
+        <Modal 
+        show={show} 
+        onHide={handleClose} 
+        animation={true} 
+        autoFocus={true}
+        className='customModal'>
         
+          
+          {page === 1 && (
+            <>
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Register bedriftsinformasjon</Modal.Title>
+              </Modal.Header>
 
-       
-                <div className="col-md-12">
-                <label>Tags</label>
-            <Select
-                          placeholder="Tags..."
-                          defaultValue={options.value}
-                          onChange={(value) => setTags({'tags':value.map(c => c.value)}) }
-                          options={options}
-                          isMulti
-                          name="tags"
-                 
-                        />
+              <Modal.Body>
+                <h4 className="text-center">
+                  Viktigheten med å utfylle dette skjemaet
+                </h4>
+                <img
+                  className="rounded mx-auto d-block"
+                  src="https://cdni.iconscout.com/illustration/premium/thumb/online-registration-form-5061840-4221899.png"
+                  alt=""
+                />
+                <p className="text-center">
+                  Å fylle ut et selskapsinformasjonsskjema er en viktig oppgave
+                  som kan få betydelige konsekvenser for din virksomhet.
+                </p>
+                <p className="text-center">
+                  Nøyaktig og oppdatert informasjon om din bedrift er avgjørende
+                  for dine kunder og for plattformens søkeresultater. Unøyaktig
+                  eller ufullstendig bedriftsinformasjon kan føre til
+                  misforståelser eller mistillit blant kundene dine, og det kan
+                  også påvirke bedriftens synlighet på plattformen negativt.
+                  <br />
+                  Kunder kan ha mindre sannsynlighet for å gjøre forretninger
+                  med deg hvis de ikke klarer å finne nøyaktig informasjon om
+                  bedriften din, og din bedrift kan ha mindre sannsynlighet for
+                  å vises i søkeresultater hvis plattformens algoritmer ikke har
+                  fullstendig og nøyaktig informasjon om bedriften din.
+                  <br />
+                  Derfor er det viktig å lese og følge alle instruksjoner nøye
+                  når du fyller ut selskapsinformasjonsskjemaet. Sørg for å gi
+                  nøyaktig og oppdatert informasjon, og dobbeltsjekk arbeidet
+                  ditt før du sender inn skjemaet.
+                  <br />
+                  Unnlatelse av å fylle ut skjemaet nøyaktig eller i tide kan få
+                  alvorlige konsekvenser for virksomheten din, som tapte kunder
+                  eller tapte muligheter.
+                </p>
+                <p className="text-center">
+                  Oppsummert er det avgjørende å fylle ut
+                  selskapsinformasjonsskjemaet riktig og i tide for å sikre at
+                  kundene dine har den informasjonen de trenger og for å
+                  maksimere din bedrifts synlighet på plattformen. Det er viktig
+                  å ta deg tid til å fylle ut skjemaet nøye og nøyaktig for å
+                  unngå potensielle problemer eller forsinkelser.
+                </p>
+
+                <p className="text-center">
+                  {" "}
+                  DENNE INFORMASJOENEN VIL VÆRE SYNLIG FOR DINE KUNDER
+                </p>
+              </Modal.Body>
+              <Modal.Footer>
+                <div className="row ">
+                  <div className="col">
+                    <Button variant="secondary" onClick={handlePrevPage}>
+                      Tilbake
+                    </Button>
+                  </div>
+                  <div className="col">
+                    <Button
+                      variant="primary"
+                      style={{ height: "auto", width: "100px" }}
+                      onClick={handleNextPage2}
+                    >
+                      Gå videre
+                    </Button>
+                  </div>
                 </div>
+              </Modal.Footer>
+            </>
+          )}
+          {page === 2 && (
+            <>
+              <Modal.Header >
+                <Modal.Title className="formMainLable">Page 2</Modal.Title>
+              </Modal.Header>
+              <form >
+                <Modal.Body>
+                  <ProgressBar
+                    now={40}
+                    variant="success"
+                    style={{ margin: "10px" }}
+                    label={`40%`}
+                  />
+                  <div className="">
+                  {/* <div className="row mt-2">
+              <div  className="col-md-3 ">
+                      <input
+                        type="checkbox"
+                        className="form-check-input "
+                        id="performsTrucks"
+                        checked={performsTrucks}
+                        onChange={handlePerformsTrucksChange}
+                      />
+                      <label
+                        style={{ paddingLeft: "10px" }}
+                       
+                        key="performsTrucks"
+                        htmlFor="exampleCheck1"
+                      >
+                        Inneholder tjenesten pakker?
+                      </label>
+                      </div>
 
-              </div>
-              <div className="row mt-2">
-              <div className="col-md-6">
-              <button disabled={per !== null && per < 100} type="submit">
-                Send
-              </button>
-                 </div></div>
-            </form>
-          </div>
-        </div>
+                      <div  className="col-md-3 ">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="companiesAgreements"
+                        checked={packageService}
+                        onChange={handleCompaniesAgreementsChange}
+                      />
+                      <label
+                        style={{ paddingLeft: "10px" }}
+                    
+                        key="companiesAgreements"
+                        htmlFor="exampleCheck1"
+                      >
+                        Er det tjenesten på tilbud?
+                      </label>
+</div>
+<div  className="col-md-6 ">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        id="companiesAgreements"
+                        checked={packageService}
+                        onChange={handleCompaniesAgreementsChange}
+                      />
+                      <label
+                        style={{ paddingLeft: "10px" }}
+                     
+                        key="companiesAgreements"
+                        htmlFor="exampleCheck1"
+                      >
+                        Leverer er tjenesten ett fast services dere leverer?
+                      </label>
+
+                      </div>
+                    </div> */}
+
+                   
+                   
+
+
+                    <div className="row mt-2">
+                      <div className="col-md-12" key="service">
+                        <label className="labels">
+                          Tjeneste (må velge minst ett bransje){" "}
+                        </label>
+
+                        <Select
+                          
+                          id="service"
+                          placeholder="Velg tjeneste"
+                 
+                          onChange={(value) =>
+                            setIndustryData(value.label)
+                            }
+                          
+                          options={options}
+                          name="service"
+                        />
+                 
+                      </div>
+                    </div>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer className="modalFotterCompanyForm">
+                  <div className="row ">
+                    <div className="col">
+                      <Button variant="secondary" onClick={handlePrevPage}>Tilbake</Button>
+                    </div>
+                    <div className="col">
+                      <Button
+                        variant="primary"
+                        style={{ height: "auto", width: "100px" }}
+                        onClick={handleSelectedNextPage}
+                        type={"submit"}
+                      >
+                        Gå videre
+                      </Button>
+                    </div>
+                  </div>
+                </Modal.Footer>
+              </form>
+            </>
+          )}
+          {page === 3 && (
+            <>
+              <CarWashPackages buttonName={'Bil vask'}/>
+            </>
+          )}
+          {page === 4 && (
+            <>
+             <Repair buttonName={'Reprasjon'}/>
+            </>
+          )}
+          {page === 5 && (
+            <>
+           <div>
+            <h1>5</h1>
+           </div>
+            </>
+          )}
+
+        </Modal>
       </div>
-    </div>
+    </>
   );
-};
-
+}
 export default AddServices;

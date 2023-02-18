@@ -14,6 +14,7 @@ import {
 import { db } from "../../firebase";
 import React  from 'react';
 import { AuthContext} from "../../context/AuthContext";
+import AddServices from "../../pages/new/AddServices";
 
 
 const ServiceTable = ({pageTitle}) => {
@@ -119,9 +120,10 @@ const ServiceTable = ({pageTitle}) => {
     <div className="datatable">
       <div className="datatableTitle">
         {pageTitle}
-        <Link to="/service/new-service" className="link">
+        {/* <Link to="/service/new-service" className="link">
         Legg til ny
-        </Link>
+        </Link> */}
+        <AddServices buttonName={'Legg til en tjeneste'}/>
 
         
 

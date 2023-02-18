@@ -262,7 +262,7 @@ const handleChangeBusnissHours = (e, index) => {
     
 })
 
-console.log(days)
+
 }
 
 
@@ -309,7 +309,8 @@ useEffect(() => {
     setAddFieldIcon(false)
   
     console.log('ww')
-  } else if(days.length === 7){
+  } 
+  else if(days.length === 7){
     setAddFieldIcon(true)
     setOpeningHoursError(true)
     setRecommendedOpeningDays(true);
@@ -588,27 +589,6 @@ const handleRemoveClick = index => {
       setPage(page + 1);
     }
   };
-
-  // handle click event of the Remove button
-  // const handleRemoveClick = (index) => {
-  //   const list = [...inputList];
-  //   list.splice(index, 1);
-  //   setInputList(list);
-  // };
-
-  // // handle click event of the Add button
-  // const handleAddClick = (e) => {
-  //   if (inputList.length <= 6) {
-  //     setInputList(...inputList, {
-  //       openingDays: "",
-  //       openingTime: "",
-  //       closingTime: "",
-  //     });
-  //   } else {
-  //     setHiddeAddIcon(true);
-  //     console.log("All seven days");
-  //   }
-  // };
 
   // ------------- SEARCH API. RETURNS DIFFENTES RENDERINGS RESUALT ----------------
   const handleAPIRequesest = async (event) => {

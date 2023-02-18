@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { auth, db, storage } from "../../firebase";
 import { AuthContext } from "../../context/AuthContext";
+import LoadingPage from './LoadingPage.js'
 const Home = () => {
   const [colorTheme, setColorTheme] = useState('green-theme');
   const { currentUser } = useContext(AuthContext);
@@ -69,6 +70,8 @@ const Home = () => {
           <Widget type="order" />
           <Widget type="earning" />
         </div>
+
+        
         <div className="charts">
           <Featured />
           <Chart title="Siste 6 måneder (inntekt)" aspect={4/ 1} />
