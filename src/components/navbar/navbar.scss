@@ -10,7 +10,9 @@
   position: -webkit-sticky !important;
   position: sticky !important;
   top: 0 !important;
+  opacity:1 !important;
   border-bottom: 0.5px solid rgb(231, 228, 228);
+  z-index: 1000;
   // border-bottom-right-radius: 2000px;
 
 
@@ -70,6 +72,7 @@
 
         .icon {
           font-size: 20px;
+          color: #888888;
         }
 
         .avatar {

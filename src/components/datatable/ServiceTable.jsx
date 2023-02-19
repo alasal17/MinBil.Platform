@@ -119,7 +119,7 @@ const ServiceTable = ({pageTitle}) => {
   return (
     <div className="datatable">
       <div className="datatableTitle">
-        {pageTitle}
+  
         {/* <Link to="/service/new-service" className="link">
         Legg til ny
         </Link> */}

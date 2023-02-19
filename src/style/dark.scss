@@ -38,12 +38,42 @@
 
     ul {
       li {
+        span{
+          color: #aac93a;
+        }
+        .icon{
+          color: #aac93a !important;
+        }
+        &:hover {
+          background-color: #333333;
+        }
+
+    
+      }
+    }
+  }
+
+  .navbar {
+    background-color: #111;
+    border-color: #333;
+
+    .top {
+      .logo {
+        color: #999;
+      }
+    }
+    hr {
+      border-color: #333;
+    }
+
+    ul {
+      li {
         &:hover {
           background-color: #333;
         }
 
         .icon {
-          color: #999;
+          color: #aac93a;
         }
       }
     }

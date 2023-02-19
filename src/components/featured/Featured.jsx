@@ -53,7 +53,7 @@ const Featured = () => {
     };
   }, );
   return (
-    <div className={`featured ${cTheme.backgroundColor}`}>
+    <div className={`featured`}>
       <div className="top">
         <h1 className="title">Totale inntekter</h1>
         <MoreVertIcon fontSize="small" />

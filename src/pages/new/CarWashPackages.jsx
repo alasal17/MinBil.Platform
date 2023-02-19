@@ -10,7 +10,7 @@ import Select from "react-select";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
-
+import { Configuration, OpenAIApi } from "openai";
 import axios from "axios";
 
 
@@ -44,9 +44,11 @@ function CarWashPackages({ buttonName }) {
   const apiKey = "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";
   const [response, setResponse] = useState(null);
   const [chatGPTShow, setChatGPTShow ] = useState(true);
+  const [dallEShow, setDallEShow ] = useState(false);
+  const [priceClassShow, setPriceClassShow ] = useState(true);
   const [loading, setLoading] = useState(false);
   let [obj, setObj] = useState({ choices: [] });
-
+  const [result, setResult] = useState("");
   const [payload, setPayLoad] = useState({
     prompt: "Mario: Hi, how are you?",
     temperature: 0.9,
@@ -54,11 +56,42 @@ function CarWashPackages({ buttonName }) {
     max_tokens: 500,
     model: "text-davinci-003"
   });
-  
+  const [promptImage, setPromptImage] = useState("");
+  const configuration = new Configuration({
+    apiKey: apiKey,
+  });
+
+  const openai = new OpenAIApi(configuration);
+
+  const translate_text = async () =>{
+    const res = await openai.translateText({
+      prompt: prompt,
+      source: "no",
+      target: "en",
+    });
+    console.log(res.data.data.translations[0].text)
+    return res.data.data.translations[0].text
+   
+  }
+  const generateImage = async () => {
+    translate_text()
+    const res = await openai.createImage({
+      prompt: '',
+      n: 1,
+      size: "512x512",
+    });
+
+    setResult(res.data.data[0].url);
+    console.log(res.data.data[0].url);
+  };
+
 
   const getRes = () => {
 
     setLoading(true);
+    if(dallEShow === true){
+      generateImage()
+    }
     axios({
       method: "POST",
       url: "https://api.openai.com/v1/completions",
@@ -72,6 +105,7 @@ function CarWashPackages({ buttonName }) {
       .then((res) => {
         console.log(res);
         responseHandler(res);
+        
       })
       .catch((e) => {
         setLoading(false);
@@ -93,6 +127,9 @@ function CarWashPackages({ buttonName }) {
     setChatGPTShow(!chatGPTShow);
   };
 
+  const handleDallEShowChange = () => {
+    setDallEShow(!dallEShow);
+  };
 
   // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
   const handleNextPage = () => {
@@ -128,7 +165,7 @@ function CarWashPackages({ buttonName }) {
     { value: "Rens av matter, gummi etc", label: "Rens av matter, gummi etc" },
     { value: "Lakk korrigering", label: "Lakk korrigering" },
   ];
-  const price_name = ["Pris", "Pris vanlig bil", "Pris stor bil"];
+  const price_name = ["Pris", "Pris liten bil", "Pris vanlig bil", "Pris stor bil"];
 
   const handleChangeBusnissHours = (e, index) => {
     const updatedPrice = [...price];
@@ -151,30 +188,34 @@ function CarWashPackages({ buttonName }) {
     return shortDate;
   };
 
+
+  const handlePriceClassShowChange = () => {
+    setPriceClassShow(!priceClassShow);
+  };
   useEffect(() => {
     const formSelected = document.getElementsByName("Pris");
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.toLocaleDateString("default", {
-      month: "long",
-    });
+  
     const currentMonth2 = currentDate.getMonth();
     const dayMonth = currentDate.getDate();
 
-    console.log(currentYear);
-    console.log(currentMonth);
-    console.log(dayMonth);
+    price_name[0] = "Pris liten bil";
 
     setCurrentDateFormat(
       new Date(currentMonth2 + "-" + dayMonth + "-" + currentYear)
     );
-
+    
     if (price.length > 1) {
-      formSelected[0].value = "Pris liten bil";
+      
     }
-  }, []);
+  },[]);
 
-  const handleAddDay = (e, index) => {
+
+  const handleAddPrisClass = () => {
+
+    
+
     if (price.length < 3) {
       setPrice([
         ...price,
@@ -194,7 +235,27 @@ function CarWashPackages({ buttonName }) {
       setAddFieldIcon(true);
     }
 
-    console.log(price);
+   
+    
+
+
+  };
+
+  const handleAddDay = (e, index) => {
+    setPrice([
+      ...price,
+      {
+        title: "",
+        sum: "",
+        sum_small_car: "",
+        sum_normal_car: "",
+        sum_big_car: "",
+      }])
+
+   
+    
+
+
   };
 
   const handleRemoveClick = (index) => {
@@ -222,17 +283,12 @@ function CarWashPackages({ buttonName }) {
       </Modal.Header>
       <form onSubmit={handleSubmit(handleNextPage)}>
         <Modal.Body>
-          <ProgressBar
-            now={40}
-            variant='success'
-            style={{ margin: "10px" }}
-            label={`40%`}
-          />
+
           <div className=''>
             <img
               src={
-                file
-                  ? URL.createObjectURL(file)
+                result || file ? 
+                result || URL.createObjectURL(file)
                   : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
               }
               alt=''
@@ -263,6 +319,7 @@ function CarWashPackages({ buttonName }) {
                   className='form-control'
                   id='title'
                   onChange={handleInput}
+                  placeholder='Bilvask'
                 />
                 {errors.title && (
                   <p style={{ color: "red" }}>
@@ -280,6 +337,43 @@ function CarWashPackages({ buttonName }) {
                 />
               </div>
             </div>
+
+            <div className='row mt-2'>
+              <div className='col-md-6' key='estimatedTime'>
+                <label className='labels'>Estimert tid (I minutter)</label>
+                <input
+                  type='number'
+                  {...register("estimatedTime", { required: true })}
+                  className='form-control'
+                  id='estimatedTime'
+                  onChange={handleInput}
+                  placeholder='60'
+                />
+                {errors.estimatedTime && (
+                  <p style={{ color: "red" }}>
+                    Estimert tid: Dette feltet er obligatorisk! Det må være tall
+                  </p>
+                )}
+              </div>
+
+              <div className='col-md-6' key='capacity'>
+                <label className='labels'>Kapasitet (Antall plass biler)</label>
+                <input
+                  type='number'
+                  {...register("capacity", { required: true })}
+                  className='form-control'
+                  id='capacity'
+                  onChange={handleInput}
+                  placeholder='3'
+                />
+                {errors.capacity && (
+                  <p style={{ color: "red" }}>
+                    Kapasitet: Dette feltet er obligatorisk! Det må være tall
+                  </p>
+                )}
+              </div>
+            </div>
+
             <div className="row mt-2" style={{paddingTop:'10px'}}>
               <div className="col-md-6">
               <input
@@ -295,17 +389,17 @@ function CarWashPackages({ buttonName }) {
                         key="performsTrucks"
                         htmlFor="exampleCheck1"
                       >
-                        Bruk AI til tjeneste beskrivelse?
+                        Bruk AI til å generere tjeneste beskrivelse?
                       </label>
               </div>
 
-              <div className="col-md-6">
+              <div className="col-md-6" hidden={chatGPTShow}>
               <input
                         type="checkbox"
                         className="form-check-input "
                         id="performsTrucks"
-                        checked={!chatGPTShow}
-                        onChange={handleChatGTPShowChange}
+                        checked={dallEShow}
+                        onChange={handleDallEShowChange}
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
@@ -313,10 +407,9 @@ function CarWashPackages({ buttonName }) {
                         key="performsTrucks"
                         htmlFor="exampleCheck1"
                       >
-                        Bruk AI til tjeneste bilde?
+                        Bruk AI til å generere tjeneste bilde?
                       </label>
               </div>
-              
               </div>
 
             <div className='row mt-2 'hidden={!chatGPTShow} >
@@ -381,30 +474,46 @@ function CarWashPackages({ buttonName }) {
             <div className="row mt-2" hidden={chatGPTShow}>
             <div className="col-md-4">
               </div>
-              <div className="col-md-3">
+              <div className="col-md-4" style={{display: 'flex', justifyContent: 'center'}}>
               <Button disabled={loading} type="submit"  variant='primary' onClick={getRes}>
             {loading ? "Loading... " : "Hent resultat"}
           </Button>
               </div>
-              <div className="col-md-5">
+              <div className="col-md-4">
               </div>
             </div>
 
 
-            <div className='row mt-2'>
-              <h6 style={{ paddingTop: "20px", paddingBottom: "10px" }}>
-                Legg til pakkenavn og pris
-              </h6>
-              {/* {price.map((field, index) => (
-                    <div className="row mt-2 " key={index}>
+            <div className='row mt-2' style={{paddingTop:'20px'}}>
+            
+              <div className="col-md-6">
+              <input
+                        type="checkbox"
+                        className="form-check-input "
+                        id="priceClassShow"
+                        checked={!priceClassShow}
+                        onChange={handlePriceClassShowChange}
+                      />
+                      <label
+                        style={{ paddingLeft: "10px" }}
+                        className="form-check-label"
+                        key="performsTrucks"
+                        htmlFor="exampleCheck1"
+                      >
+                        Pris klasse basert på størrelse på bilen eller en enkel pris?
+                      </label>
+              </div>
+          
+              {price.map((field, index) => (
+                    <div className="row mt-2 " hidden={priceClassShow} key={index}>
 
 
                     <div className="col-md" w key="price_title">
                     <label className="labels customLabel text-center"></label>
                     <input name={price_name[index]}
                     id={[index]} 
-                    value={price_name[index]} 
-                    readOnly
+                    value={price.length > 1 ?  price_name[index + 1]  : price_name[index]} 
+                    
                     ref={[index]}
                     className="form-control priceCol text-center fromControlCompanyForm"  
                     onChange={e => handleChangeBusnissHours(e, index)}/>
@@ -423,15 +532,15 @@ function CarWashPackages({ buttonName }) {
                   <div className="col-md-1">
                     {price.length !== 1 && 
                   <DeleteIcon onClick={handleRemoveClick} style={{color:'#ae0000'}} className=' mx-auto  mt-4'/>
-                    }   {price.length - 1 === index && <AddBoxIcon  className=' mx-auto  mt-4' style={{color:'#0068C3'}} onClick={handleAddDay} hidden={addFieldIcon}/>}
+                    }   {price.length - 1 === index && <AddBoxIcon  className=' mx-auto  mt-4' style={{color:'#0068C3'}} onClick={handleAddPrisClass} hidden={addFieldIcon}/>}
                     
                   </div>
                   </div>
 
-      ))} */}
+      ))}
 
               {price.map((field, index) => (
-                <div className='row mt-2 ' key={index}>
+                <div className='row mt-2 ' key={index} hidden={!priceClassShow}>
                   <div className='col-md' w key='price_title'>
                     <label className='labels customLabel text-center'>
                       Pakke navn
@@ -460,7 +569,7 @@ function CarWashPackages({ buttonName }) {
                     <label>Tags</label>
                     <Select
                       placeholder='Tags...'
-                      defaultValue={tags_options.value}
+                      value={tags_options.value}
                       onChange={(value) =>
                         setTags({ tags: value.map((c) => c.value) })
                       }
@@ -506,7 +615,7 @@ function CarWashPackages({ buttonName }) {
                 style={{ height: "auto", width: "100px" }}
                 disabled={firstFormValidated}
                 type={"submit"}>
-                Gå videre
+                Lagre
               </Button>
             </div>
           </div>

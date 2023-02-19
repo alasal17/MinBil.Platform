@@ -133,23 +133,23 @@ function AddServices({ buttonName }) {
 
   const handleSelectedNextPage = () => {
 
-    const formSelected = document.getElementsByName('service');
-    {formSelected.forEach((e) =>
-     
+    // const formSelected = document.getElementsByName('service');
+    setPage(3)
+    // {formSelected.forEach((e) =>      
     
-      {if(e.value === 'Bilvask'){
-        setPage(3)
-        console.log(page)
-      }else if (e.value === 'Reparasjon'){
-        setPage(4)
-        console.log(page)
-      }
-      else{
-        console.log('not')
-      }}
+    //   {if(e.value === 'Bilvask'){
+    //     setPage(3)
+    //     console.log(page)
+    //   }else if (e.value === 'Reparasjon'){
+    //     setPage(4)
+    //     console.log(page)
+    //   }
+    //   else{
+    //     console.log('not')
+    //   }}
       
       
-      )}
+    //   )}
       
    
   };
@@ -249,11 +249,7 @@ function AddServices({ buttonName }) {
               </Modal.Body>
               <Modal.Footer>
                 <div className="row ">
-                  <div className="col">
-                    <Button variant="secondary" onClick={handlePrevPage}>
-                      Tilbake
-                    </Button>
-                  </div>
+               
                   <div className="col">
                     <Button
                       variant="primary"
@@ -274,69 +270,9 @@ function AddServices({ buttonName }) {
               </Modal.Header>
               <form >
                 <Modal.Body>
-                  <ProgressBar
-                    now={40}
-                    variant="success"
-                    style={{ margin: "10px" }}
-                    label={`40%`}
-                  />
+      
                   <div className="">
-                  {/* <div className="row mt-2">
-              <div  className="col-md-3 ">
-                      <input
-                        type="checkbox"
-                        className="form-check-input "
-                        id="performsTrucks"
-                        checked={performsTrucks}
-                        onChange={handlePerformsTrucksChange}
-                      />
-                      <label
-                        style={{ paddingLeft: "10px" }}
-                       
-                        key="performsTrucks"
-                        htmlFor="exampleCheck1"
-                      >
-                        Inneholder tjenesten pakker?
-                      </label>
-                      </div>
-
-                      <div  className="col-md-3 ">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="companiesAgreements"
-                        checked={packageService}
-                        onChange={handleCompaniesAgreementsChange}
-                      />
-                      <label
-                        style={{ paddingLeft: "10px" }}
-                    
-                        key="companiesAgreements"
-                        htmlFor="exampleCheck1"
-                      >
-                        Er det tjenesten på tilbud?
-                      </label>
-</div>
-<div  className="col-md-6 ">
-                      <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="companiesAgreements"
-                        checked={packageService}
-                        onChange={handleCompaniesAgreementsChange}
-                      />
-                      <label
-                        style={{ paddingLeft: "10px" }}
-                     
-                        key="companiesAgreements"
-                        htmlFor="exampleCheck1"
-                      >
-                        Leverer er tjenesten ett fast services dere leverer?
-                      </label>
-
-                      </div>
-                    </div> */}
-
+                  
                    
                    
 
@@ -344,13 +280,13 @@ function AddServices({ buttonName }) {
                     <div className="row mt-2">
                       <div className="col-md-12" key="service">
                         <label className="labels">
-                          Tjeneste (må velge minst ett bransje){" "}
+                          Velg tjeneste 
                         </label>
 
                         <Select
                           
                           id="service"
-                          placeholder="Velg tjeneste"
+                          placeholder="Tjeneste..."
                  
                           onChange={(value) =>
                             setIndustryData(value.label)
@@ -391,7 +327,8 @@ function AddServices({ buttonName }) {
           )}
           {page === 4 && (
             <>
-             <Repair buttonName={'Reprasjon'}/>
+             {/* <Repair buttonName={'Reprasjon'}/> */}
+             <h1>Page 4</h1>
             </>
           )}
           {page === 5 && (

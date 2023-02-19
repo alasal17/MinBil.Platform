@@ -104,6 +104,7 @@ const Sidebar = () => {
             setColorTheme(list)
 
             setCTheme(...colorTheme)
+            console.log(cTheme)
         });
      
 
@@ -131,7 +132,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`sidebar stickyBar ${cTheme.backgroundColor}`}>
+    <div className={`sidebar stickyBar `}>
       <div className="top">
         
         <Link to="/" style={{ textDecoration: "none"}}>
@@ -145,7 +146,7 @@ const Sidebar = () => {
       </div>
 
 
-      <div className="center" style={{paddingTop:'45%'}}  >
+      <div className="center"   >
         <ul>
           <p className="title">OVERSIKT</p>
           <Link to="/" style={{ textDecoration: "none" }}>

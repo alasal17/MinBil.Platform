@@ -55,7 +55,7 @@ const Home = () => {
   }, );
 
   return (
-    <div className={`home ${cTheme.backgroundColor}`}>
+    <div className={`home `}>
       <Sidebar />
       <div className="homeContainer">
         <Navbar />

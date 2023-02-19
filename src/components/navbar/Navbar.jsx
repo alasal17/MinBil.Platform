@@ -92,11 +92,11 @@ const Navbar = () => {
     return () => {
       unsub();
     };
-  }, );
+  }, []);
 
 
   return (
-    <div className={`navbar  ${cTheme.backgroundColor}`}>
+    <div className={`navbar`}>
       <div className="wrapper">
 
         {/* <div className="search">
