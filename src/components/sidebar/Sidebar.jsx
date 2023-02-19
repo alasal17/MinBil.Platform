@@ -51,6 +51,7 @@ const Sidebar = () => {
   const [data, setData] = useState({});
   const {currentUser} = useContext(AuthContext);
   const [colorTheme, setColorTheme] = useState('green-theme');
+  const [cTheme, setCTheme] = useState('');
   const userID = currentUser.uid;
   useEffect(() => {
     // LISTEN (REALTIME)
@@ -86,30 +87,29 @@ const Sidebar = () => {
 
   useEffect(() => {
     // LISTEN (REALTIME)
-   
+    
     const unsub = onSnapshot(
       collection(db, "userTheme"),
       (snapShot) => {
         let list = [];
 
         snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
+          if(doc.id === userID){
+               list.push({id: doc.id, ...doc.data()});
+  
+          }
           
-
-          if (doc.id === userID) {
+      
+          
             setColorTheme(list)
 
-            console.log(colorTheme[0].backgroundColor)
-        
-          } else {
-
-            console.log('Faild')
-          }
+            setCTheme(...colorTheme)
         });
+     
 
+        
+
+     
        
       },
 
@@ -121,7 +121,7 @@ const Sidebar = () => {
     return () => {
       unsub();
     };
-  }, []);
+  },);
 
   const signUserOut = () => {
     signOut(auth).then(() => {
@@ -131,7 +131,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`sidebar stickyBar ${colorTheme[0].backgroundColor}`}>
+    <div className={`sidebar stickyBar ${cTheme.backgroundColor}`}>
       <div className="top">
         
         <Link to="/" style={{ textDecoration: "none"}}>

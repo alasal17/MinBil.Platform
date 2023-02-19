@@ -29,6 +29,8 @@ const Navbar = () => {
   const {currentUser} = useContext(AuthContext)
   const [colorTheme, setColorTheme] = useState('green-theme');
   const userID = currentUser.uid;
+  const [cTheme, setCTheme] = useState('');
+
 
   
   useEffect(() => {
@@ -71,21 +73,12 @@ const Navbar = () => {
         let list = [];
 
         snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
-          
-
-          if (doc.id === userID) {
-            setColorTheme(list)
-
-            console.log(colorTheme[0].backgroundColor)
-        
-          } else {
-
-            console.log('Faild')
+          if(doc.id === userID){
+            list.push({id: doc.id, ...doc.data()});
           }
+          
+          setColorTheme(list)
+          setCTheme(...colorTheme)
         });
 
        
@@ -99,11 +92,11 @@ const Navbar = () => {
     return () => {
       unsub();
     };
-  }, []);
+  }, );
 
 
   return (
-    <div className={`navbar ${colorTheme[0].backgroundColor}`}>
+    <div className={`navbar  ${cTheme.backgroundColor}`}>
       <div className="wrapper">
 
         {/* <div className="search">

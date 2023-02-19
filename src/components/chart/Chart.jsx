@@ -35,6 +35,8 @@ const data = [
 const Chart = ({ aspect, title }) => {
   const {currentUser} = useContext(AuthContext)
   const [colorTheme, setColorTheme] = useState('green-theme');
+  const [cTheme, setCTheme] = useState('');
+
   const userID = currentUser.uid;
 
 
@@ -47,21 +49,14 @@ const Chart = ({ aspect, title }) => {
         let list = [];
   
         snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
-          
-  
-          if (doc.id === userID) {
-            setColorTheme(list)
-  
-            console.log(colorTheme)
-        
-          } else {
-  
-            console.log('Faild')
+            if(doc.id === userID){
+              list.push({id: doc.id, ...doc.data()});
           }
+          setColorTheme(list)
+
+          setCTheme(...colorTheme)
+  
+         
         });
   
        console.log()
@@ -75,7 +70,7 @@ const Chart = ({ aspect, title }) => {
     return () => {
       unsub();
     };
-  }, []);
+  }, );
 
   return (
     <div className="chart">
@@ -89,8 +84,8 @@ const Chart = ({ aspect, title }) => {
         >
           <defs>
             <linearGradient id="total" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={colorTheme[0].chartColor || '#13547a'} stopOpacity={0.8} />
-              <stop offset="95%" stopColor={colorTheme[0].chartColor || '#13547a'} stopOpacity={0} />
+              <stop offset="5%" stopColor={cTheme.chartColor || '#13547a'} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={cTheme.chartColor || '#13547a'} stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="name" stroke="gray" />

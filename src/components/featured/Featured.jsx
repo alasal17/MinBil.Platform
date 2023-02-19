@@ -18,6 +18,7 @@ const Featured = () => {
   const {currentUser} = useContext(AuthContext)
   const [colorTheme, setColorTheme] = useState('green-theme');
   const userID = currentUser.uid;
+  const [cTheme, setCTheme] = useState('');
 
 
   useEffect(() => {
@@ -33,17 +34,10 @@ const Featured = () => {
           //   if(doc.id === userID){
           //     list.push({id: doc.id, ...doc.data()});
           // }
-          
+          setColorTheme(list)
+          setCTheme(...colorTheme)
   
-          if (doc.id === userID) {
-            setColorTheme(list)
-  
-            console.log(colorTheme)
         
-          } else {
-  
-            console.log('Faild')
-          }
         });
   
        console.log()
@@ -57,9 +51,9 @@ const Featured = () => {
     return () => {
       unsub();
     };
-  }, []);
+  }, );
   return (
-    <div className={`featured ${colorTheme[0].backgroundColor}`}>
+    <div className={`featured ${cTheme.backgroundColor}`}>
       <div className="top">
         <h1 className="title">Totale inntekter</h1>
         <MoreVertIcon fontSize="small" />

@@ -19,6 +19,8 @@ import LoadingPage from './LoadingPage.js'
 const Home = () => {
   const [colorTheme, setColorTheme] = useState('green-theme');
   const { currentUser } = useContext(AuthContext);
+  const [cTheme, setCTheme] = useState('');
+
   const userID = currentUser.uid;
   useEffect(() => {
     // LISTEN (REALTIME)
@@ -29,21 +31,14 @@ const Home = () => {
         let list = [];
 
         snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
-          
-
-          if (doc.id === userID) {
-            setColorTheme(list)
-
-            console.log(colorTheme[0].backgroundColor)
-        
-          } else {
-
-            console.log('Faild')
+            if(doc.id === userID){
+              list.push({id: doc.id, ...doc.data()});
           }
+          setColorTheme(list)
+
+          setCTheme(...colorTheme)
+
+         
         });
 
        
@@ -57,10 +52,10 @@ const Home = () => {
     return () => {
       unsub();
     };
-  }, []);
+  }, );
 
   return (
-    <div className={`home ${colorTheme[0].backgroundColor}`}>
+    <div className={`home ${cTheme.backgroundColor}`}>
       <Sidebar />
       <div className="homeContainer">
         <Navbar />

@@ -68,10 +68,7 @@
 
 
 
-/* Smartphones (portrait and landscape) ----------- */
-@media only screen
-and (min-device-width : 320px)
-and (max-device-width : 480px) {
+
   .home {
     display: flex;
   
@@ -103,7 +100,23 @@ and (max-device-width : 480px) {
       }
     }
   }
+
+
+
+.st1 {
+  fill: none;
+  stroke: #eeeeee;
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
 }
+
+svg {
+  transform: translateX(-56px);
+}
+
+
+
 /* Smartphones (landscape) ----------- */
 @media only screen
 and (min-width : 321px) {
@@ -157,17 +170,3 @@ only screen and (min-device-pixel-ratio : 1.5) {
 
 
 
-
-
-
-.st1 {
-  fill: none;
-  stroke: #eeeeee;
-  stroke-width: 7;
-  stroke-linecap: round;
-  stroke-miterlimit: 10;
-}
-
-svg {
-  transform: translateX(-56px);
-}

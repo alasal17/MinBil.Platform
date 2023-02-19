@@ -21,17 +21,7 @@ import "../../components/popup/registrationForm.css";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import MuiPhoneInput from "material-ui-phone-number";
-import { useNavigate } from "react-router-dom";
-
-import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover'
-
-import SuccessMessages from "../../components/popup/SuccessMessages";
+import { Await, useNavigate } from "react-router-dom";
 import CarWashPackages from "./CarWashPackages";
 import Repair from "./Repair";
 
@@ -396,7 +386,7 @@ function AddServices({ buttonName }) {
           )}
           {page === 3 && (
             <>
-              <CarWashPackages buttonName={'Bil vask'}/>
+               <CarWashPackages buttonName={'Bil vask'}/>
             </>
           )}
           {page === 4 && (
