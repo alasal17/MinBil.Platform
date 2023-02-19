@@ -122,7 +122,7 @@ const Sidebar = () => {
     return () => {
       unsub();
     };
-  },);
+  },[]);
 
   const signUserOut = () => {
     signOut(auth).then(() => {

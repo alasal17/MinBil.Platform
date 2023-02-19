@@ -24,6 +24,9 @@ import { useForm, Controller } from "react-hook-form";
 import { Await, useNavigate } from "react-router-dom";
 import CarWashPackages from "./CarWashPackages";
 import Repair from "./Repair";
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
 
 
 function AddServices({ buttonName }) {
@@ -33,17 +36,17 @@ function AddServices({ buttonName }) {
   const [data, setData] = useState({});
   const { currentUser } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState("");
+  const [hiddenInfoText, setShowInfoText] = useState(false);
 
-  const [registerButton, setRegisterButton] = useState(false);
+  const [showStartButton, setShowStartButton] = useState(true);
 
   const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
   const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
   const [data2, setData2] = useState({});
   const [selectedOption, setSelectedOption] = useState([]);
   // const [selectedCountry, setSelectedCountry] = useState([]);
-  const postsCollectionRef = collection(db, "enhetsRegisteret");
   const [per, setPerc] = useState(null);
-  const [hiddenInfoText, setShowInfoText] = useState(false);
+  const [hiddenWorkshopCheckBox, setHiddenWorkshopCheckBox] = useState(true);
   const [firstFormValidated, setFirstFormValidated] = useState(false);
   const [visible, setVisible] = useState(false);
   const [showData, setShowData] = useState();
@@ -105,20 +108,16 @@ function AddServices({ buttonName }) {
   const handleShow = () => setShow(true);
 
    // ------------- FOR CALLING enhetsRegisteret DB -----------------
-   useEffect(() => {
-    // LISTEN (REALTIME)
 
-    
-    
-
-   
-  }, );
  
 
-  const handleCompaniesAgreementsChange = () => {
-    setPackageService(!packageService);
+  const handleWorkShopChange = () => {
+    setHiddenWorkshopCheckBox(!hiddenWorkshopCheckBox);
   };
 
+  const handlePrevPageAfterServices = () => {
+    setPage(2);
+  };
   const handlePerformsTrucksChange = () => {
     setPerformsTrucks(!performsTrucks);
   };
@@ -126,55 +125,81 @@ function AddServices({ buttonName }) {
 
   // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
   const handleNextPage2 = ({}) => {
-    setPage(page + 1);
+    setPage(2);
       
    
   };
 
   const handleSelectedNextPage = () => {
-
-    // const formSelected = document.getElementsByName('service');
-    setPage(3)
-    // {formSelected.forEach((e) =>      
     
-    //   {if(e.value === 'Bilvask'){
-    //     setPage(3)
-    //     console.log(page)
-    //   }else if (e.value === 'Reparasjon'){
-    //     setPage(4)
-    //     console.log(page)
-    //   }
-    //   else{
-    //     console.log('not')
-    //   }}
+    const formSelected = document.getElementsByName('select_service');
+   
+    {formSelected.forEach((e) =>      
+    
+      {if(e.value === 'Bilvask'){
+        setPage(3)
+        setShowStartButton(false)
+      }else if (e.value === 'Reparasjon'){
+        setPage(4)
+        setShowStartButton(false)
+        console.log(page)
+      }
+      else{
+        console.log('not')
+        setShowStartButton(true)
+      }}
       
       
-    //   )}
+      )}
       
    
   };
   // ------------- HADNLE FOR PREV PAGE ----------------
-  const handlePrevPage = () => setPage(page - 1);
-
-
-
-  // ######### WORNG
-  const handleInput = (e) => {
-    const id = e.target.id;
-    const value = e.target.value;
-
-
- 
-    setData({ ...data, [id]: value, orgNumber: searchTerm });
+  const handlePrevPage = () => {
+    setPage(1)
+    setIndustryData('')
   };
 
 
 
+  // ######### FOR WORKSHOP SERVICES
+  useEffect(() => {
+    const formSelected = document.getElementsByName('select_service');
+    console.log(industryData)
+    if(industryData === 'Bilvask'){
+      setShowStartButton(false)
+        setHiddenWorkshopCheckBox(true)
+      }else if (industryData === 'Reparasjon'){
+      
+        setHiddenWorkshopCheckBox(false)
+        setShowStartButton(false)
+      }
+      else{
+        setHiddenWorkshopCheckBox(true)
+        console.log('Else')
+        setShowStartButton(true)
+      }
+  }, );
 
 
-  // const openingHoursErrorMessage = (
-   
-  // );
+
+
+const popPageFourInfo = (
+  <Popover id="popover-basic" >
+    <Popover.Header className="formInfoRecommention" as="h3">Sosiale medier</Popover.Header>
+    <Popover.Body>
+      Vi <strong>anbefaler</strong> at du fyller inn dataen for dine sosiale medier og nettside.   
+    <br/>  Det vil øker intressen hos dine kunder.    </Popover.Body>
+    <br/>
+      
+
+    <Popover.Header className="formInfoRequered" as="h3">Åpningstider (obligatorisk)</Popover.Header>
+    <Popover.Body>
+     Fyll inn tiden for alle dagene i uka. man-søn.</Popover.Body>
+
+ 
+  </Popover>
+);
   
 
   return (
@@ -195,13 +220,11 @@ function AddServices({ buttonName }) {
           {page === 1 && (
             <>
               <Modal.Header >
-                <Modal.Title className="formMainLable">Register bedriftsinformasjon</Modal.Title>
+                <Modal.Title className="formMainLable">Register av Tjeneste</Modal.Title>
               </Modal.Header>
 
               <Modal.Body>
-                <h4 className="text-center">
-                  Viktigheten med å utfylle dette skjemaet
-                </h4>
+            
                 <img
                   className="rounded mx-auto d-block"
                   src="https://cdni.iconscout.com/illustration/premium/thumb/online-registration-form-5061840-4221899.png"
@@ -212,35 +235,15 @@ function AddServices({ buttonName }) {
                   som kan få betydelige konsekvenser for din virksomhet.
                 </p>
                 <p className="text-center">
-                  Nøyaktig og oppdatert informasjon om din bedrift er avgjørende
-                  for dine kunder og for plattformens søkeresultater. Unøyaktig
-                  eller ufullstendig bedriftsinformasjon kan føre til
-                  misforståelser eller mistillit blant kundene dine, og det kan
-                  også påvirke bedriftens synlighet på plattformen negativt.
-                  <br />
-                  Kunder kan ha mindre sannsynlighet for å gjøre forretninger
-                  med deg hvis de ikke klarer å finne nøyaktig informasjon om
-                  bedriften din, og din bedrift kan ha mindre sannsynlighet for
-                  å vises i søkeresultater hvis plattformens algoritmer ikke har
-                  fullstendig og nøyaktig informasjon om bedriften din.
-                  <br />
-                  Derfor er det viktig å lese og følge alle instruksjoner nøye
-                  når du fyller ut selskapsinformasjonsskjemaet. Sørg for å gi
-                  nøyaktig og oppdatert informasjon, og dobbeltsjekk arbeidet
-                  ditt før du sender inn skjemaet.
-                  <br />
-                  Unnlatelse av å fylle ut skjemaet nøyaktig eller i tide kan få
-                  alvorlige konsekvenser for virksomheten din, som tapte kunder
-                  eller tapte muligheter.
+                Det er viktig at du fyller ut riktig informasjon på dette skjemaet for å sikre at vi nøyaktig kan 
+                representere virksomheten din og dens tjenester til potensielle kunder. 
+                Denne informasjonen vil også bli brukt til å hjelpe oss med å skreddersy tjenestene våre for 
+                å møte dine forretningsbehov.
+                <br/>
+                Vennligst ta deg tid til å fylle ut dette skjemaet i sin helhet og gi så mange detaljer som mulig. 
+                Hvis du har spørsmål eller bekymringer angående skjemaet, ikke nøl med å kontakte oss for å få hjelp.
                 </p>
-                <p className="text-center">
-                  Oppsummert er det avgjørende å fylle ut
-                  selskapsinformasjonsskjemaet riktig og i tide for å sikre at
-                  kundene dine har den informasjonen de trenger og for å
-                  maksimere din bedrifts synlighet på plattformen. Det er viktig
-                  å ta deg tid til å fylle ut skjemaet nøye og nøyaktig for å
-                  unngå potensielle problemer eller forsinkelser.
-                </p>
+              
 
                 <p className="text-center">
                   {" "}
@@ -256,7 +259,7 @@ function AddServices({ buttonName }) {
                       style={{ height: "auto", width: "100px" }}
                       onClick={handleNextPage2}
                     >
-                      Gå videre
+                      Start
                     </Button>
                   </div>
                 </div>
@@ -266,7 +269,18 @@ function AddServices({ buttonName }) {
           {page === 2 && (
             <>
               <Modal.Header >
-                <Modal.Title className="formMainLable">Page 2</Modal.Title>
+                <Modal.Title className="formMainLable">
+                  Velg tjeneste
+                  <span hidden={hiddenWorkshopCheckBox}>
+                <OverlayTrigger
+                    key={'right'}
+                    placement={'right'}
+                    overlay={popPageFourInfo}
+            >  
+                  <ErrorOutlineTwoToneIcon className="formMainLableInfo" style={{left: '95%',  position: 'absolute'}}/>
+                  </OverlayTrigger>
+                </span>
+                </Modal.Title>
               </Modal.Header>
               <form >
                 <Modal.Body>
@@ -285,20 +299,28 @@ function AddServices({ buttonName }) {
 
                         <Select
                           
-                          id="service"
+                          id="select_service"
                           placeholder="Tjeneste..."
                  
                           onChange={(value) =>
                             setIndustryData(value.label)
                             }
-                          
+              
                           options={options}
-                          name="service"
+                          name="select_service"
+                   
                         />
                  
                       </div>
+             
+                     
                     </div>
+                  
+              
+                
+                
                   </div>
+                
                 </Modal.Body>
                 <Modal.Footer className="modalFotterCompanyForm">
                   <div className="row ">
@@ -307,6 +329,7 @@ function AddServices({ buttonName }) {
                     </div>
                     <div className="col">
                       <Button
+                      disabled={showStartButton}
                         variant="primary"
                         style={{ height: "auto", width: "100px" }}
                         onClick={handleSelectedNextPage}
@@ -327,8 +350,8 @@ function AddServices({ buttonName }) {
           )}
           {page === 4 && (
             <>
-             {/* <Repair buttonName={'Reprasjon'}/> */}
-             <h1>Page 4</h1>
+           <Repair buttonName={'Reprasjon'} prevPage={handlePrevPageAfterServices}/> 
+          
             </>
           )}
           {page === 5 && (

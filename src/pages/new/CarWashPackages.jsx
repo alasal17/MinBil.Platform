@@ -40,8 +40,7 @@ function CarWashPackages({ buttonName }) {
   const [tagsData, setTags] = useState([]);
   const [currentDateFormat, setCurrentDateFormat] = useState(new Date());
   const [prompt, setPrompt] = useState("");
-  const  organization = "org-KcC5XEDCZrFwkYAqj6pFUWHI";
-  const apiKey = "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";
+  const apiKey = process.env.OPENAI_APIKEY;
   const [response, setResponse] = useState(null);
   const [chatGPTShow, setChatGPTShow ] = useState(true);
   const [dallEShow, setDallEShow ] = useState(false);
