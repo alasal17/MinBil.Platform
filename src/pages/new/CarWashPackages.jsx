@@ -165,7 +165,9 @@ function CarWashPackages({ buttonName, prevPage }) {
     { value: "Lakk korrigering", label: "Lakk korrigering" },
   ];
   const price_name = ["Pris", "Pris liten bil", "Pris vanlig bil", "Pris stor bil"];
-
+  const price_name_prices = ["1000", "2000",  "3000"];
+  const packagenames = ["Bronze", "Silver", "Gold", "Bronze 2", "Silver 2", "Gold 2", "Bronze 3", "Silver 3", "Gold 3" ]
+  const packagenames_prices = ["1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000" ]
   const handleChangeBusnissHours = (e, index) => {
     const updatedPrice = [...price];
     updatedPrice[index][e.target.name] = e.target.value ?? "";
@@ -511,8 +513,8 @@ function CarWashPackages({ buttonName, prevPage }) {
                     <label className="labels customLabel text-center"></label>
                     <input name={price_name[index]}
                     id={[index]} 
+                
                     value={price.length > 1 ?  price_name[index + 1]  : price_name[index]} 
-                    
                     ref={[index]}
                     className="form-control priceCol text-center fromControlCompanyForm"  
                     onChange={e => handleChangeBusnissHours(e, index)}/>
@@ -522,7 +524,8 @@ function CarWashPackages({ buttonName, prevPage }) {
                     <div className="col-md " >
                     <label className="labels customLabel text-center">Sum</label>
                     <input name={price_name[index]} className="form-control priceCol" 
-                    placeholder="1000"/>
+                    
+                    placeholder={price_name_prices[index]}/>
                     </div>
 
                   
@@ -548,6 +551,7 @@ function CarWashPackages({ buttonName, prevPage }) {
                       name='packagename'
                       id={[index]}
                       ref={[index]}
+                      placeholder={packagenames[index]}
                       className='form-control priceCol text-center fromControlCompanyForm'
                       onChange={(e) => handleChangeBusnissHours(e, index)}
                     />
@@ -559,8 +563,9 @@ function CarWashPackages({ buttonName, prevPage }) {
                     </label>
                     <input
                       name={price_name[index]}
+                      
                       className='form-control priceCol'
-                      placeholder='1000'
+                      placeholder={packagenames_prices[index]}
                     />
                   </div>
 
