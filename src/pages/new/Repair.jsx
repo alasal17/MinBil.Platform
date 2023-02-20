@@ -345,6 +345,16 @@ function Repair({ buttonName, prevPage }) {
   };
 
   const tags_options = [
+    { value: "Bilverksteder", label: "Bilverksteder" },
+    { value: "Motorservice", label: "Motorservice" },
+    { value: "Girkasseservice", label: "Girkasseservice" },
+    { value: "Bremse-service", label: "Bremse-service"},
+    { value: "Opphengsservice", label: "Opphengsservice" },
+    { value: "Kjøle- og varmeservice", label: "Kjøle- og varmeservice" },
+    { value: "Elektrisk service", label: "Elektrisk service" },
+    { value: "Utslippssystemservice", label: "Utslippssystemservice" },
+    { value: "Dekkservice", label: "Dekkservice" },
+    { value: "Rutinemessig vedlikeholdsservice", label: "Rutinemessig vedlikeholdsservice" },
     { value: "Prøvekjøring", label: "Prøvekjøring" },
     { value: "Visuell sjekk", label: "Visuell sjekk" },
     { value: "Tilkobling av diagnoseinstrumenter", label: "Tilkobling av diagnoseinstrumenter" },

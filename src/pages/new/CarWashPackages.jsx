@@ -15,7 +15,7 @@ import axios from "axios";
 
 
 
-function CarWashPackages({ buttonName }) {
+function CarWashPackages({ buttonName, prevPage }) {
   
   const {
     register,
@@ -142,15 +142,9 @@ function CarWashPackages({ buttonName }) {
 
   const tags_options = [
     { value: "Innvending/utvendig vask", label: "Innvending/utvendig vask" },
-    {
-      value: "Innvendig/utvendig vask med polering og motorvask",
-      label: "Innvendig/utvendig vask med polering og motorvask",
-    },
+    { value: "Innvendig/utvendig vask med polering og motorvask", label: "Innvendig/utvendig vask med polering og motorvask"},
     { value: "Utvendig vask", label: "Utvendig vask" },
-    {
-      value: "Utvendig vask med polering",
-      label: "Utvendig vask med polering",
-    },
+    { value: "Utvendig vask med polering", label: "Utvendig vask med polering"},
     { value: "Innvendig vask", label: "Innvendig vask" },
     { value: "Motorvask", label: "Motorvask" },
     { value: "Innvendig rens", label: "Innvendig rens" },
@@ -158,6 +152,12 @@ function CarWashPackages({ buttonName }) {
     { value: "Avfoliering", label: "Avfoliering" },
     { value: "Utvendig vask", label: "Utvendig vask" },
     { value: "Ozonbehandling", label: "Ozonbehandling" },
+
+    { value: "Bilvask og rengjøring", label: "Bilvask og rengjøring" },
+    { value: "Lakk- og karosseriarbeid", label: "Lakk- og karosseriarbeid" },
+    { value: "Vindusfoliering og glasservice", label: "Vindusfoliering og glasservice" },
+    { value: "Polstring og interiørservice", label: "Polstring og interiørservice" },
+
     { value: "Glassforsegling", label: "Glassforsegling" },
     { value: "Keramisk lakkforsegling", label: "Keramisk lakkforsegling" },
     { value: "Lakkrens", label: "Lakkrens" },
@@ -278,7 +278,7 @@ function CarWashPackages({ buttonName }) {
   return (
     <div>
       <Modal.Header>
-        <Modal.Title className='formMainLable'>Bilvask</Modal.Title>
+        <Modal.Title className='formMainLable'>{buttonName}</Modal.Title>
       </Modal.Header>
       <form onSubmit={handleSubmit(handleNextPage)}>
         <Modal.Body>
@@ -604,7 +604,7 @@ function CarWashPackages({ buttonName }) {
         <Modal.Footer className='modalFotterCompanyForm'>
           <div className='row '>
             <div className='col'>
-              <Button variant='secondary' onClick={handlePrevPage}>
+              <Button variant='secondary'  onClick={prevPage}>
                 Tilbake
               </Button>
             </div>

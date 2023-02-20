@@ -27,7 +27,8 @@ import Repair from "./Repair";
 import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
-
+import Badge from 'react-bootstrap/Badge';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function AddServices({ buttonName }) {
   const [show, setShow] = useState(false);
@@ -92,15 +93,15 @@ function AddServices({ buttonName }) {
 
 
   const options = [
-    { label: "Reparasjon", value: "Reparasjon" },
-    { label: "Polering", value: "Polering" },
-    { label: "Bilpleie", value: "Bilpleie" },
-    { label: "Mekanikk", value: "Mekanikk" },
-    { label: "Lakering", value: "Lakering" },
-    { label: "Bilvask", value: "Bilvask" },
+    { label: "Reparasjon og vedlikehold av kjøretøy", value: "Reparasjon og vedlikehold av kjøretøy" },
+    { label: "Bilpleietjenester", value: "Bilpleietjenester" },
+    // { label: "Bilpleie", value: "Bilpleie" },
+    // { label: "Mekanikk", value: "Mekanikk" },
+    // { label: "Lakering", value: "Lakering" },
+    // { label: "Bilvask", value: "Bilvask" },
     { label: "Dekk & Felg", value: "Dekk & Felg" },
     { label: "EU-Kontroll", value: "EU-Kontroll" },
-    { label: "AC-Service", value: "AC-Service" },
+
   ];
 
 
@@ -109,23 +110,21 @@ function AddServices({ buttonName }) {
 
    // ------------- FOR CALLING enhetsRegisteret DB -----------------
 
- 
-
   const handleWorkShopChange = () => {
     setHiddenWorkshopCheckBox(!hiddenWorkshopCheckBox);
   };
 
   const handlePrevPageAfterServices = () => {
-    setPage(2);
+    setPage(1);
   };
+
   const handlePerformsTrucksChange = () => {
     setPerformsTrucks(!performsTrucks);
   };
 
-
   // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
   const handleNextPage2 = ({}) => {
-    setPage(2);
+    setPage(1);
       
    
   };
@@ -136,11 +135,11 @@ function AddServices({ buttonName }) {
    
     {formSelected.forEach((e) =>      
     
-      {if(e.value === 'Bilvask'){
-        setPage(3)
+      {if(e.value === 'Bilpleietjenester'){
+        setPage(2)
         setShowStartButton(false)
-      }else if (e.value === 'Reparasjon'){
-        setPage(4)
+      }else if (e.value === 'Reparasjon og vedlikehold av kjøretøy'){
+        setPage(3)
         setShowStartButton(false)
         console.log(page)
       }
@@ -154,22 +153,21 @@ function AddServices({ buttonName }) {
       
    
   };
+
   // ------------- HADNLE FOR PREV PAGE ----------------
   const handlePrevPage = () => {
-    setPage(1)
+    setPage(page - 1);
     setIndustryData('')
   };
-
-
 
   // ######### FOR WORKSHOP SERVICES
   useEffect(() => {
     const formSelected = document.getElementsByName('select_service');
     console.log(industryData)
-    if(industryData === 'Bilvask'){
+    if(industryData === 'Bilpleietjenester'){
       setShowStartButton(false)
         setHiddenWorkshopCheckBox(true)
-      }else if (industryData === 'Reparasjon'){
+      }else if (industryData === 'Reparasjon og vedlikehold av kjøretøy'){
       
         setHiddenWorkshopCheckBox(false)
         setShowStartButton(false)
@@ -180,9 +178,6 @@ function AddServices({ buttonName }) {
         setShowStartButton(true)
       }
   }, );
-
-
-
 
 const popPageFourInfo = (
   <Popover id="popover-basic" >
@@ -201,7 +196,6 @@ const popPageFourInfo = (
   </Popover>
 );
   
-
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
@@ -217,7 +211,7 @@ const popPageFourInfo = (
         className='customModal'>
         
           
-          {page === 1 && (
+          {/* {page === 1 && (
             <>
               <Modal.Header >
                 <Modal.Title className="formMainLable">Register av Tjeneste</Modal.Title>
@@ -230,10 +224,7 @@ const popPageFourInfo = (
                   src="https://cdni.iconscout.com/illustration/premium/thumb/online-registration-form-5061840-4221899.png"
                   alt=""
                 />
-                <p className="text-center">
-                  Å fylle ut et selskapsinformasjonsskjema er en viktig oppgave
-                  som kan få betydelige konsekvenser for din virksomhet.
-                </p>
+   
                 <p className="text-center">
                 Det er viktig at du fyller ut riktig informasjon på dette skjemaet for å sikre at vi nøyaktig kan 
                 representere virksomheten din og dens tjenester til potensielle kunder. 
@@ -245,10 +236,7 @@ const popPageFourInfo = (
                 </p>
               
 
-                <p className="text-center">
-                  {" "}
-                  DENNE INFORMASJOENEN VIL VÆRE SYNLIG FOR DINE KUNDER
-                </p>
+           
               </Modal.Body>
               <Modal.Footer>
                 <div className="row ">
@@ -265,8 +253,8 @@ const popPageFourInfo = (
                 </div>
               </Modal.Footer>
             </>
-          )}
-          {page === 2 && (
+          )} */}
+          {page === 1 && (
             <>
               <Modal.Header >
                 <Modal.Title className="formMainLable">
@@ -315,6 +303,114 @@ const popPageFourInfo = (
              
                      
                     </div>
+
+                    {/* <div className="row mt-2" hidden={hiddenWorkshopCheckBox}>
+                      <div className="col-md-12" key="service">
+                 
+           <h4 className="text-center" style={{ margin: "30px" }}>
+                      Informasjon om skjemaet
+                    </h4>
+                <p className="text-center">
+                Det er viktig at du fyller ut riktig informasjon på dette skjemaet for å sikre at vi nøyaktig kan 
+                representere virksomheten din og dens tjenester til potensielle kunder. 
+                Denne informasjonen vil også bli brukt til å hjelpe oss med å skreddersy tjenestene våre for 
+                å møte dine forretningsbehov.
+                <br/>
+                Vennligst ta deg tid til å fylle ut dette skjemaet i sin helhet og gi så mange detaljer som mulig. 
+                Hvis du har spørsmål eller bekymringer angående skjemaet, ikke nøl med å kontakte oss for å få hjelp.
+                </p>
+
+                <h6>Felter beksrivelse:</h6>
+
+                <ListGroup as="ol"  style={{listStyleType: 'none', margin:'10px'}} >
+                      
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Bilde</div>
+                          Last opp/ generer ett bilde til tjenesten
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Tjeneste tittel</div>
+                          For eksempel: <span  style={{fontStyle:'italic', color:'#818282'}}> Motorservice, Girkasseservice, Rutinemessig vedlikehold</span>
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Aktiv fra dato</div>
+                          Aktiveringsdato for tjenesten.
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Estimert tid (i minutter)</div>
+                          Hvor langt tid kan den tjeneste bruke. Bergnet i minutter. For eksempel: <span style={{fontStyle:'italic', color:'#818282'}}> 60 tilsvarer 1 time</span>
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Kapasitet (Antall plass biler)</div>
+                          Antall plass av biler i verksted om gangen for denne tjenesten.
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Tilbyr bedriften lånebil</div>
+                          Kryss av dersom bedriften tilbyr lånebil når kunden har bilen inne på service
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Leverer bedriften faste avtaler for bedrifter</div>
+                          Kryss av dersom bedriften tilbyr faste avtaler til andre bedrifter for denne tjenesten?
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Tjeneste beskrivelse</div>
+                          Skriv / generer en beskrivelse av tjenesten du tilbyr
+                        </div>
+                      </ListGroup.Item>
+
+                      <ListGroup.Item
+                        as="li"
+                        className="d-flex justify-content-between align-items-start">
+                        <div className="ms-2 me-auto" >
+                          <div className="fw-bold" >Pris</div>
+                          Skjemat har to former for prismodeller. <br/>1. Pakke priser <br/>2. Enkel pris eller pris basert på bil størrelse. 3 type størrelse (Pris liten bil, Pris normal bil, Pris stor bil)
+                        </div>
+                      </ListGroup.Item>
+
+                </ListGroup>
+                
+             
+
+                      </div>
+                    </div> */}
                   
               
                 
@@ -343,18 +439,18 @@ const popPageFourInfo = (
               </form>
             </>
           )}
-          {page === 3 && (
+          {page === 2 && (
             <>
-               <CarWashPackages buttonName={'Bil vask'}/>
+            <CarWashPackages buttonName={'Bilpleietjenester'} prevPage={handlePrevPageAfterServices}/>
             </>
           )}
-          {page === 4 && (
+          {page === 3 && (
             <>
-           <Repair buttonName={'Reprasjon'} prevPage={handlePrevPageAfterServices}/> 
+           <Repair buttonName={'Reparasjon og vedlikehold av kjøretøy'} prevPage={handlePrevPageAfterServices}/> 
           
             </>
           )}
-          {page === 5 && (
+          {page === 4 && (
             <>
            <div>
             <h1>5</h1>
