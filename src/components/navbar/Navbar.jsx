@@ -6,7 +6,7 @@ import FullscreenExitOutlinedIcon from "@mui/icons-material/FullscreenExitOutlin
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutlineOutlined";
 import { DarkModeContext } from "../../context/darkModeContext";
-import { useContext, useState,useEffect } from "react";
+import { useContext, useState,useEffect, useRef } from "react";
 import { db} from "../../firebase";
 import { AuthContext} from "../../context/AuthContext";
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -20,8 +20,7 @@ import {
 import React  from 'react';
 import { Link } from "react-router-dom";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-
-
+import RegistrationForm from "../popup/RegistrationForm";
 
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -31,57 +30,38 @@ const Navbar = () => {
   const userID = currentUser.uid;
   const [cTheme, setCTheme] = useState('');
 
-
+  const myButtonRef = useRef(null);
   
   useEffect(() => {
     // LISTEN (REALTIME)
    
     const unsub = onSnapshot(
-      
-      query(collection(db, "company"), where("uid", "==", currentUser.uid)),
+      collection(db, "company"),
       (snapShot) => {
-    
-
-                
-      
-        
-        snapShot.docs.map((doc) => {
-          setData({uid:doc.data().uid, companyName: doc.data().companyName, companyLogo:doc.data().companyLogo});
-              
-            
-          });
  
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
-  
-  
-
-    return () => {
-      unsub();
-    };
-  }, );
-
-  useEffect(() => {
-    // LISTEN (REALTIME)
-   
-    const unsub = onSnapshot(
-      collection(db, "userTheme"),
-      (snapShot) => {
-        let list = [];
 
         snapShot.docs.forEach((doc) => {
-          if(doc.id === userID){
-            list.push({id: doc.id, ...doc.data()});
+         
+          if(doc.data().uid === userID){
+            console.log(doc.data().companyName)
+            setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo})
+            console.log(doc.data().companyName)
+          }else{
+            console.log('no data')
+            setInterval(() => {
+       
+               
+                    myButtonRef.current.click()
+           
+                }, 30); // 5 minutes in milliseconds
           }
-          
-          setColorTheme(list)
-          setCTheme(...colorTheme)
+
+        
+
+         
         });
 
-       
+  
       },
 
       (error) => {
@@ -94,11 +74,56 @@ const Navbar = () => {
     };
   }, []);
 
+  // useEffect(() => {
+    
+  //   const interval = setInterval(() => {
+  //     if(data.companyName === undefined){
+   
+  //       myButtonRef.current.click()
+  //     }
+  //   }, 10); // 5 minutes in milliseconds
+  
+  
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
+   
+  //   const unsub = onSnapshot(
+  //     collection(db, "userTheme"),
+  //     (snapShot) => {
+  //       let list = [];
+
+  //       snapShot.docs.forEach((doc) => {
+  //         if(doc.id === userID){
+  //           list.push({id: doc.id, ...doc.data()});
+  //         }
+          
+  //         setColorTheme(list)
+  //         setCTheme(...colorTheme)
+  //       });
+
+       
+  //     },
+
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
+
 
   return (
     <div className={`navbar`}>
       <div className="wrapper">
-
+      <div hidden={true}>
+        <RegistrationForm  buttonName='Register deg' ref_reg={myButtonRef} />
+        </div>
         {/* <div className="search">
           <input type="text" placeholder="Søk..." />
           <SearchOutlinedIcon />
@@ -167,7 +192,7 @@ const Navbar = () => {
     </Dropdown> 
     </ul>
 
-
+    
             
           </div>
 

@@ -2,7 +2,7 @@
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 
-import React, { useState, useEffect, useContext }   from 'react';
+import React, { useState, useEffect, useContext, useRef }   from 'react';
 import {
   addDoc,
     collection,
@@ -24,7 +24,7 @@ const Profile = () => {
     const {currentUser} = useContext(AuthContext)
     const [searchTerm, setSearchTerm] = useState('');
     const [registerButton, setRegisterButton] = useState(false)
-
+    const userID = currentUser.uid;
     const [isData, setIsData] = useState('')
     const [visitorsData, setVisitorData] = useState('')
     const [file, setFile] = useState("");
@@ -32,199 +32,40 @@ const Profile = () => {
     const [per, setPerc] = useState(null);
     const [altinnData, setAltinnData] = useState([]);
     const postsCollectionRef = collection(db, "company");
+    const myButtonRef = useRef(null);
  
- 
-    useEffect(() => {
-    // LISTEN (REALTIME)
-   
-    const unsub = onSnapshot(
-      
-      query(collection(db, "company"), where("uid", "==", currentUser.uid)),
-      (snapShot) => {
-        
-        if(snapShot.docs !== ''){
-        snapShot.docs.map((doc) => {
-          setData({uid:doc.data().uid,
-             companyName: doc.data().companyName,
-              companyLogo:doc.data().companyLogo,
-               email:doc.data().email,
-               address:doc.data().address,
-               country:doc.data().country,
-               phoneNumber:doc.data().phoneNumber,
-               about: doc.data().about,
-              //  role: doc.data().role.replace(/[0-9.]/g, ''),
-              role: doc.data().role,
-               orgNumber:doc.data().orgNumber,
-               CEO:doc.data().CEO,
-               website:doc.data().website,
-               openingDays:doc.data().openingDays,
-               openingHours:doc.data().openingHours,
-               facebook:doc.data().facebook,
-               youtube:doc.data().youtube,
-               linkedin:doc.data().linkedin,
-               instagram:doc.data().instagram});
-                          
-          });}
-          
-
-
-
-            if(data.companyName == null || data.companyName === ''){
-              
-              
-             return (
-              
-            
-               setIsData(
-               <div>
-                <div className="col-sm-12">
-                      <RegistrationForm buttonName='Register deg'/>
-                    </div>
-                </div>)
-                ,
-
-                setVisitorData(<div className="row gutters-sm">
-                <div className="col-sm-6 mb-3">
-                  <div className="card h-100">
-                    <div className="card-body">
-                      <h6 className="align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Tilbud</h6>
-                      <small>Dekkskift</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Bilvask</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Polering</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Lakering</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Sandblås</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-sm-6 mb-3">
-                  <div className="card h-100">
-                    <div className="card-body">
-                      <h6 className="align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Produkter</h6>
-                      <small>Dekkskift</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Ruteskift</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Motorvask</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>Bilvask</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                      <small>EU-kontroll</small>
-                      <div className="progress mb-3" style={{height: "5px"}}>
-                        <div className="progress-bar bg-primary" role="progressbar" style={{width: "0%"}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>)
-                )
-              
-            }
-            else{
-              return(
-                
-               setIsData(
-                <div>
-                 <div className="col-sm-12">
-                 <RegistrationForm buttonName='Endre'/>
-                     </div>
-                 </div>),
-
-              setVisitorData(<div className="row gutters-sm">
-              <div className="col-sm-6 mb-3">
-                <div className="card h-100">
-                  <div className="card-body">
-                    <h6 className=" align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Tilbud</h6>
-                    <small>Dekkskift</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "80%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Bilvask</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "72%"}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Polering</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "89%"}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Lakering</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "55%"}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Sandblås</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "66%"}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-sm-6 mb-3">
-                <div className="card h-100">
-                  <div className="card-body">
-                    <h6 className="align-items-center mb-3"><i className="material-icons text-info mr-2">Mest besøkende</i> Produkter</h6>
-                    <small>Dekkskift</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "60%"}} aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Ruteskift</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "22%"}} aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Motorvask</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "19%"}} aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>Bilvask</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "55%"}} aria-valuenow="55" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                    <small>EU-kontroll</small>
-                    <div className="progress mb-3" style={{height: "5px"}}>
-                      <div className="progress-bar bg-primary" role="progressbar" style={{width: "66%"}} aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>)
-              )
-            }
-
-            
-          
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
   
+    // useEffect(() => {
+    //   // LISTEN (REALTIME)
+     
+    //   const unsub = onSnapshot(
+    //     collection(db, "enhetsRegisteret"),
+    //     (snapShot) => {
+    //       let list = [];
   
+    //       snapShot.docs.forEach((doc) => {
+    //         list.push({ id: doc.id, ...doc.data() });
+    //           if(doc.id === userID){
+    //             list.push({id: doc.id, ...doc.data()});
+    //         }
+  
+           
+    //       });
+  
+    //       setData(list);
+    //     },
+  
+    //     (error) => {
+    //       console.log(error);
+    //     }
+    //   );
+  
+    //   return () => {
+    //     unsub();
+    //   };
+    // }, []);
 
-    return () => {
-      unsub();
-    };
-  },[]);
+  
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;

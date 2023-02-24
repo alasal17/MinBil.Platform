@@ -40,7 +40,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SuccessMessages from "./SuccessMessages";
 import { set } from "date-fns";
 
-function RegistrationForm({ buttonName }) {
+function RegistrationForm({ buttonName, ref_reg }) {
   const [show, setShow] = useState(false);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ function RegistrationForm({ buttonName }) {
   const [performsTrucks, setPerformsTrucks] = useState(false);
   const [aboutUs, setAboutUs] = useState([]);
   const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
-  const userID = auth.currentUser.uid;
+  const userID = currentUser.uid;
   const [addFieldIcon, setAddFieldIcon] = useState(false);
   const [openingHoursError, setOpeningHoursError] = useState(true);
   const [days, setDays] = useState([{day: "", open: "", close: ""}]);
@@ -308,7 +308,7 @@ useEffect(() => {
     setRecommendedOpeningDays(false);
     setAddFieldIcon(false)
   
-    console.log('ww')
+
   } 
   else if(days.length === 7){
     setAddFieldIcon(true)
@@ -765,7 +765,7 @@ const handleRemoveClick = index => {
         ...data,
         orgNumber: searchTerm,
         // ...openingsData,
-        ...aboutUs,
+        ...aboutUs || '',
         ...industryData,
         ...country,
         ...phoneNumber,
@@ -774,11 +774,11 @@ const handleRemoveClick = index => {
         ...performsTrucks,
         numberOfEmployees:null,
         linkedin:'',
-        images:[...imagesData],
+        images:[...imagesData] || [],
         openingHours: {...days2},
-        companiesAgreements:companiesAgreements,
-        performsTrucks:performsTrucks,
-        status:true,
+        companiesAgreements:companiesAgreements || false,
+        performsTrucks:performsTrucks || false,
+        status:true ,
         createdAt: serverTimestamp(),
       });
     } catch (err) {
@@ -882,7 +882,7 @@ const handleRemoveClick = index => {
   );
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" ref={ref_reg} name='registration_form' onClick={handleShow}>
         {buttonName}
       </Button>
 

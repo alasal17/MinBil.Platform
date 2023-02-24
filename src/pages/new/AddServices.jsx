@@ -174,7 +174,7 @@ function AddServices({ buttonName }) {
       }
       else{
         setHiddenWorkshopCheckBox(true)
-        console.log('Else')
+       
         setShowStartButton(true)
       }
   }, );

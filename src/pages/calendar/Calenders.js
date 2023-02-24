@@ -1,21 +1,23 @@
 import Navbar from "../../components/navbar/Navbar";
 import Sidebar from "../../components/sidebar/Sidebar";
-import React from 'react'
+import React, { useState, useEffect, useContext, useRef }   from 'react';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { useEffect, useState } from "react";
 import {
   collection,
-  onSnapshot
+  onSnapshot,
+  query,
+  where
 } from "firebase/firestore";
 import { getAuth} from "firebase/auth";
 import { db } from "../../firebase";
 import EventList from "../list/EventList";
-
+import { AuthContext} from "../../context/AuthContext";
 import timeGridPlugin from '@fullcalendar/timegrid';
 import Popup from "../../components/popup/Popup";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import RegistrationForm from "../../components/popup/RegistrationForm";
 export const auth = getAuth();
 
 
@@ -23,52 +25,85 @@ const Calendars = () => {
   const [data, setData] = useState([]);
   const dataColor = 'red';
   const [registerButton, setRegisterButton] = useState(false)
-  const auth = getAuth();
+  
+  const {currentUser} = useContext(AuthContext)
+ 
+
+
+  const [data2, setData2] = useState({});
+  const userID = currentUser.uid;
+  const myButtonRef = useRef(null);
+
 
   useEffect(() => {
     // LISTEN (REALTIME)
- 
-  
+   
     const unsub = onSnapshot(
-      
-      collection(db, "booking"),
+      collection(db, "company"),
       (snapShot) => {
         let list = [];
-       
-        
-          snapShot.docs.forEach((doc) => {
-           
-           
-            if(doc.data().uid === auth.currentUser.uid ){
-              
-              list.push({ id: doc.id, status: doc.data().status, price: doc.data().price, title:doc.data().title, start: (doc.data().startDate+'T'+ doc.data().startTime), customerUid:doc.data().customerUid});
 
-
-            
-              
+        snapShot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+            if(doc.id === userID){
+              list.push({id: doc.id, ...doc.data()});
           }
-          if(doc.data().status === false){
-           
-            
-        }
+
          
-          });
+        });
+
         setData(list);
-        
       },
 
       (error) => {
         console.log(error);
-        
       }
     );
 
-    return () => {
-      unsub();
-      const timer = setTimeout(() => console.log('Initial timeout!'), 1000);
-      clearTimeout(timer)
-    }
-  },);
+  }, []);
+
+
+
+
+
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
+  //   const unsub = onSnapshot(
+      
+  //     collection(db, "booking"),
+  //     (snapShot) => {
+  //       let list = [];
+       
+        
+  //         snapShot.docs.forEach((doc) => {
+           
+           
+  //           if(doc.data().uid === auth.currentUser.uid ){
+              
+  //             list.push({ id: doc.id, status: doc.data().status, price: doc.data().price, title:doc.data().title, start: (doc.data().startDate+'T'+ doc.data().startTime), customerUid:doc.data().customerUid});
+
+
+            
+              
+  //         }
+  //         if(doc.data().status === false){
+           
+            
+  //       }
+         
+  //         });
+  //       data2(list);
+        
+  //     },
+
+  //     (error) => {
+  //       console.log(error);
+        
+  //     }
+  //   );
+
+   
+  // },);
   
   
 
@@ -104,7 +139,7 @@ const Calendars = () => {
                     }}
                     height='auto'
                     editable={true}
-                    events={data}/>
+                    events={data2}/>
                     </div> 
 </div> 
 </div> 
@@ -112,7 +147,9 @@ const Calendars = () => {
         </div>
         
         </div>
-      
+        <div hidden={true}>
+        <RegistrationForm  buttonName='Register deg' ref_reg={myButtonRef} />
+        </div>
       
         <Popup trigger={registerButton} setTrigger={setRegisterButton}> 
   

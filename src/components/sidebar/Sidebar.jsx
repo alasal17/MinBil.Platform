@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { signOut } from "firebase/auth";
 import { auth} from "../../firebase";
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState,useEffect, useRef } from 'react';
 import { AuthContext} from "../../context/AuthContext";
 import {
   collection,
@@ -43,7 +43,8 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import RoomPreferencesOutlinedIcon from '@mui/icons-material/RoomPreferencesOutlined';
 import SettingsApplicationsOutlinedIcon from '@mui/icons-material/SettingsApplicationsOutlined';
 import DisplaySettingsOutlinedIcon from '@mui/icons-material/DisplaySettingsOutlined';
-
+import { da } from "date-fns/locale";
+import RegistrationForm from "../popup/RegistrationForm";
 const Sidebar = () => {
   
 
@@ -53,76 +54,78 @@ const Sidebar = () => {
   const [colorTheme, setColorTheme] = useState('green-theme');
   const [cTheme, setCTheme] = useState('');
   const userID = currentUser.uid;
+  const postsCollectionRef = collection(db, "company");
+  const myButtonRef = useRef(null);
+  
+
   useEffect(() => {
     // LISTEN (REALTIME)
    
     const unsub = onSnapshot(
-      
-      query(collection(db, "company"), where("uid", "==", currentUser.uid)),
+      collection(db, "company"),
       (snapShot) => {
-    
+        let list = [];
+       
+        snapShot.docs.forEach((doc) => {
+          if(doc.data().uid === userID){
+          setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo});
+          
+          }
+     
+        });
 
-                
-      
         
-        snapShot.docs.map((doc) => {
-          setData({uid:doc.data().uid, companyName: doc.data().companyName, companyLogo:doc.data().companyLogo});
-              
-            
-          });
- 
       },
+
       (error) => {
         console.log(error);
       }
     );
-  
-  
 
     return () => {
       unsub();
     };
-  }, );
+  }, []);
 
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
     
-    const unsub = onSnapshot(
-      collection(db, "userTheme"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "userTheme"),
+  //     (snapShot) => {
+  //       let list = [];
 
-        snapShot.docs.forEach((doc) => {
-          if(doc.id === userID){
-               list.push({id: doc.id, ...doc.data()});
+  //       snapShot.docs.forEach((doc) => {
+  //         if(doc.id === userID){
+  //              list.push({id: doc.id, ...doc.data()});
   
-          }
+  //         }
           
       
           
-            setColorTheme(list)
+  //           setColorTheme(list)
 
-            setCTheme(...colorTheme)
-            console.log(cTheme)
-        });
+  //           setCTheme(...colorTheme)
+          
+  //       });
      
 
         
 
      
        
-      },
+  //     },
 
-      (error) => {
-        console.log(error);
-      }
-    );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
 
-    return () => {
-      unsub();
-    };
-  },[]);
+  //   return () => {
+  //     unsub();
+  //   };
+  // },[]);
 
   const signUserOut = () => {
     signOut(auth).then(() => {
@@ -137,10 +140,10 @@ const Sidebar = () => {
         
         <Link to="/" style={{ textDecoration: "none"}}>
           <img src={
-                data.companyLogo
-                  ? data.companyLogo
-                  : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-              }  alt="" className=" company_logo mx-auto d-block rounded-circle mt-2" />
+              data.companyLogo
+                ? data.companyLogo
+                : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+            } alt="" className=" company_logo mx-auto d-block rounded-circle mt-2" />
         </Link>
         <p className="companyNameTitle">{data.companyName}</p>
       </div>
@@ -322,7 +325,7 @@ const Sidebar = () => {
             <span onClick={signUserOut}>Logg ut</span>
           </li>
 
-      
+          
     
 
         </ul>

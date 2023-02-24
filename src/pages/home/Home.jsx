@@ -5,7 +5,7 @@ import Widget from "../../components/widget/Widget";
 import Featured from "../../components/featured/Featured";
 import Chart from "../../components/chart/Chart";
 import Table from "../../components/table/Table";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef  } from "react";
 import {
   doc,
   collection,
@@ -16,43 +16,51 @@ import {
 import { auth, db, storage } from "../../firebase";
 import { AuthContext } from "../../context/AuthContext";
 import LoadingPage from './LoadingPage.js'
+import RegistrationForm from "../../components/popup/RegistrationForm";
+
 const Home = () => {
   const [colorTheme, setColorTheme] = useState('green-theme');
   const { currentUser } = useContext(AuthContext);
   const [cTheme, setCTheme] = useState('');
-
+  const [showPopup, setShowPopup] = useState(true);
+  const inputElement = useRef();
+  const myButtonRef = useRef(null);
   const userID = currentUser.uid;
-  useEffect(() => {
-    // LISTEN (REALTIME)
+
+
+
+
+ 
+
+
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
    
-    const unsub = onSnapshot(
-      collection(db, "userTheme"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+      
+  //     collection(db, "userTheme"),
+      
+  //     (snapShot) => {
+        
+  //       let list = [];
 
-        snapShot.docs.forEach((doc) => {
-            if(doc.id === userID){
-              list.push({id: doc.id, ...doc.data()});
-          }
-          setColorTheme(list)
+  //       snapShot.docs.forEach((doc) => {
+  //       if(doc.id === userID){
+  //         list.push({id: doc.id, ...doc.data()});
+  //       }
+        
+  //       setColorTheme(list)
+  //       setCTheme(...colorTheme)
+  //     });
+  //   },  
+  //   (error) => {
+  //     console.log(error);
+  //   });
 
-          setCTheme(...colorTheme)
-
-         
-        });
-
-       
-      },
-
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    return () => {
-      unsub();
-    };
-  }, );
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, );
 
   return (
     <div className={`home `}>
@@ -65,7 +73,10 @@ const Home = () => {
           <Widget type="order" />
           <Widget type="earning" />
         </div>
-
+        <div hidden={true}>
+        <RegistrationForm  buttonName='Register deg' ref_reg={myButtonRef} />
+        </div>
+        
         
         <div className="charts">
           <Featured />
