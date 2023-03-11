@@ -21,7 +21,7 @@ import Profile from './pages/profile/Profile';
 import AuthPage from "./pages/login/AuthPage";
 import PlatfromSettings from "./pages/settings/platfromSettings/PlatfromSettings";
 import AccountSettings from "./pages/settings/accountSettings/AccountSettings";
-import WelcomePage from "./WelcomePage";
+
 
 
 const Home = React.lazy(() => wait(30).then(() => import('./pages/home/Home')))
@@ -37,7 +37,7 @@ function App() {
   const {currentUser} = useContext(AuthContext)
 
   const RequireAuth = ({ children }) => {
-    return currentUser ? children : <Navigate to="/welcome" />;
+    return currentUser ? children : <Navigate to="/login" />;
   };
 
 
@@ -48,7 +48,7 @@ function App() {
         <Routes>
          
         <Route path="/">
-        <Route path="/welcome" element={<WelcomePage />} />
+   
             <Route path="/login" element={<AuthPage />} />
             <Route
               index
