@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "17.x"
+    "node": "18.x"
   },
   "dependencies": {
     "@emotion/core": "^11.0.0",
@@ -56,7 +56,7 @@
     "react-confetti": "^6.1.0",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.41.1",
-  
+   
     "react-multiple-image-uploader": "^1.0.3",
     "react-papaparse": "^4.1.0",
     "react-router-dom": "^6.2.2",
