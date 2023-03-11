@@ -261,7 +261,7 @@ function CarWashPackages({ buttonName, prevPage }) {
   };
 
 
-  const handleChangeBusnissHours = (e, index) => {
+  const handleChangePrice = (e, index) => {
     const updatedPrice = [...price];
     updatedPrice[index][e.target.name] = e.target.value ?? "";
     setPrice(updatedPrice);
@@ -630,7 +630,7 @@ function CarWashPackages({ buttonName, prevPage }) {
                     value={price.length > 1 ?  price_name[index + 1]  : price_name[index]} 
                     ref={[index]}
                     className="form-control priceCol text-center fromControlCompanyForm"  
-                    onChange={e => handleChangeBusnissHours(e, index)}/>
+                    onChange={e => handleChangePrice(e, index)}/>
                       
                     </div>
 
@@ -666,7 +666,7 @@ function CarWashPackages({ buttonName, prevPage }) {
                       ref={[index]}
                       placeholder={packagenames[index]}
                       className='form-control priceCol text-center fromControlCompanyForm'
-                      onChange={(e) => handleChangeBusnissHours(e, index)}
+                      onChange={(e) => handleChangePrice(e, index)}
                     />
                   </div>
 
