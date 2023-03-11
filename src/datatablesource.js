@@ -79,19 +79,19 @@ export const employeesColumns = [
 
 export const servicesColumns = [
   // { field: "id", headerName: "ID", width: 70 },
-  {
-    field: "services",
-    headerName: "Tjenester",
-    width: 230,
-    renderCell: (params) => {
-      return (
-        <div className="cellWithImg">
-          <img className="cellImg" src={params.row.imageUrl} alt="avatar" />
-          {params.row.title}
-        </div>
-      );
-    },
-  },
+  // {
+  //   field: "services",
+  //   headerName: "Tjenester",
+  //   width: 230,
+  //   renderCell: (params) => {
+  //     return (
+  //       <div className="cellWithImg">
+  //         <img className="cellImg" src={params.row.imageUrl} alt="avatar" />
+  //         {params.row.title}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     field: "title",
     headerName: "Tittel",
@@ -102,21 +102,21 @@ export const servicesColumns = [
     headerName: "Beskrivelse",
     width: 300,
   },  
-  {
-    field: "smallCar",
-    headerName: "Pris liten bil",
-    width: 100,
-  },
-  {
-    field: "normalCar",
-    headerName: "Pris vanlig bil",
-    width: 100,
-  },
-  {
-    field: "bigCar",
-    headerName: "Pris stor bil",
-    width: 100,
-  },
+  // {
+  //   field: "smallCar",
+  //   headerName: "Pris liten bil",
+  //   width: 100,
+  // },
+  // {
+  //   field: "normalCar",
+  //   headerName: "Pris vanlig bil",
+  //   width: 100,
+  // },
+  // {
+  //   field: "bigCar",
+  //   headerName: "Pris stor bil",
+  //   width: 100,
+  // },
   {
     field: "tags",
     headerName: "Stikk ord",
@@ -128,37 +128,37 @@ export const servicesColumns = [
     headerName: "Kalkulert varighet",
     width: 150,
   },
-  {
-    field: "estimatedTime",
-    headerName: "Varighet i minutter",
-    width: 150,
-  },
-  {
-    field: "status",
-    headerName: "Status",
-    width: 100,
-    renderCell: (params) => {
-      if(params.row.status === true){
+  // {
+  //   field: "estimatedTime",
+  //   headerName: "Varighet i minutter",
+  //   width: 150,
+  // },
+  //{
+    // field: "status",
+    // headerName: "Status",
+    // width: 100,
+    // renderCell: (params) => {
+    //   if(params.row.status === true){
 
-        return (
-          <div  className={`cellWithStatus ${params.row.status}`}>
-            Aktiv
-          </div>
-        )
-      }if(params.row.status !== true){
-        return (
-          <div  className={`cellWithStatus ${params.row.status}`}>
-            Ikke aktiv
-          </div>
-        )
+    //     return (
+    //       <div  className={`cellWithStatus ${params.row.status}`}>
+    //         Aktiv
+    //       </div>
+    //     )
+    //   }if(params.row.status !== true){
+    //     return (
+    //       <div  className={`cellWithStatus ${params.row.status}`}>
+    //         Ikke aktiv
+    //       </div>
+    //     )
 
-      }else{
-        <div  className={`cellWithStatus ${params.row.status}`}>
-            Active
-          </div>
-      }
-    },
-  },
+    //   }else{
+    //     <div  className={`cellWithStatus ${params.row.status}`}>
+    //         Active
+    //       </div>
+    //   }
+    //},
+ // },
   
 ];
 

@@ -12,8 +12,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import { Configuration, OpenAIApi } from "openai";
 import axios from "axios";
-
-
+import {
+  doc,
+  collection,
+  serverTimestamp,
+  addDoc,
+  onSnapshot,
+} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+import { auth, db, storage } from "../../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function CarWashPackages({ buttonName, prevPage }) {
   
@@ -40,7 +49,7 @@ function CarWashPackages({ buttonName, prevPage }) {
   const [tagsData, setTags] = useState([]);
   const [currentDateFormat, setCurrentDateFormat] = useState(new Date());
   const [prompt, setPrompt] = useState("");
-  const apiKey = process.env.OPENAI_APIKEY;
+ 
   const [response, setResponse] = useState(null);
   const [chatGPTShow, setChatGPTShow ] = useState(true);
   const [dallEShow, setDallEShow ] = useState(false);
@@ -48,6 +57,19 @@ function CarWashPackages({ buttonName, prevPage }) {
   const [loading, setLoading] = useState(false);
   let [obj, setObj] = useState({ choices: [] });
   const [result, setResult] = useState("");
+  const navigate = useNavigate();
+  const { currentUser } = useContext(AuthContext);
+  const postsCollectionRef = collection(db, "services");
+  const apiKey = process.env.OPENAI_APIKEY;
+  const [promptImage, setPromptImage] = useState("");
+  const configuration = new Configuration({
+    apiKey: apiKey,
+  });
+  const [data, setData] = useState([{}]);
+  const openai = new OpenAIApi(configuration);
+  const userID = currentUser.uid;
+  const [per, setPerc] = useState(null);
+
   const [payload, setPayLoad] = useState({
     prompt: "Mario: Hi, how are you?",
     temperature: 0.9,
@@ -55,12 +77,108 @@ function CarWashPackages({ buttonName, prevPage }) {
     max_tokens: 500,
     model: "text-davinci-003"
   });
-  const [promptImage, setPromptImage] = useState("");
-  const configuration = new Configuration({
-    apiKey: apiKey,
-  });
 
-  const openai = new OpenAIApi(configuration);
+  const tags_options = [
+    { value: "Innvending/utvendig vask", label: "Innvending/utvendig vask" },
+    { value: "Innvendig/utvendig vask med polering og motorvask", label: "Innvendig/utvendig vask med polering og motorvask"},
+    { value: "Utvendig vask", label: "Utvendig vask" },
+    { value: "Utvendig vask med polering", label: "Utvendig vask med polering"},
+    { value: "Innvendig vask", label: "Innvendig vask" },
+    { value: "Motorvask", label: "Motorvask" },
+    { value: "Innvendig rens", label: "Innvendig rens" },
+    { value: "Skinnbehandling", label: "Skinnbehandling" },
+    { value: "Avfoliering", label: "Avfoliering" },
+    { value: "Utvendig vask", label: "Utvendig vask" },
+    { value: "Ozonbehandling", label: "Ozonbehandling" },
+
+    { value: "Bilvask og rengjøring", label: "Bilvask og rengjøring" },
+    { value: "Lakk- og karosseriarbeid", label: "Lakk- og karosseriarbeid" },
+    { value: "Vindusfoliering og glasservice", label: "Vindusfoliering og glasservice" },
+    { value: "Polstring og interiørservice", label: "Polstring og interiørservice" },
+
+    { value: "Glassforsegling", label: "Glassforsegling" },
+    { value: "Keramisk lakkforsegling", label: "Keramisk lakkforsegling" },
+    { value: "Lakkrens", label: "Lakkrens" },
+    { value: "Rens av matter, gummi etc", label: "Rens av matter, gummi etc" },
+    { value: "Lakk korrigering", label: "Lakk korrigering" },
+  ];
+
+  const price_name = [
+    "Pris",
+    "Pris liten bil", 
+    "Pris vanlig bil", 
+    "Pris stor bil"
+  ];
+  
+  const price_name_prices = [
+    "1000", 
+    "2000",  
+    "3000"
+  ];
+  
+  const packagenames = [
+    "Bronze", 
+    "Silver", 
+    "Gold", 
+    "Bronze 2", 
+    "Silver 2", 
+    "Gold 2", 
+    "Bronze 3", 
+    "Silver 3", 
+    "Gold 3"
+  ]
+  
+  const packagenames_prices = [
+    "1000", 
+    "2000", 
+    "3000", 
+    "4000", 
+    "5000", 
+    "6000", 
+    "7000", 
+    "8000", 
+    "9000" 
+  ]
+ 
+
+  useEffect(() => {
+    const uploadFile = () => {
+      const name = new Date().getTime() + file.name;
+
+      console.log(name);
+      const storageRef = ref(storage, file.name);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          setPerc(progress);
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+            default:
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setData((prev) => ({ ...prev, imageUrl: downloadURL }));
+          });
+        }
+      );
+    };
+    file && uploadFile();
+  }, [file]);
 
   const translate_text = async () =>{
     const res = await openai.translateText({
@@ -138,36 +256,11 @@ function CarWashPackages({ buttonName, prevPage }) {
   const handleInput = (e) => {
     const id = e.target.id;
     const value = e.target.value;
+    setData([...data, {[id]:value}])
+    console.log(data);
   };
 
-  const tags_options = [
-    { value: "Innvending/utvendig vask", label: "Innvending/utvendig vask" },
-    { value: "Innvendig/utvendig vask med polering og motorvask", label: "Innvendig/utvendig vask med polering og motorvask"},
-    { value: "Utvendig vask", label: "Utvendig vask" },
-    { value: "Utvendig vask med polering", label: "Utvendig vask med polering"},
-    { value: "Innvendig vask", label: "Innvendig vask" },
-    { value: "Motorvask", label: "Motorvask" },
-    { value: "Innvendig rens", label: "Innvendig rens" },
-    { value: "Skinnbehandling", label: "Skinnbehandling" },
-    { value: "Avfoliering", label: "Avfoliering" },
-    { value: "Utvendig vask", label: "Utvendig vask" },
-    { value: "Ozonbehandling", label: "Ozonbehandling" },
 
-    { value: "Bilvask og rengjøring", label: "Bilvask og rengjøring" },
-    { value: "Lakk- og karosseriarbeid", label: "Lakk- og karosseriarbeid" },
-    { value: "Vindusfoliering og glasservice", label: "Vindusfoliering og glasservice" },
-    { value: "Polstring og interiørservice", label: "Polstring og interiørservice" },
-
-    { value: "Glassforsegling", label: "Glassforsegling" },
-    { value: "Keramisk lakkforsegling", label: "Keramisk lakkforsegling" },
-    { value: "Lakkrens", label: "Lakkrens" },
-    { value: "Rens av matter, gummi etc", label: "Rens av matter, gummi etc" },
-    { value: "Lakk korrigering", label: "Lakk korrigering" },
-  ];
-  const price_name = ["Pris", "Pris liten bil", "Pris vanlig bil", "Pris stor bil"];
-  const price_name_prices = ["1000", "2000",  "3000"];
-  const packagenames = ["Bronze", "Silver", "Gold", "Bronze 2", "Silver 2", "Gold 2", "Bronze 3", "Silver 3", "Gold 3" ]
-  const packagenames_prices = ["1000", "2000", "3000", "4000", "5000", "6000", "7000", "8000", "9000" ]
   const handleChangeBusnissHours = (e, index) => {
     const updatedPrice = [...price];
     updatedPrice[index][e.target.name] = e.target.value ?? "";
@@ -193,6 +286,8 @@ function CarWashPackages({ buttonName, prevPage }) {
   const handlePriceClassShowChange = () => {
     setPriceClassShow(!priceClassShow);
   };
+
+
   useEffect(() => {
     const formSelected = document.getElementsByName("Pris");
     const currentDate = new Date();
@@ -214,8 +309,6 @@ function CarWashPackages({ buttonName, prevPage }) {
 
 
   const handleAddPrisClass = () => {
-
-    
 
     if (price.length < 3) {
       setPrice([
@@ -265,9 +358,7 @@ function CarWashPackages({ buttonName, prevPage }) {
     setPrice(list);
   };
 
-  const handlePrevPage = () => setPage(page - 1);
-
-
+ 
   const handlePropInputChange =(e) =>{
     const name = e.target.name;
     const value = e.target.value;
@@ -277,12 +368,37 @@ function CarWashPackages({ buttonName, prevPage }) {
            prompt:  "fungere som ekspert. Gi meg beskrivelsen som en tjeneste eller et produkt jeg selger. det skal fungere som en reklame " + value  
          });
   }
+
+  const handleAddToDatabase = async (e) => {
+    e.preventDefault();
+ 
+    try {
+      await addDoc(db, postsCollectionRef, {
+        uid: userID,
+        ...data,
+        category:buttonName,
+        status:true ,
+        createdAt: serverTimestamp(),
+      })}
+     catch (err) {
+      console.log(err);
+    }
+    
+
+    setPage(page + 1 )
+    setTimeout(() =>{
+      navigate('/service')
+    }, 6000)
+
+    
+  };
+
   return (
     <div>
       <Modal.Header>
         <Modal.Title className='formMainLable'>{buttonName}</Modal.Title>
       </Modal.Header>
-      <form onSubmit={handleSubmit(handleNextPage)}>
+      <form onSubmit={handleSubmit(handleAddToDatabase)}>
         <Modal.Body>
 
           <div className=''>
@@ -333,6 +449,8 @@ function CarWashPackages({ buttonName, prevPage }) {
                 <label>Aktiv fra dato</label>
                 <input
                   type='date'
+                  id="activeDate"
+                  onChange={handleInput}
                   className='form-control'
                   defaultValue={getCurrentDateInput()}
                 />
@@ -380,14 +498,14 @@ function CarWashPackages({ buttonName, prevPage }) {
               <input
                         type="checkbox"
                         className="form-check-input "
-                        id="performsTrucks"
+                        id="chatGTPS"
                         checked={!chatGPTShow}
                         onChange={handleChatGTPShowChange}
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
                         className="form-check-label"
-                        key="performsTrucks"
+                        key="chatGTPS"
                         htmlFor="exampleCheck1"
                       >
                         Bruk AI til å generere tjeneste beskrivelse?
@@ -398,15 +516,15 @@ function CarWashPackages({ buttonName, prevPage }) {
               <input
                         type="checkbox"
                         className="form-check-input "
-                        id="performsTrucks"
+                        id="dallE"
                         checked={dallEShow}
                         onChange={handleDallEShowChange}
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
                         className="form-check-label"
-                        key="performsTrucks"
-                        htmlFor="exampleCheck1"
+                        key="dallE"
+                        htmlFor="dallE"
                       >
                         Bruk AI til å generere tjeneste bilde?
                       </label>
@@ -418,21 +536,16 @@ function CarWashPackages({ buttonName, prevPage }) {
                 <label className='labels'>Tjeneste beskrivelse</label>
                 <textarea
                   type='textarea'
-                  {...register("description", { required: true })}
+            
                   className='form-control'
                   id='description'
                   name='description'
                   as='textarea'
                   style={{height:'150px'}}
-                  
-                  rows={3}
-               
+                  required
+                  onChange={handleInput}
                 />
-                {errors.description && (
-                  <p style={{ color: "red" }}>
-                    Tjeneste beskrivelse: Dette feltet er obligatorisk!
-                  </p>
-                )}
+         
               </div>
             </div>
 
@@ -446,8 +559,7 @@ function CarWashPackages({ buttonName, prevPage }) {
                type='textarea'
                {...register("description", { required: true })}
                className='form-control'
-               id='description'
-               name='description'
+               id='enterDescription'
                style={{height:'150px'}}
                as='textarea'
                rows={3}
@@ -464,6 +576,7 @@ function CarWashPackages({ buttonName, prevPage }) {
               <div className="col-md-6">
               <label className='labels'>Resultat</label>
               <textarea
+              id='description'
               style={{height:'150px'}}
               className='form-control'
                type='textarea'

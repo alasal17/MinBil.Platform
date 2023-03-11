@@ -1,0 +1,35 @@
+.icons{
+    width: 300px !important;
+    height: 50px !important;
+    display: flex !important;
+    justify-content:left !important;
+    align-items:flex-end !important;
+    flex-direction:column !important;
+    
+ 
+ 
+
+   
+}
+.center_button{
+    width: 300px !important;
+    height: 50px !important;
+ 
+
+    align-items:flex-end !important;
+    flex-direction:column !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    display:block !important;
+    border: none !important;
+    border-radius: none !important; 
+    box-shadow: none!important; 
+    color: rgb(255, 255, 255) !important; 
+    cursor:none !important; 
+    font-size: 19px !important; 
+    margin: none !important; 
+    width: calc(100% - 30px) !important;  
+    user-select: none !important; 
+    height: none !important; 
+    background: rgb(41, 62, 105) !important;
+}

@@ -8,6 +8,7 @@ import {
   setDoc,
   onSnapshot,
 } from "firebase/firestore";
+import firebase from "firebase/compat/app";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { auth, db, storage } from "../../firebase";
 import { RMIUploader } from "react-multiple-image-uploader";
@@ -39,6 +40,11 @@ import Confetti from "react-confetti";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SuccessMessages from "./SuccessMessages";
 import { set } from "date-fns";
+import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+
+import { signInWithEmailAndPassword, getAuth, provider } from "firebase/auth";
+
+
 
 function RegistrationForm({ buttonName, ref_reg }) {
   const [show, setShow] = useState(false);
@@ -53,6 +59,7 @@ function RegistrationForm({ buttonName, ref_reg }) {
   //   openingTime: "",
   //   closingTime: "",
   // });
+
   const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
   const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
   const [data2, setData2] = useState({});
@@ -266,7 +273,15 @@ const handleChangeBusnissHours = (e, index) => {
 }
 
 
-
+const handleFacebookLogin = async () => {
+ 
+  try {
+    // const result = await auth().signInWithPopup(provider);
+    // console.log(result.user);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
 const handleNextPagefem = () =>{
@@ -1375,6 +1390,23 @@ const handleRemoveClick = index => {
                 />
                 <h6 className="formTitle">Sosiale medier</h6>
                 <div className="row mt-2">
+                <div className="col-md-2" ></div>
+
+                <div className="col-md-4" key="instagram">
+                 
+                    <GoogleLoginButton className="icons" align='right' iconSize='40px' iconFormat={'fa-icon fa-icon-google'}  text= "Logg inn Google " onClick={() => alert("Google")} />
+                  </div>
+
+                  <div className="col" >
+                  
+                    <FacebookLoginButton className="icons" align='right' iconSize='40px' iconFormat={'fa-icon fa-icon-facebook'}  text= "Logg inn Facebook "  onClick={handleFacebookLogin}/>
+                  
+                  </div>
+
+                  <div className="col-md-1" ></div>
+                  
+                </div>
+                <div className="row mt-2">
                   <div className="col-md-3" key="website">
                     <label className="labels customLabel">Nettside</label>
                     <input
@@ -1386,27 +1418,7 @@ const handleRemoveClick = index => {
                     />
                   </div>
 
-                  <div className="col-md-3" key="instagram">
-                    <label className="labels">Instagram</label>
-                    <input
-                      type="text"
-                      id="instagram"
-                      className="form-control fromControlCompanyForm"
-                      placeholder="@instagram"
-                      onChange={handleSocialInput}
-                    />
-                  </div>
-
-                  <div className="col-md-3" key="facebook">
-                    <label className="labels">Facebook</label>
-                    <input
-                      type="text"
-                      id="facebook"
-                      className="form-control fromControlCompanyForm"
-                      placeholder="www.facebook.com"
-                      onChange={handleSocialInput}
-                    />
-                  </div>
+                 
 
                   <div className="col-md-3" key="youtube">
                     <label className="labels">Youtube</label>

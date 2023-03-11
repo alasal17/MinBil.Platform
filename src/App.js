@@ -15,13 +15,14 @@ import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/AuthContext";
 import Calendars from "./pages/calendar/Calenders";
-import React, {Suspense}  from 'react';
+import React, {Suspense, useEffect, useState}  from 'react';
 import VerifyEmail from '../src/pages/register/VerifyEmail';
 import Profile from './pages/profile/Profile';
 import AuthPage from "./pages/login/AuthPage";
 import PlatfromSettings from "./pages/settings/platfromSettings/PlatfromSettings";
 import AccountSettings from "./pages/settings/accountSettings/AccountSettings";
-import LoadingPage from "./pages/home/LoadingPage";
+import WelcomePage from "./WelcomePage";
+
 
 const Home = React.lazy(() => wait(30).then(() => import('./pages/home/Home')))
 // const EmployeesList = React.lazy(() => import("./pages/list/EmployeesList"));
@@ -32,12 +33,14 @@ const Home = React.lazy(() => wait(30).then(() => import('./pages/home/Home')))
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-
+  const [showPopup, setShowPopup] = useState(false);
   const {currentUser} = useContext(AuthContext)
 
   const RequireAuth = ({ children }) => {
-    return currentUser ? children : <Navigate to="/login" />;
+    return currentUser ? children : <Navigate to="/welcome" />;
   };
+
+
 
   return (
     <div className={darkMode ? "app dark" : "app"}>
@@ -45,6 +48,7 @@ function App() {
         <Routes>
          
         <Route path="/">
+        <Route path="/welcome" element={<WelcomePage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route
               index
@@ -139,7 +143,11 @@ function App() {
       <h1>Loading...</h1>
                 </div>
                 
+                
                 }>
+
+           
+                 
                 <RequireAuth>
                   <Home />
                 </RequireAuth>
