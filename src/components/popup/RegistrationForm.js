@@ -7,6 +7,9 @@ import {
   serverTimestamp,
   setDoc,
   onSnapshot,
+  where,
+  query,
+  getDocs
 } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -40,7 +43,7 @@ import Confetti from "react-confetti";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SuccessMessages from "./SuccessMessages";
 import { set } from "date-fns";
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
+
 
 import { signInWithEmailAndPassword, getAuth, provider } from "firebase/auth";
 
@@ -109,7 +112,7 @@ function RegistrationForm({ buttonName, ref_reg }) {
   // const onSubmit = (data) => {
   //   console.log(data);
   // };
-
+ 
   const options = [
     { label: "Bilverksted", value: "Bilverksted" },
     { label: "Reprasjon", value: "Reprasjon" },
@@ -796,6 +799,7 @@ const handleRemoveClick = index => {
         status:true ,
         createdAt: serverTimestamp(),
       });
+      navigate('/')
     } catch (err) {
       console.log(err);
     }
@@ -809,10 +813,8 @@ const handleRemoveClick = index => {
       console.log(err);
     }
 
-    setPage(page + 1 )
-    setTimeout(() =>{
-      navigate('/')
-    }, 6000)
+    
+  
 
     
   };
@@ -1392,16 +1394,9 @@ const handleRemoveClick = index => {
                 <div className="row mt-2">
                 <div className="col-md-2" ></div>
 
-                <div className="col-md-4" key="instagram">
-                 
-                    <GoogleLoginButton className="icons" align='right' iconSize='40px' iconFormat={'fa-icon fa-icon-google'}  text= "Logg inn Google " onClick={() => alert("Google")} />
-                  </div>
+               
 
-                  <div className="col" >
-                  
-                    <FacebookLoginButton className="icons" align='right' iconSize='40px' iconFormat={'fa-icon fa-icon-facebook'}  text= "Logg inn Facebook "  onClick={handleFacebookLogin}/>
-                  
-                  </div>
+              
 
                   <div className="col-md-1" ></div>
                   

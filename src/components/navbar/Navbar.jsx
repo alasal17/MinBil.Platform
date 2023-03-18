@@ -15,7 +15,8 @@ import {
   collection,
   onSnapshot,
   where,
-  query
+  query,
+  getDocs
 } from "firebase/firestore";
 import React  from 'react';
 import { Link } from "react-router-dom";
@@ -32,6 +33,8 @@ const Navbar = () => {
 
   const myButtonRef = useRef(null);
   
+
+
   useEffect(() => {
     // LISTEN (REALTIME)
    
@@ -41,26 +44,13 @@ const Navbar = () => {
  
 
         snapShot.docs.forEach((doc) => {
-         
           if(doc.data().uid === userID){
-            console.log(doc.data().companyName)
+
             setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo})
-            console.log(doc.data().companyName)
-          }else{
-            console.log('no data')
-            setInterval(() => {
-       
-               
-                    myButtonRef.current.click()
-           
-                }, 30); // 5 minutes in milliseconds
-          }
-
-        
-
-         
+          
+          } 
+          
         });
-
   
       },
 
@@ -74,49 +64,22 @@ const Navbar = () => {
     };
   }, []);
 
-  // useEffect(() => {
-    
-  //   const interval = setInterval(() => {
-  //     if(data.companyName === undefined){
-   
-  //       myButtonRef.current.click()
-  //     }
-  //   }, 10); // 5 minutes in milliseconds
+
+// async function getData() {
+//   const q = query(collection(db, "company"), where("uid", "==", userID));
+//   const querySnapshot = await data
+//   const docs = querySnapshot.companyName;
+//   console.log("Current data: ", docs);
+
+//   if(docs === undefined)
+//   {
+//     myButtonRef.current.click()
+//   }
+// }
   
-  
-  //   return () => clearInterval(interval);
-  // }, []);
-
-  // useEffect(() => {
-  //   // LISTEN (REALTIME)
-   
-  //   const unsub = onSnapshot(
-  //     collection(db, "userTheme"),
-  //     (snapShot) => {
-  //       let list = [];
-
-  //       snapShot.docs.forEach((doc) => {
-  //         if(doc.id === userID){
-  //           list.push({id: doc.id, ...doc.data()});
-  //         }
-          
-  //         setColorTheme(list)
-  //         setCTheme(...colorTheme)
-  //       });
-
-       
-  //     },
-
-  //     (error) => {
-  //       console.log(error);
-  //     }
-  //   );
-
-  //   return () => {
-  //     unsub();
-  //   };
-  // }, []);
-
+// useEffect(() => {
+//   getData()
+// },);
 
   return (
     <div className={`navbar`}>
