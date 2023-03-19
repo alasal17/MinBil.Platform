@@ -69,12 +69,8 @@ const Sidebar = () => {
         snapShot.docs.forEach((doc) => {
           if(doc.data().uid === userID){
           setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo});
-          
           }
-     
         });
-
-        
       },
 
       (error) => {
@@ -239,19 +235,8 @@ const Sidebar = () => {
           </li>
           <li>
             <TableChartOutlinedIcon className="icon" />
-            <span>Produkt statistikk </span>
+            <span>Salgsstatistikk </span>
           </li>
-          <li>
-            <TroubleshootOutlinedIcon className="icon" />
-            <span>Kampanje statistikk</span>
-          </li>
-
-       
-          <li>
-            <CandlestickChartOutlinedIcon className="icon" />
-            <span>Ansatt statistikk</span>
-          </li>
-
 
           <p className="title">VERKTØY & INNSTILLINGER</p>
 
@@ -262,16 +247,16 @@ const Sidebar = () => {
           <Dropdown.Toggle className="profileImage " style={{content:''}} variant='' id="dropdown-basic">
           <div className="row mt-2">
           
-                      <div className="col-md-8">
+                      <div className="col-md-9">
                       
                       <SettingsOutlinedIcon className="icon" />
-                      <span>Instillinger </span>
+                      <span>Innstillinger </span>
                       
                       
                         </div>
-                        <div className="col-md-3" >
-                        <ArrowForwardIosIcon style={{fontSize: '12px', paddingRight:'3px'}}/>
-                        </div>
+                        {/* <div className="col-md-3" >
+                        <ArrowForwardIosIcon style={{fontSize: '12px', padding:'3px'}}/>
+                        </div> */}
                      
                         </div>       
                         </Dropdown.Toggle>
