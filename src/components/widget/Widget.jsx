@@ -69,19 +69,20 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    case "earning":
-      data = {
-        title: "INNTJENING",
-        isMoney: true,
-        link: "Se nettoinntekter",
-        icon: (
-          <MonetizationOnOutlinedIcon
-            className="icon"
-            style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
-          />
-        ),
-      };
-      break;
+      case "earning":
+        data = {
+          title: "INNTJENING",
+          isMoney: true,
+          query: "earning", // Add the query property here
+          link: "Se nettoinntekter",
+          icon: (
+            <MonetizationOnOutlinedIcon
+              className="icon"
+              style={{ backgroundColor: "rgba(0, 128, 0, 0.2)", color: "green" }}
+            />
+          ),
+        };
+        break;
     case "services":
       data = {
         title: "TJENESTER",
@@ -108,7 +109,7 @@ const Widget = ({ type }) => {
       const lastMonth = new Date(new Date().setMonth(today.getMonth() - 0));
       const prevMonth = new Date(new Date().setMonth(today.getMonth() - 1));
       if (!data.query) {
-        console.error(`Invalid widget type: ${type}`);
+        console.error(`Invalid widget type: ${type}`)
         return;
       }
       else{

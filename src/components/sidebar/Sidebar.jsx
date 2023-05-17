@@ -68,7 +68,7 @@ const Sidebar = () => {
        
         snapShot.docs.forEach((doc) => {
           if(doc.data().uid === userID){
-          setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo});
+            setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo});
           }
         });
       },
@@ -141,7 +141,7 @@ const Sidebar = () => {
                 : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
             } alt="" className=" company_logo mx-auto d-block rounded-circle mt-2" />
         </Link>
-        <p className="companyNameTitle">{data.companyName}</p>
+        <p className="companyNameTitle">{data.companyName || ''}</p>
       </div>
 
 

@@ -35,34 +35,7 @@ const Navbar = () => {
   
 
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
-   
-    const unsub = onSnapshot(
-      collection(db, "company"),
-      (snapShot) => {
- 
 
-        snapShot.docs.forEach((doc) => {
-          if(doc.data().uid === userID){
-
-            setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo})
-          
-          } 
-          
-        });
-  
-      },
-
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    return () => {
-      unsub();
-    };
-  }, []);
 
 
 // async function getData() {
@@ -131,9 +104,7 @@ const Navbar = () => {
       <Dropdown.Toggle className="profileImage" variant='' style={{backgroundColor:''}} id="dropdown-basic">
       <img
             src={
-              data.companyLogo
-                ? data.companyLogo
-                : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+               "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
             } alt="" className="rounded avatar  d-block rounded-circle"/>
       </Dropdown.Toggle>
 
