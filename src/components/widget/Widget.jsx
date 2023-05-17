@@ -18,6 +18,23 @@ const Widget = ({ type }) => {
   let data;
 
   switch (type) {
+    default:
+  data = {
+    title: "DEFAULT",
+    query:"defaultCollection",
+    link: "Default link",
+    icon: (
+      <PersonOutlinedIcon
+        className="icon"
+        style={{
+          color: "crimson",
+          backgroundColor: "rgba(255, 0, 0, 0.2)",
+        }}
+      />
+    ),
+  };
+  break;
+
     case "employees":
       data = {
         title: "ANSATTE",
@@ -81,34 +98,39 @@ const Widget = ({ type }) => {
         ),
       };
       break;
-    default:
-      break;
+     
+      
   }
 
   useEffect(() => {
     const fetchData = async () => {
       const today = new Date();
-      const timestampToDay = new Date().toISOString();
       const lastMonth = new Date(new Date().setMonth(today.getMonth() - 0));
       const prevMonth = new Date(new Date().setMonth(today.getMonth() - 1));
-      console.log(timestampToDay)
+      if (!data.query) {
+        console.error(`Invalid widget type: ${type}`);
+        return;
+      }
+      else{
+        console.log('Missing')
+      }
       const lastMonthQuery = query(
-        collection(db, data.query),
-        where("createdAt", "<=", lastMonth), 
-        where("createdAt", ">", prevMonth),
-        where("uid", '==', currentUser.uid) );
-
-      const prevMonthQuery = query(
         collection(db, data.query),
         where("createdAt", "<=", lastMonth), 
         where("createdAt", ">", prevMonth),
         where("uid", '==', currentUser.uid) 
       );
 
+      const prevMonthQuery = query(
+        collection(db, data.query),
+        where("createdAt", "<=", prevMonth), 
+        where("uid", '==', currentUser.uid) 
+      );
+
       const lastMonthData = await getDocs(lastMonthQuery);
       const prevMonthData = await getDocs(prevMonthQuery);
 
-      setAmount(lastMonthData.docs.length);
+      setAmount(lastMonthData.docs.length || '');
       setDiff(
         ((lastMonthData.docs.length - prevMonthData.docs.length) / prevMonthData.docs.length) *
           100
