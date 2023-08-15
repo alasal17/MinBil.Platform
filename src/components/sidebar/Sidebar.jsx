@@ -45,7 +45,7 @@ import SettingsApplicationsOutlinedIcon from '@mui/icons-material/SettingsApplic
 import DisplaySettingsOutlinedIcon from '@mui/icons-material/DisplaySettingsOutlined';
 import { da } from "date-fns/locale";
 import RegistrationForm from "../popup/RegistrationForm";
-const Sidebar = () => {
+const Sidebar = ({ sidebarOpen }) => {
   
 
   const { dispatch } = useContext(DarkModeContext);
@@ -56,7 +56,6 @@ const Sidebar = () => {
   const userID = currentUser.uid;
   const postsCollectionRef = collection(db, "company");
   const myButtonRef = useRef(null);
-  
 
   useEffect(() => {
     // LISTEN (REALTIME)
@@ -84,44 +83,7 @@ const Sidebar = () => {
   }, []);
 
 
-  // useEffect(() => {
-  //   // LISTEN (REALTIME)
-    
-  //   const unsub = onSnapshot(
-  //     collection(db, "userTheme"),
-  //     (snapShot) => {
-  //       let list = [];
-
-  //       snapShot.docs.forEach((doc) => {
-  //         if(doc.id === userID){
-  //              list.push({id: doc.id, ...doc.data()});
   
-  //         }
-          
-      
-          
-  //           setColorTheme(list)
-
-  //           setCTheme(...colorTheme)
-          
-  //       });
-     
-
-        
-
-     
-       
-  //     },
-
-  //     (error) => {
-  //       console.log(error);
-  //     }
-  //   );
-
-  //   return () => {
-  //     unsub();
-  //   };
-  // },[]);
 
   const signUserOut = () => {
     signOut(auth).then(() => {
@@ -131,7 +93,9 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`sidebar stickyBar `}>
+    <div className={`sidebar ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+
+    <div className={`sidebar  `} >
       <div className="top">
         
         <Link to="/" style={{ textDecoration: "none"}}>
@@ -155,14 +119,7 @@ const Sidebar = () => {
           </li>
           </Link>
           <p className="title">ADMINISTRASJON</p>
-          
-          {/* <Link to="/employee" style={{ textDecoration: "none" }}>
-            <li>
-              <PersonOutlineIcon className="icon" />
-              <span>Ansatte</span>
-            </li>
-          </Link> */}
-
+      
           <li>
             <AddShoppingCartOutlinedIcon className="icon" />
             <span>Kommende</span>
@@ -254,9 +211,6 @@ const Sidebar = () => {
                       
                       
                         </div>
-                        {/* <div className="col-md-3" >
-                        <ArrowForwardIosIcon style={{fontSize: '12px', padding:'3px'}}/>
-                        </div> */}
                      
                         </div>       
                         </Dropdown.Toggle>
@@ -295,13 +249,6 @@ const Sidebar = () => {
 
 
 
-
-        
-          {/* <li>
-            <ExitToAppIcon className="icon" />
-            <span onClick={signUserOut}>Logg ut</span>
-          </li> */}
-
 <hr className="sidebarhr"/>
 
  
@@ -317,17 +264,7 @@ const Sidebar = () => {
       </div>
  
 
-      {/* <div className="bottom">
-        <div
-          className="colorOption"
-          onClick={() => dispatch({ type: "LIGHT" })}
-        ></div>
-        <div
-          className="colorOption"
-          onClick={() => dispatch({ type: "DARK" })}
-        ></div>
-      </div> */}
-    </div>
+    </div></div>
   );
 };
 

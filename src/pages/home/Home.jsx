@@ -26,47 +26,14 @@ const Home = () => {
   const inputElement = useRef();
   const myButtonRef = useRef(null);
   const userID = currentUser.uid;
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Add sidebar state
 
-
-
-
- 
-
-
-  // useEffect(() => {
-  //   // LISTEN (REALTIME)
-   
-  //   const unsub = onSnapshot(
-      
-  //     collection(db, "userTheme"),
-      
-  //     (snapShot) => {
-        
-  //       let list = [];
-
-  //       snapShot.docs.forEach((doc) => {
-  //       if(doc.id === userID){
-  //         list.push({id: doc.id, ...doc.data()});
-  //       }
-        
-  //       setColorTheme(list)
-  //       setCTheme(...colorTheme)
-  //     });
-  //   },  
-  //   (error) => {
-  //     console.log(error);
-  //   });
-
-  //   return () => {
-  //     unsub();
-  //   };
-  // }, );
 
   return (
     <div className={`home `}>
-      <Sidebar />
+      <Sidebar sidebarOpen={sidebarOpen} /> {/* Pass the sidebarOpen state */}
       <div className="homeContainer">
-        <Navbar />
+        <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} /> {/* Pass the toggle function */}
         <div className="widgets">
           <Widget type="employees" />
           <Widget type="services" />

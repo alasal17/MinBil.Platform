@@ -2,18 +2,30 @@
   // background-color: #0f0e3e;
   // background-color: #f2f3f9;
 
-  flex:0.75 ;
+
   border-right: 0.5px solid rgb(230, 227, 227);
   height: auto !important;
-  max-height: 150vh !important;
+  max-height: 100% !important;
   background-color: #f2f5fd;
+  transition: transform 0.3s ease-in-out;
 
+  &.sidebar-open {
+    transform: translateX(0);
+    flex:0.75 ;
+  }
+
+  &.sidebar-closed {
+    transform: translateX(-100%);
+    flex:0;
+    
+
+  }
    
   .top {
-    height: 50px;
+    // height: 50px;
     align-items: center;
     justify-content: center;
-    margin: 5px;
+   
     padding-top:10px;
     align-items: stretch;
     justify-content: center;
@@ -54,7 +66,7 @@
       li {
         // display: flex;
         align-items: center;
-        padding: 3px;
+        
         cursor: pointer;
         padding-bottom: 9px;
     
@@ -75,7 +87,7 @@
             font-weight: 500;
             color: #888;
             // color: #2f49d1;
-            margin-left: 5px;
+            
         }
       }
     }
@@ -104,7 +116,7 @@
         li {
           // display: flex;
           align-items: center;
-          padding: 3px;
+          
           cursor: pointer;
           padding-bottom: 9px;
       
@@ -124,7 +136,7 @@
               font-weight: 500;
               color: #888;
               // color: #2f49d1;
-              margin-left: 5px;
+              
           }
         }
       }
@@ -149,6 +161,7 @@
       }
   }
 }
+
 
 .company_logo{
   max-width: 30%;
@@ -274,7 +287,7 @@
     li {
       // display: flex;
       align-items: center;
-      padding: 3px;
+      
       cursor: pointer;
       padding-bottom: 9px;
   
@@ -294,7 +307,7 @@
           font-weight: 500;
           color: rgb(0, 0, 0);
           // color: #2f49d1;
-          margin-left: 5px;
+          
       }
     }
   }
@@ -323,7 +336,7 @@
       li {
         // display: flex;
         align-items: center;
-        padding: 3px;
+        
         cursor: pointer;
         padding-bottom: 9px;
     
@@ -343,7 +356,7 @@
             font-weight: 500;
             color: rgb(0, 0, 0);
             // color: #2f49d1;
-            margin-left: 5px;
+            
         }
       }
     }
@@ -443,7 +456,7 @@
     li {
       // display: flex;
       align-items: center;
-      padding: 3px;
+      
       cursor: pointer;
       padding-bottom: 9px;
   
@@ -463,7 +476,7 @@
           font-weight: 500;
           color: rgb(255, 255, 255);
           // color: #2f49d1;
-          margin-left: 5px;
+          
       }
     }
   }
@@ -492,7 +505,7 @@
       li {
         // display: flex;
         align-items: center;
-        padding: 3px;
+        
         cursor: pointer;
         padding-bottom: 9px;
     
@@ -512,7 +525,7 @@
             font-weight: 500;
             color: rgb(255, 255, 255);
             // color: #2f49d1;
-            margin-left: 5px;
+            
         }
       }
     }
@@ -601,7 +614,7 @@
     li {
       // display: flex;
       align-items: center;
-      padding: 3px;
+      
       cursor: pointer;
       padding-bottom: 9px;
   
@@ -621,7 +634,7 @@
           font-weight: 500;
           color: rgb(0, 0, 0);
           // color: #2f49d1;
-          margin-left: 5px;
+          
       }
     }
   }
@@ -650,7 +663,7 @@
       li {
         // display: flex;
         align-items: center;
-        padding: 3px;
+        
         cursor: pointer;
         padding-bottom: 9px;
     
@@ -670,7 +683,7 @@
             font-weight: 500;
             color: rgb(0, 0, 0);
             // color: #2f49d1;
-            margin-left: 5px;
+            
         }
       }
     }
@@ -775,7 +788,7 @@
     li {
       // display: flex;
       align-items: center;
-      padding: 3px;
+      
       cursor: pointer;
       padding-bottom: 9px;
   
@@ -795,7 +808,7 @@
           font-weight: 500;
           color: rgb(255, 255, 255);
           // color: #2f49d1;
-          margin-left: 5px;
+          
       }
     }
   }
@@ -824,7 +837,7 @@
       li {
         // display: flex;
         align-items: center;
-        padding: 3px;
+        
         cursor: pointer;
         padding-bottom: 9px;
     
@@ -844,7 +857,7 @@
             font-weight: 500;
             color: rgb(255, 255, 255);
             // color: #2f49d1;
-            margin-left: 5px;
+            
         }
       }
     }
