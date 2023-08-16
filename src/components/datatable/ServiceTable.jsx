@@ -123,7 +123,7 @@ const ServiceTable = ({pageTitle}) => {
         {/* <Link to="/service/new-service" className="link">
         Legg til ny
         </Link> */}
-        <AddServices buttonName={'Legg til en tjeneste'}/>
+        <AddServices buttonName={'Legg til en tjeneste'} />
 
         
 

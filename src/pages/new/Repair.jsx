@@ -263,7 +263,7 @@ function Repair({ buttonName, prevPage }) {
 
   const openai = new OpenAIApi(configuration);
   const [hiddenWorkshopCheckBox, setHiddenWorkshopCheckBox] = useState(false);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const translate_text = async () =>{
     const res = await openai.translateText({
       prompt: prompt,
