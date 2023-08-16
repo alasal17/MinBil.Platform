@@ -65,7 +65,7 @@ function Register() {
 </div> */}
 <form className="form-detail" onSubmit={register} autoComplete="off">
 
-      
+       <div class="g-recaptcha" data-sitekey="6LcW2K0nAAAAAMTZ-jAo2b6l7tEMWQ-7wZ-w40_D"></div>
       <Modal.Body>
   <div className="row mt-2">
           <div className="col-md-12" key='email'><label className="labels">E-post</label>
