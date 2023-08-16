@@ -22,15 +22,15 @@ const ServicesList = ({pageTitle}) => {
   const userID = currentUser.uid;
   const postsCollectionRef = collection(db, "company");
   const myButtonRef = useRef(null);
-  
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   
 
   return (
     <div className="list">
-      <Sidebar/>
+      <Sidebar sidebarOpen={sidebarOpen} />
       <div className="listContainer">
-        <Navbar/>
+      <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} />
         <ServiceTable pageTitle={pageTitle} />
       </div>
       <div hidden={true}>

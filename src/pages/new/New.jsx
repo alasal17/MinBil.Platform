@@ -15,7 +15,7 @@ const New = ({ inputs, title}) => {
   const [per, setPerc] = useState(null);
   const navigate = useNavigate()
   const postsCollectionRef = collection(db, "employees");
-  
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   useEffect(() => {
     const uploadFile = () => {
@@ -86,9 +86,9 @@ const New = ({ inputs, title}) => {
 
   return (
     <div className="new">
-      <Sidebar />
+       <Sidebar sidebarOpen={sidebarOpen} />
       <div className="newContainer">
-        <Navbar img={data.imageUrl}/>
+        <Navbar  onClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className="top">
           <h1>{title}</h1>
         </div>

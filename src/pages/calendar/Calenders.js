@@ -34,7 +34,7 @@ const Calendars = () => {
   const userID = currentUser.uid;
   const myButtonRef = useRef(null);
 
-
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Add sidebar state
   useEffect(() => {
     // LISTEN (REALTIME)
    
@@ -66,47 +66,6 @@ const Calendars = () => {
 
 
 
-  // useEffect(() => {
-  //   // LISTEN (REALTIME)
-  //   const unsub = onSnapshot(
-      
-  //     collection(db, "booking"),
-  //     (snapShot) => {
-  //       let list = [];
-       
-        
-  //         snapShot.docs.forEach((doc) => {
-           
-           
-  //           if(doc.data().uid === auth.currentUser.uid ){
-              
-  //             list.push({ id: doc.id, status: doc.data().status, price: doc.data().price, title:doc.data().title, start: (doc.data().startDate+'T'+ doc.data().startTime), customerUid:doc.data().customerUid});
-
-
-            
-              
-  //         }
-  //         if(doc.data().status === false){
-           
-            
-  //       }
-         
-  //         });
-  //       data2(list);
-        
-  //     },
-
-  //     (error) => {
-  //       console.log(error);
-        
-  //     }
-  //   );
-
-   
-  // },);
-  
-  
-
  
 
  
@@ -117,15 +76,13 @@ const Calendars = () => {
        <div>
    
    <div className="single">
-       <Sidebar />
+      <Sidebar sidebarOpen={sidebarOpen} />
        <div className="singleContainer">
-         <Navbar />
+         <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} />
          <div className="container" style={{paddingTop:"10px"}}>
     <div className="main-body">
     <div>
-                <div className="col-sm-12">
-                      <button className="btn btn-info "  onClick={() => setRegisterButton(true)}>Registrer deg</button>
-                    </div>
+              
                 </div><div >
       
       

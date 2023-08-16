@@ -33,37 +33,7 @@ const Profile = () => {
     const [altinnData, setAltinnData] = useState([]);
     const postsCollectionRef = collection(db, "company");
     const myButtonRef = useRef(null);
- 
-  
-    // useEffect(() => {
-    //   // LISTEN (REALTIME)
-     
-    //   const unsub = onSnapshot(
-    //     collection(db, "enhetsRegisteret"),
-    //     (snapShot) => {
-    //       let list = [];
-  
-    //       snapShot.docs.forEach((doc) => {
-    //         list.push({ id: doc.id, ...doc.data() });
-    //           if(doc.id === userID){
-    //             list.push({id: doc.id, ...doc.data()});
-    //         }
-  
-           
-    //       });
-  
-    //       setData(list);
-    //     },
-  
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-  
-    //   return () => {
-    //     unsub();
-    //   };
-    // }, []);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
   
   useEffect(() => {
@@ -161,10 +131,10 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
 
 <div className="single">
       
-      <Sidebar />
+<Sidebar sidebarOpen={sidebarOpen} />
       
       <div className="singleContainer">
-        <Navbar />
+      <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className="">
 <div className="container" style={{paddingTop:"10px"}}>
     <div className="main-body">
@@ -257,7 +227,7 @@ fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
                   </div>
                 </div>
               </div>
-
+<RegistrationForm buttonName={'Registerering'}/>
               
 {/* {visitorsData} */}
 

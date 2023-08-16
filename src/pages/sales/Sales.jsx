@@ -4,19 +4,19 @@ import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import ServiceTable from "../../components/datatable/ServiceTable";
 import React  from 'react';
-
+import { useEffect, useState } from "react";
 import {useLocation} from 'react-router-dom';
 const Sales = () => {
   const location = useLocation();
   const data = location.state.data
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
   return (
     <div className="single">
-      <Sidebar />
+      <Sidebar sidebarOpen={sidebarOpen} />
       <div className="singleContainer">
-        <Navbar />
+      <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className="top">
           <div className="left">
             <div className="editButton">Endre</div>

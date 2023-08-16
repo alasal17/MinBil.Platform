@@ -2,14 +2,16 @@ import "./list.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
 import Employeestable from "../../components/datatable/Employeestable"
-import React from 'react';
+import React, { useEffect, useState } from "react";
+
 
 const EmployeesList = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="list">
-      <Sidebar/>
+        <Sidebar sidebarOpen={sidebarOpen} />
       <div className="listContainer">
-        <Navbar/>
+      <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} />
         <Employeestable/>
       </div>
     </div>

@@ -3,23 +3,24 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import List from "../../components/table/Table";
-import React  from 'react';
+import React, { useEffect, useState } from "react";
 
 import {useLocation} from 'react-router-dom';
 
 const Single = () => {
+  
   const location = useLocation();
   const data = location.state.data
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
 
 
 
   return (
     <div className="single">
-      <Sidebar />
+        <Sidebar sidebarOpen={sidebarOpen} />
       <div className="singleContainer">
-        <Navbar />
+      <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} />
         <div className="top">
           <div className="left">
             <div className="editButton">Endre</div>
