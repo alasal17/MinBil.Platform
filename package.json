@@ -77,7 +77,7 @@
   },
   "scripts": {
    "dev": "react-scripts start",
-    "start": "serve -s build",
+    "start": "serve -s build -c 1",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
