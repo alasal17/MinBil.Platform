@@ -1,118 +1,68 @@
+// RegistrationForm.js
 import React, { useState, useContext, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, ProgressBar } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
 import {
   doc,
-  collection,
   serverTimestamp,
   setDoc,
-  onSnapshot,
-  where,
-  query,
-  getDocs
+  getDoc,
 } from "firebase/firestore";
-import firebase from "firebase/compat/app";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { auth, db, storage } from "../../firebase";
-import { RMIUploader } from "react-multiple-image-uploader";
-import ProgressBar from "react-bootstrap/ProgressBar";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/Delete";
-import "./registrationForm.css";
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
+import { db, storage } from "../../firebase";
 import Select from "react-select";
-import { useForm, Controller } from "react-hook-form";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import MuiPhoneInput from "material-ui-phone-number";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
-import setBodyColor from './setBodyColor'
-import { urlParams } from "via/lib/utils";
-import { style } from "@mui/system";
-import BackgroundImage2 from './form_background2.png'
-import ErrorOutlineTwoToneIcon from '@mui/icons-material/ErrorOutlineTwoTone';
-import Tooltip from 'react-bootstrap/Tooltip';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Popover from 'react-bootstrap/Popover'
-import { idText } from "typescript";
-import Confetti from "react-confetti";
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SuccessMessages from "./SuccessMessages";
-import { set } from "date-fns";
+import { useCompanyData } from "../../useCompanyData";
+import { useUserTheme } from "../../useUserTheme";
+import { fetchDocument } from "../../fetchData";
 
-
-import { signInWithEmailAndPassword, getAuth, provider } from "firebase/auth";
-
-
-
-function RegistrationForm({ buttonName, ref_reg }) {
-  const [show, setShow] = useState(false);
-  const [page, setPage] = useState(1);
+function RegistrationForm() {
+  const [show, setShow] = useState(true); // Vis modal når komponenten rendres
   const navigate = useNavigate();
   const [data, setData] = useState({});
   const { currentUser } = useContext(AuthContext);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [registerButton, setRegisterButton] = useState(false);
-  // const [inputList, setInputList] = useState({
-  //   openingDays: "",
-  //   openingTime: "",
-  //   closingTime: "",
-  // });
-
-  const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
-  const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
-  const [data2, setData2] = useState({});
-  const [selectedOption, setSelectedOption] = useState([]);
-  // const [selectedCountry, setSelectedCountry] = useState([]);
-  const postsCollectionRef = collection(db, "enhetsRegisteret");
+  const userID = currentUser.uid;
   const [per, setPerc] = useState(null);
-  const [hiddenInfoText, setShowInfoText] = useState(false);
-  const [firstFormValidated, setFirstFormValidated] = useState(false);
-  const [visible, setVisible] = useState(false);
-  const [showData, setShowData] = useState();
   const [file, setFile] = useState("");
-  const areAllFieldsFilled = !(searchTerm === "") & !(searchTerm === undefined);
-  const dataIsNotEmpty =
-    (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true);
   const [industryData, setIndustryData] = useState([]);
-  const [phoneNumber, setPhoneNumber] = useState([]);
-  const [country, setCountry] = useState([]);
-
-  const [imagesData, setImagesData] = useState([]);
-  const [imagesData2, setImagesData2] = useState([]);
-  const [recommendedSocialMedia, setRecommendedSocialMedia] = useState(false);
-  const [recommendedOpeningDays, setRecommendedOpeningDays] = useState(false);
-  const [recommendedAboutUs, setRecommendedAboutUs] = useState(false);
-  const [recommendedColor, setRecommendedColor] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [country, setCountry] = useState("");
+  const [aboutUs, setAboutUs] = useState("");
   const [socialMedia, setSocialMedia] = useState({
     website: "",
     instagram: "",
     facebook: "",
     youtube: "",
   });
-  const [companiesAgreements, setCompaniesAgreements] = useState(true);
-  const [performsTrucks, setPerformsTrucks] = useState(false);
-  const [aboutUs, setAboutUs] = useState([]);
-  const regx = new RegExp(/^([01]\d|2[0-3]):?([0-5]\d)$/);
-  const userID = currentUser.uid;
   const [addFieldIcon, setAddFieldIcon] = useState(false);
-  const [openingHoursError, setOpeningHoursError] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const [imagesData2, setImagesData2] = useState([]);
+  const [recommendedOpeningDays, setRecommendedOpeningDays] = useState(false);
+  const [registerButton, setRegisterButton] = useState(false);
+  const [enhetsRegisteretData, setEnhetsRegisteretData] = useState([]);
+  const [enhetsRegisteretAPIData, setEnhetsRegisteretAPIData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [companiesAgreements, setCompaniesAgreements] = useState(false);
+  const [performsTrucks, setPerformsTrucks] = useState(false);
+  const [openingHours, setOpeningHours] = useState({});
+  const [imagesData, setImagesData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [progress, setProgress] = useState(0);
+  const [showData, setShowData] = useState();
+  const areAllFieldsFilled = !(searchTerm === "") & !(searchTerm === undefined);
+  const dataIsNotEmpty =
+  (enhetsRegisteretAPIData.length !== 0) & (areAllFieldsFilled !== true);
+  const [hiddenInfoText, setShowInfoText] = useState(false);
   const [days, setDays] = useState([{day: "", open: "", close: ""}]);
   const [days2, setDays2] = useState({});
+  const [openingHoursError, setOpeningHoursError] = useState(true);
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  // };
- 
+
   const options = [
     { label: "Bilverksted", value: "Bilverksted" },
     { label: "Reprasjon", value: "Reprasjon" },
@@ -286,7 +236,20 @@ const handleFacebookLogin = async () => {
   }
 };
 
-
+  // Oppdatering av `days2` basert på `days`
+  useEffect(() => {
+    if (days.length === 7) {
+      setDays2({
+        Mandag: { open: days[0].open || "", close: days[0].close || "" },
+        Tirsdag: { open: days[1].open || "", close: days[1].close || "" },
+        Onsdag: { open: days[2].open || "", close: days[2].close || "" },
+        Torsdag: { open: days[3].open || "", close: days[3].close || "" },
+        Fredag: { open: days[4].open || "", close: days[4].close || "" },
+        Lørdag: { open: days[5].open || "", close: days[5].close || "" },
+        Søndag: { open: days[6].open || "", close: days[6].close || "" },
+      });
+    }
+  }, [days]);
 const handleNextPagefem = () =>{
   if(days.length < 6){
     setPage(page)
@@ -344,72 +307,13 @@ useEffect(() => {
 })
 
 const handleAddDay = () => {
-  if(days.length < 7){
-    setDays([...days, {day: "", open: "", close: ""}]);
-
-    setAddFieldIcon(false)
-  } else if(days.length === 7){
-    setAddFieldIcon(true)
-  } else{
-    setAddFieldIcon(false)
-  }
-
-  
-
-  console.log(days)
-
 }
 
 const handleRemoveClick = index => {
-  const list = [...days];
-  list.splice(index, 1);
-  setDays(list);
 };
 
   // ----------- FOR UPLOAD IMAGES -------------
   const onUpload = async (data) => {
-    // console.log("Upload files", data.map((item) => item.dataURL));
-    let list = [];
-    let list2 = [];
-
-    // console.log(data)
-
-    data.map((e) => {
-      if (e.img) {
-        if (list.includes(e.img.id)) {
-          console.log("Not temp images In list");
-          console.log("id", list.includes(e.file.name));
-        } else {
-          console.log("Not temp images");
-          list.push(e.img.id);
-        }
-      }
-      if (e.file) {
-        if (!list.includes(e.file.name)) {
-          console.log("Temp images");
-          console.log("file", list.includes(e.file.name));
-          list.push(e.file.name);
-          // list2.push(e.dataURL)
-          setImagesData([...imagesData, e.dataURL]);
-        } else {
-          list.push(e.file.name);
-          console.log("Temp images is in list");
-          console.log("Temp images is in list", imagesData);
-          setImagesData([...imagesData, e.dataURL]);
-        }
-      } else {
-        // console.log('someting else')
-        // console.log(e.file)
-        // console.log(list)
-      }
-    });
-
-    //
-    // setImagesData([data.map(e => e.dataURL)])
-
-    // await setImagesData(...imagesData, [data.map((e) => e.index)]);
-    console.log("OWN DATA", imagesData);
-    // console.log("Image Data", imagesData);
   };
 
 
@@ -418,51 +322,20 @@ const handleRemoveClick = index => {
     console.log("Remove image id", id);
   };
 
-  const handleClose = () => setShow(false);
+
   const handleShow = () => setShow(true);
 
-  // ------------- FOR CALLING enhetsRegisteret DB -----------------
-  useEffect(() => {
-    // LISTEN (REALTIME)
-   
-    const unsub = onSnapshot(
-      collection(db, "enhetsRegisteret"),
-      (snapShot) => {
-        let list = [];
+  const handleClose = () => {
+    setShow(false);
+    navigate("/"); // Omdirigerer brukeren ved lukking av modal
+  };
 
-        snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
-
-          if (doc.id === userID) {
-         
-            setSearchTerm(doc.data().orgNumber);
-          } else {
-          }
-        });
-
-        setEnhetsRegisteretData(list);
-      },
-
-      (error) => {
-        console.log(error);
-      }
-    );
-
-    return () => {
-      unsub();
-    };
-  }, []);
-
-  // ------------- FOR UPLOADING COMPANY LOGO -----------------
+  // Last opp firmalogo
   useEffect(() => {
     const uploadFile = () => {
       const name = new Date().getTime() + file.name;
 
-      console.log(name);
-      const storageRef = ref(storage, file.name);
+      const storageRef = ref(storage, name);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
@@ -470,18 +343,7 @@ const handleRemoveClick = index => {
         (snapshot) => {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
           setPerc(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
-          }
         },
         (error) => {
           console.log(error);
@@ -496,120 +358,44 @@ const handleRemoveClick = index => {
     file && uploadFile();
   }, [file]);
 
-  const handleEnhetregisteretNextPage = () => {
-    setRegisterButton(false);
-
-    // ## IF "organisasjonsnummer already exists in db!"
-    if (enhetsRegisteretData.organisasjonsnummer === searchTerm) {
-      console.log("organisasjonsnummer already exists in db!");
-      setShowInfoText(true);
-      setPage(page);
-      return setShowData(
-        <div className="row">
-          <div className=" border-right">
-            <h1 className="errorTitle">
-              Denne organisasjonsnummer eksisterer i vårt system!
-            </h1>
-            <div>
-              <p className="errorBody">
-                Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
-                igjen. - {searchTerm}
-              </p>
-              <p className="errorBody">
-                Ta kontakt med oss dersom du lurer på noe.
-              </p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // - IF "User has user registered" IF TRUE ---> PAGE 2
-    if (enhetsRegisteretData.uid === userID) {
-      console.log("User has user registered");
-      setShowInfoText(true);
-      setPage(2);
-      // setTimeout(() =>{
-      //   setShowData('')
-      // },1000)
-      return setShowData(
-        <div className="row">
-          <div className=" border-right">
-            <h1 className="errorTitle">
-              Denne brukeren har eksisterer en organisasjonsnummer tidligere:{" "}
-              {enhetsRegisteretData.organisasjonsnummer}!
-            </h1>
-            <div>
-              <p className="errorBody">
-                Ta kontakt med oss dersom du lurer på noe.
-              </p>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    // ## ELSE "Data fra enhetregisteret er lageret i database!" ---> PAGE 2
-    else {
-      try {
-        setPage(page + 1);
-        // setDoc(doc(db, "enhetsRegisteret", userID), {
-        //   uid: userID,
-        //   ...enhetsRegisteretAPIData,
-        //   createdAt: serverTimestamp(),
-        // });
-
-        console.log("Data fra enhetregisteret er lageret i database!");
-      } catch (err) {
-        console.log(err);
-      }
+  // Håndterer innsending av skjema
+  const onSubmit = async () => {
+    try {
+      await setDoc(doc(db, "company", userID), {
+        uid: userID,
+        ...data,
+        industryType: industryData,
+        country: country,
+        phoneNumber: phoneNumber,
+        aboutUs: aboutUs,
+        socialMedia: socialMedia,
+        companiesAgreements: companiesAgreements,
+        performsTrucks: performsTrucks,
+        images: imagesData,
+        openingHours: openingHours,
+        createdAt: serverTimestamp(),
+      });
+      // Etter vellykket registrering kan du oppdatere tilstanden eller omdirigere
+      navigate("/profile"); // Omdirigerer til profilsiden
+    } catch (err) {
+      console.log(err);
     }
   };
 
-  const handleCompaniesAgreementsChange = () => {
-    setCompaniesAgreements(!companiesAgreements);
-  };
-
-  const handlePerformsTrucksChange = () => {
-    setPerformsTrucks(!performsTrucks);
-  };
-
-
-  // ------------- HADNLE FOR NEXT PAGE : WRONG ---> setSocialMedia -----------------
+  // Håndterer neste side i skjemaet
   const handleNextPage = () => {
     setPage(page + 1);
+    setProgress(progress + 25); // Oppdaterer fremdriftsindikatoren
   };
 
-  // ------------- HADNLE FOR PREV PAGE ----------------
-  const handlePrevPage = () => setPage(page - 1);
-
-
- 
-  const startOver = () => {
-    setPage(1);
+  // Håndterer forrige side i skjemaet
+  const handlePrevPage = () => {
+    setPage(page - 1);
+    setProgress(progress - 25);
   };
 
-
-  const handleAboutUsInput = (e) => {
-    const id = e.target.id;
-    const value = e.target.value;
-
-    setAboutUs({ about: value });
-  };
-
-  const handleNextPageAboutUs = () => {
-    if (aboutUs.about === undefined || aboutUs.about === "") {
-      setRecommendedAboutUs(false);
-      setRecommendedColor('red')
-      setPage(page + 1);
-    } else {
-      setRecommendedAboutUs(true);
-      setRecommendedColor('black')
-      setPage(page + 1);
-    }
-  };
-
-  // ------------- SEARCH API. RETURNS DIFFENTES RENDERINGS RESUALT ----------------
-  const handleAPIRequesest = async (event) => {
+   // ------------- SEARCH API. RETURNS DIFFENTES RENDERINGS RESUALT ----------------
+   const handleAPIRequesest = async (event) => {
     event.preventDefault();
     fetch(`https://data.brreg.no/enhetsregisteret/api/enheter/${searchTerm}`)
       .then((response) => response.json())
@@ -762,156 +548,166 @@ const handleRemoveClick = index => {
       });
   };
 
-  // Handle change in ORG. NUMBER Field
-  const handleChange = async (event) => {
-    setSearchTerm(event.target.value);
+    // ######### WORNG
+    const handleInput = (e) => {
+      const id = e.target.id;
+      const value = e.target.value;
+  
+  
+   
+      setData({ ...data, [id]: value, orgNumber: searchTerm });
+    };
+// ------------------------------------------------
+const handleEnhetregisteretNextPage = () => {
+  setRegisterButton(false);
+
+  // ## IF "organisasjonsnummer already exists in db!"
+  if (enhetsRegisteretData.organisasjonsnummer === searchTerm) {
+    console.log("organisasjonsnummer already exists in db!");
+    setShowInfoText(true);
+    setPage(page);
+    return setShowData(
+      <div className="row">
+        <div className=" border-right">
+          <h1 className="errorTitle">
+            Denne organisasjonsnummer eksisterer i vårt system!
+          </h1>
+          <div>
+            <p className="errorBody">
+              Sjekk at du har skrevet inn riktig organisasjonsnummer og prøv
+              igjen. - {searchTerm}
+            </p>
+            <p className="errorBody">
+              Ta kontakt med oss dersom du lurer på noe.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // - IF "User has user registered" IF TRUE ---> PAGE 2
+  if (enhetsRegisteretData.uid === userID) {
+    console.log("User has user registered");
+    setShowInfoText(true);
+    setPage(2);
+    // setTimeout(() =>{
+    //   setShowData('')
+    // },1000)
+    return setShowData(
+      <div className="row">
+        <div className=" border-right">
+          <h1 className="errorTitle">
+            Denne brukeren har eksisterer en organisasjonsnummer tidligere:{" "}
+            {enhetsRegisteretData.organisasjonsnummer}!
+          </h1>
+          <div>
+            <p className="errorBody">
+              Ta kontakt med oss dersom du lurer på noe.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  // ## ELSE "Data fra enhetregisteret er lageret i database!" ---> PAGE 2
+  else {
+    try {
+      setPage(page + 1);
+      // setDoc(doc(db, "enhetsRegisteret", userID), {
+      //   uid: userID,
+      //   ...enhetsRegisteretAPIData,
+      //   createdAt: serverTimestamp(),
+      // });
+
+      console.log("Data fra enhetregisteret er lageret i database!");
+    } catch (err) {
+      console.log(err);
+    }
+  }
+};
+
+// Handle change in ORG. NUMBER Field
+const handleChange = async (event) => {
+  setSearchTerm(event.target.value);
+};
+
+
+  // ADDING THE DATA FROM COMPANY FORM. SAMVE DATA IN DB ----> company
+ // Oppdatert `handleAddToDatabase`-funksjon uten `e.preventDefault()` og med korrekt plassering
+ const handleAddToDatabase = async () => {
+  setRegisterButton(false);
+
+  const dataToSave = {
+    uid: userID,
+    ...data,
+    orgNumber: searchTerm,
+    aboutUs: aboutUs || "",
+    industryType: industryData || [],
+    country: country || "",
+    phoneNumber: phoneNumber || "",
+    socialMedia: socialMedia || {},
+    companiesAgreements: companiesAgreements || false,
+    performsTrucks: performsTrucks || false,
+    images: imagesData || [],
+    openingHours: days2 || {},
+    status: true,
+    // createdAt: serverTimestamp(), // Kommenter ut denne linjen for testing
   };
 
-  const handleSelectedChange = (e) => {
-    setSelectedOption({
-      multiValue: [...e.target.selectedOptions].map((o) => o.value),
+  // Fjern tomme og ugyldige felter
+  const removeEmpty = (obj) => {
+    Object.keys(obj).forEach((key) => {
+      if (
+        obj[key] && typeof obj[key] === 'object' &&
+        Object.keys(obj[key]).length === 0
+      ) {
+        delete obj[key];
+      } else if (Array.isArray(obj[key]) && obj[key].length === 0) {
+        delete obj[key];
+      } else if (obj[key] === undefined || obj[key] === null) {
+        delete obj[key];
+      }
     });
   };
 
-  // ADDING THE DATA FROM COMPANY FORM. SAMVE DATA IN DB ----> company
-  const handleAddToDatabase = async (e) => {
-    e.preventDefault();
-    setRegisterButton(false);
-    try {
-      await setDoc(doc(db, "company", userID), {
-        uid: userID,
-        ...data,
-        orgNumber: searchTerm,
-        // ...openingsData,
-        ...aboutUs || '',
-        ...industryData,
-        ...country,
-        ...phoneNumber,
-        ...socialMedia,
-        ...companiesAgreements,
-        ...performsTrucks,
-        numberOfEmployees:null,
-        linkedin:'',
-        images:[...imagesData] || [],
-        openingHours: {...days2},
-        companiesAgreements:companiesAgreements || false,
-        performsTrucks:performsTrucks || false,
-        status:true ,
-        createdAt: serverTimestamp(),
-      });
-      navigate('/')
-    } catch (err) {
-      console.log(err);
-    }
-    try {
-      await setDoc(doc(db, "enhetsRegisteret", userID), {
-        uid: userID,
-        ...enhetsRegisteretAPIData,
-        createdAt: serverTimestamp(),
-      });
-    } catch (err) {
-      console.log(err);
-    }
+  removeEmpty(dataToSave);
 
-    
+  // Logg dataene
+  console.log("Data being written to Firestore:", dataToSave);
+
+  try {
+    await setDoc(doc(db, "company", userID), dataToSave);
+    navigate("/profile");
+  } catch (err) {
+    console.error("Error adding document to Firestore:", err);
+  }
+
+  try {
+    await setDoc(doc(db, "enhetsRegisteret", userID), {
+      uid: userID,
+      ...enhetsRegisteretAPIData,
+      createdAt: new Date(), // Bruk en faktisk dato for testing
+    });
+  } catch (err) {
+    console.error("Error adding enhetsRegisteret document:", err);
+  }
+};
+
+
+
+
   
-
-    
-  };
-
-  // ADDING DATA TO setSocialMedia
-  const handleSocialInput = (e) => {
-    const id = e.target.id;
-    const value = e.target.value;
-
-    setSocialMedia({ ...socialMedia, [id]: value ?? "" });
-
-    if (socialMedia.id === undefined || socialMedia.value === "") {
-      setRecommendedSocialMedia(true);
-    } else {
-      setRecommendedSocialMedia(false);
-    }
-  };
-
-  const handleOpeningDataInput = (e) => {
-    const id = e.target.id;
-    const value = e.target.value;
-    const name = e.target.name;
-
-    // if(name === 'mondayOpen' || name === 'mondayClose'){
-    //   setOpeningsData( { openingHours:{Monday:{ [id]: value},}, ...openingsData});
-    // }
-    
-
-  };
-  // ######### WORNG
-  const handleInput = (e) => {
-    const id = e.target.id;
-    const value = e.target.value;
-
-
- 
-    setData({ ...data, [id]: value, orgNumber: searchTerm });
-  };
-
-
-  const handleInputOpeningsNextPage = e => {
-   
-    // setOpeningsData({...openingsData, [e.target.name]: e.target.value})
-   
-      };
-
-
-  const popPageThreeInfo = (
-    <Popover id="popover-basic">
-      <Popover.Header className="formInfoIcon" as="h3">Popover right</Popover.Header>
-      <Popover.Body>
-      Vi <strong>anbefaler</strong>  at du fyller inn informasjon om oss. Denne informasjon vil være synlig for dine kunder. 
-      </Popover.Body>
-<br/>
-      <Popover.Header className="formInfoIcon" as="h3">Popover right</Popover.Header>
-      <Popover.Body>
-      Vi <strong>anbefaler</strong>  at du fyller inn informasjon om oss. Denne informasjon vil være synlig for dine kunder. 
-      </Popover.Body>
-    </Popover>
-  );
-
-  // const openingHoursErrorMessage = (
-   
-  // );
-  
-
-  const popPageFourInfo = (
-    <Popover id="popover-basic" >
-      <Popover.Header className="formInfoRecommention" as="h3">Sosiale medier</Popover.Header>
-      <Popover.Body>
-        Vi <strong>anbefaler</strong> at du fyller inn dataen for dine sosiale medier og nettside.   
-      <br/>  Det vil øker intressen hos dine kunder.    </Popover.Body>
-      <br/>
-        
-
-      <Popover.Header className="formInfoRequered" as="h3">Åpningstider (obligatorisk)</Popover.Header>
-      <Popover.Body>
-       Fyll inn tiden for alle dagene i uka. man-søn.</Popover.Body>
-
-   
-    </Popover>
-  );
   return (
     <>
-      <Button variant="primary" ref={ref_reg} name='registration_form' onClick={handleShow}>
-        {buttonName}
-      </Button>
-
-      <div>
-        <Modal 
-        show={show} 
-        onHide={handleClose} 
-        animation={true} 
+      <Modal
+        show={show}
+        onHide={handleClose}
+        animation={true}
         autoFocus={true}
-        className='customModal'>
-        
-          {page === 1 && (
+        className="customModal"
+      >
+        {page === 1 && (
             <>
               <Modal.Header >
                 <Modal.Title className="formMainLable">Data fra Enhetsregisteret</Modal.Title>
@@ -1065,936 +861,470 @@ const handleRemoveClick = index => {
               </Modal.Footer>
             </>
           )}
-          {page === 3 && (
-            <>
-              <Modal.Header >
-                <Modal.Title className="formMainLable">Register bedriftsinformasjon 1/3</Modal.Title>
-              </Modal.Header>
-              <form onSubmit={handleSubmit(handleNextPage)}>
-                <Modal.Body>
-                  <ProgressBar
-                    now={40}
-                    variant="success"
-                    style={{ margin: "10px" }}
-                    label={`40%`}
+        {page === 3 && (
+          <>
+            <Modal.Header>
+              <Modal.Title className="formMainLabel">
+                Registrer bedriftsinformasjon 1/4
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ProgressBar
+                now={progress}
+                variant="success"
+                style={{ margin: "10px" }}
+                label={`${progress}%`}
+              />
+              <form>
+                <div className="">
+                  <img
+                    src={
+                      file
+                        ? URL.createObjectURL(file)
+                        : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
+                    }
+                    alt=""
+                    className="rounded companyLogo mx-auto d-block rounded-circle mt-5"
+                    width="150px"
                   />
-                  <div className="">
-                    <img
-                      src={
-                        file
-                          ? URL.createObjectURL(file)
-                          : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-                      }
-                      alt=""
-                      className="rounded companyLogo mx-auto d-block rounded-circle mt-5"
-                      width="150px"
+
+                  <div
+                    className="col text-center"
+                    style={{ paddingBottom: "20px" }}
+                  >
+                    <label htmlFor="file" style={{ paddingTop: "20px" }}>
+                      Last opp firmalogo
+                    </label>
+
+                    <input
+                      type="file"
+                      id="file"
+                      onChange={(e) => setFile(e.target.files[0])}
+                      style={{ display: "none" }}
                     />
+                  </div>
 
-                    {/* <span className="font-weight-bold">Bedriftslogo</span><span> </span> */}
-                    <div
-                      className="col text-center"
-                      style={{ paddingBottom: "20px" }}
-                    >
-                      <label htmlFor="file" style={{ paddingTop: "20px" }}>
-                       <CloudUploadOutlinedIcon className="icon upload-image" />
-                      </label>
-
+                  <div className="row mt-2">
+                    <div className="col-md-6" key="companyName">
+                      <label className="labels">Bedriftsnavn</label>
                       <input
-                        type="file"
-                        id="file"
-                        onChange={(e) => setFile(e.target.files[0])}
-                        style={{ display: "none" }}
+                        type="text"
+                        id="companyName"
+                        {...register("companyName", { required: true })}
+                        className="form-control"
+                        placeholder="Bedriftsnavn ..."
+                        onChange={(e) =>
+                          setData({ ...data, companyName: e.target.value })
+                        }
+                      />
+                      {errors.companyName && (
+                        <p style={{ color: "red" }}>
+                          Bedriftsnavn: Dette feltet er obligatorisk!
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="col-md-6" key="CEO">
+                      <label className="labels">Daglig leder</label>
+                      <input
+                        type="text"
+                        {...register("CEO", { required: true })}
+                        className="form-control"
+                        id="CEO"
+                        placeholder="Daglig leder ..."
+                        onChange={(e) =>
+                          setData({ ...data, CEO: e.target.value })
+                        }
+                      />
+                      {errors.CEO && (
+                        <p style={{ color: "red" }}>
+                          Daglig leder: Dette feltet er obligatorisk!
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="row mt-2">
+                    <div className="col-md-6" key="email">
+                      <label className="labels">E-post</label>
+                      <input
+                        type="email"
+                        id="email"
+                        {...register("email", {
+                          required: "required",
+                          pattern: {
+                            value: /\S+@\S+\.\S+/,
+                            message:
+                              "Oppgitt verdi matcher ikke e-postformatet",
+                          },
+                        })}
+                        className="form-control"
+                        placeholder="E-post ..."
+                        onChange={(e) =>
+                          setData({ ...data, email: e.target.value })
+                        }
+                      />
+                      {errors.email && (
+                        <span style={{ color: "red" }} role="alert">
+                          E-post: Dette feltet er obligatorisk!
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="col-md-6" key="phoneNumber">
+                      <label className="labels">Telefonnummer</label>
+                      <input
+                        type="tel"
+                        id="phoneNumber"
+                        {...register("phoneNumber", { required: true })}
+                        className="form-control"
+                        placeholder="Telefonnummer ..."
+                        onChange={(e) => setPhoneNumber(e.target.value)}
+                      />
+                      {errors.phoneNumber && (
+                        <p style={{ color: "red" }}>
+                          Telefonnummer: Dette feltet er obligatorisk!
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="row mt-2">
+                    <div className="col-md-6" key="streetAddress">
+                      <label className="labels">Gateadresse</label>
+                      <input
+                        type="text"
+                        id="streetAddress"
+                        {...register("streetAddress", { required: true })}
+                        className="form-control"
+                        placeholder="Gateadresse ..."
+                        onChange={(e) =>
+                          setData({ ...data, streetAddress: e.target.value })
+                        }
+                      />
+                      {errors.streetAddress && (
+                        <p style={{ color: "red" }}>
+                          Gateadresse: Dette feltet er obligatorisk!
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="col-md-3" key="zipCode">
+                      <label className="labels">Postnummer</label>
+                      <input
+                        type="text"
+                        id="zipCode"
+                        {...register("zipCode", { required: true })}
+                        className="form-control"
+                        placeholder="Postnummer ..."
+                        onChange={(e) =>
+                          setData({ ...data, zipCode: e.target.value })
+                        }
+                      />
+                      {errors.zipCode && (
+                        <p style={{ color: "red" }}>
+                          Postnummer: Dette feltet er obligatorisk!
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="col-md-3" key="region">
+                      <label className="labels">Sted</label>
+                      <input
+                        type="text"
+                        id="region"
+                        {...register("region", { required: true })}
+                        className="form-control"
+                        placeholder="Sted ..."
+                        onChange={(e) =>
+                          setData({ ...data, region: e.target.value })
+                        }
+                      />
+                      {errors.region && (
+                        <p style={{ color: "red" }}>
+                          Sted: Dette feltet er obligatorisk!
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="row mt-2">
+                    <div className="col-md-6" key="country">
+                      <label className="labels">Land</label>
+                      <Select
+                        placeholder="Velg land..."
+                        onChange={(value) => setCountry(value.label)}
+                        options={countries}
+                        name="country"
+                        className="country-style"
                       />
                     </div>
 
-                    <div className="row mt-2">
-                      <div className="col-md-6" >
-                        <label className="labels">Org. nummer</label>
-                        <input
-                          type="text"
-                          id="orgNumber"
-                          style={{ backgroundColor: "#dde2eb" }}
-                          readOnly
-                          className="form-control"
-                          value={searchTerm}
-                          onChange={handleInput}
-                        />
-                      </div>
-
-                      <div className="col-md-6" key="CEO">
-                        <label className="labels">Dagligleder</label>
-                        <input
-                          type="text"
-                          {...register("CEO", { required: true })}
-                          className="form-control"
-                          id="CEO"
-                          onChange={handleInput}
-                        />
-                        {errors.CEO && (
-                          <p style={{ color: "red" }}>
-                            Dagligleder: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                      </div>
+                    <div className="col-md-6" key="industryType">
+                      <label className="labels">Bransje</label>
+                      <Select
+                        placeholder="Velg bransje..."
+                        isMulti
+                        required
+                        onChange={(value) =>
+                          setIndustryData(value.map((c) => c.value))
+                        }
+                        options={options}
+                        name="industryType"
+                      />
                     </div>
-                    <div className="row mt-2">
-                      <div className="col-md-6" key="companyName">
-                        <label className="labels">Bedriftsnavn</label>
-                        <input
-                          type="text"
-                          id="companyName"
-                          {...register("companyName", { required: true })}
-                          className="form-control"
-                          placeholder="bedriftsnavn ..."
-                          onChange={handleInput}
-                        />
-                        {errors.companyName && (
-                          <p style={{ color: "red" }}>
-                            Bedriftsnavn: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                      </div>
+                  </div>
 
-                      <div className="col-md-6" key="email">
-                        <label className="labels">E-post</label>
-                        <input
-                          type="email"
-                          id="email"
-                          {...register("email", {
-                            required: "required",
-                            pattern: {
-                              value: /\S+@\S+\.\S+/,
-                              message:
-                                "Entered value does not match email format",
-                            },
-                          })}
-                          className="form-control"
-                          placeholder="epost ..."
-                          onChange={handleInput}
-                        />
-                        {errors.email && (
-                          <span style={{ color: "red" }} role="alert">
-                            E-post: Dette feltet er obligatorisk!
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="row mt-2">
-                      <div className="col-md-6" key="phoneNumber">
-                        <label className="labels">Telefon nummer</label>
-                        <MuiPhoneInput
-                          name="phoneNumber"
-                          // onChange={handleInput}
-                          onChange={(value) =>
-                            setPhoneNumber({ phoneNumber: value })
-                          }
-                          className="form-control"
-                          defaultCountry="no"
-                          onlyCountries={["no", "se", "dk", "is", "fi"]}
-                        />
-                        {errors.phoneNumber && (
-                          <p style={{ color: "red" }}>
-                            Telefon nummber: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                        {/* <input  id ="phoneNumber" type="tel" placeholder="Telefon nummer" {...register("phone",  {required: true, pattern:[/^[0-9+-]+$/, /[^a-zA-Z]/], minLength: 8, maxLength: 12})}    onChange={handleInput}/>
-                {errors?.phone && errors.phone.message} */}
-                      </div>
-
-                      <div className="col-md-6" key={countries.value}>
-                        <label className="labels">Land</label>
-
-                        <Select
-                          placeholder="Velg land..."
-                          defaultValue={countries.value}
-                          onChange={(value) =>
-                            setCountry({ country: value.label })
-                          }
-                          options={countries}
-                          name="country"
-                          className="country-style"
-                        />
-                        {errors.country && (
-                          <span style={{ color: "red" }} role="alert">
-                            Land: Dette feltet er obligatorisk!
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="row mt-2">
-                      <div className="col-md-6" key="streetAddress">
-                        <label className="labels">Gate adresse</label>
-                        <input
-                          type="text"
-                          id="streetAddress"
-                          {...register("streetAddress", {
-                            required: "required",
-                          })}
-                          className="form-control"
-                          placeholder="Oslo Gate 33"
-                          onChange={handleInput}
-                        />
-                        {errors.companyName && (
-                          <p style={{ color: "red" }}>
-                            Gate adresse: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="col-md-3" key="city">
-                        <label className="labels">Sted</label>
-                        <input
-                          type="text"
-                          id="region"
-                          {...register("region", {
-                            required: "required",
-                          })}
-                          className="form-control"
-                          placeholder="Oslo"
-                          onChange={handleInput}
-                        />
-                        {errors.companyName && (
-                          <p style={{ color: "red" }}>
-                            Sted: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="col-md-3" key="zipCode">
-                        <label className="labels">Postnummer</label>
-                        <input
-                          type="text"
-                          id="zipCode"
-                          className="form-control"
-                          placeholder="1069"
-                          {...register("zipCode", {
-                            required: "required",
-                          })}
-                          onChange={handleInput}
-                        />
-                        {errors.companyName && (
-                          <p style={{ color: "red" }}>
-                            Postnummer: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="row mt-2">
-                      <div className="col-md-12" key="industryType">
-                        <label className="labels">
-                          Bransje (må velge minst ett bransje){" "}
-                        </label>
-
-                        <Select
-                          {...register("industryType", {})}
-                          id="industryType"
-                          placeholder="Legg til bransje"
-                          isMulti
-                          required
-                          onChange={(value) =>
-                            setIndustryData({
-                              industryType: value.map((c) => c.value),
-                            })
-                          }
-                          options={options}
-                          name="industryType"
-                        />
-                        {errors.companyName && (
-                          <p style={{ color: "red" }}>
-                            Bransje: Dette feltet er obligatorisk!
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="" style={{ margin: "10px" }}>
+                  <div className="row mt-2">
+                    <div className="col-md-6">
                       <input
                         type="checkbox"
-                        className="form-check-input "
+                        className="form-check-input"
                         id="performsTrucks"
                         checked={performsTrucks}
-                        onChange={handlePerformsTrucksChange}
+                        onChange={() => setPerformsTrucks(!performsTrucks)}
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
-                        className="col-md-3 form-check-label"
-                        key="performsTrucks"
-                        htmlFor="exampleCheck1"
+                        className="form-check-label"
+                        htmlFor="performsTrucks"
                       >
                         Utfører arbeid for lastebiler?
                       </label>
+                    </div>
+                    <div className="col-md-6">
                       <input
                         type="checkbox"
                         className="form-check-input"
                         id="companiesAgreements"
                         checked={companiesAgreements}
-                        onChange={handleCompaniesAgreementsChange}
+                        onChange={() =>
+                          setCompaniesAgreements(!companiesAgreements)
+                        }
                       />
                       <label
                         style={{ paddingLeft: "10px" }}
-                        className=" col-md-4 form-check-label"
-                        key="companiesAgreements"
-                        htmlFor="exampleCheck1"
+                        className="form-check-label"
+                        htmlFor="companiesAgreements"
                       >
                         Leverer du faste avtaler for bedrifter?
                       </label>
                     </div>
-
-                    {/*<button type="submit"  className="btn btn-primary profile-button">Save data</button> */}
                   </div>
-                </Modal.Body>
-                <Modal.Footer className="modalFotterCompanyForm">
-                  <div className="row ">
-                    <div className="col">
-                      <Button variant="secondary">Tilbake</Button>
-                    </div>
-                    <div className="col">
-                      <Button
-                        variant="primary"
-                        style={{ height: "auto", width: "100px" }}
-                        disabled={firstFormValidated}
-                        type={"submit"}
-                      >
-                        Gå videre
-                      </Button>
-                    </div>
-                  </div>
-                </Modal.Footer>
+                </div>
               </form>
-            </>
-          )}
-          {page === 4 && (
-            <>
-            <form onSubmit={handleSubmit(handleNextPagefem)}>
-              <Modal.Header >
-                <Modal.Title className="formMainLable data">Register bedriftsinformasjon 2/3
-                <span >
-                <OverlayTrigger
-                    key={'right'}
-                    placement={'right'}
-                    overlay={popPageFourInfo}
-            >  
-                  <ErrorOutlineTwoToneIcon className="formMainLableInfo" style={{left: '95%',  position: 'absolute'}}/>
-                  </OverlayTrigger>
-                </span>
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <ProgressBar
-                  now={60}
-                  variant="success"
-                  animated 
-                  bsPrefix={''}
-                  style={{ margin: "10px",  fillColor:'#7451f8'}}
-                  label={`60%`}
-                  filledbackground="linear-gradient(to right, #fefb72, #f0bb31)"
-                />
+            </Modal.Body>
+            <Modal.Footer className="modalFooterCompanyForm">
+              <div className="row ">
+                <div className="col">
+                  <Button variant="secondary" onClick={handleClose}>
+                    Avslutt
+                  </Button>
+                </div>
+                <div className="col">
+                  <Button
+                    variant="primary"
+                    style={{ height: "auto", width: "100px" }}
+                    onClick={handleNextPage}
+                  >
+                    Neste
+                  </Button>
+                </div>
+              </div>
+            </Modal.Footer>
+          </>
+        )}
+        {page === 4 && (
+          <>
+            <Modal.Header>
+              <Modal.Title className="formMainLabel">
+                Registrer bedriftsinformasjon 2/4
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ProgressBar
+                now={progress}
+                variant="success"
+                style={{ margin: "10px" }}
+                label={`${progress}%`}
+              />
+              <form>
                 <h6 className="formTitle">Sosiale medier</h6>
                 <div className="row mt-2">
-                <div className="col-md-2" ></div>
-
-               
-
-              
-
-                  <div className="col-md-1" ></div>
-                  
-                </div>
-                <div className="row mt-2">
-                  <div className="col-md-3" key="website">
-                    <label className="labels customLabel">Nettside</label>
+                  <div className="col-md-6" key="website">
+                    <label className="labels">Nettside</label>
                     <input
                       type="text"
                       id="website"
                       placeholder="www.nettside.no"
                       className="form-control fromControlCompanyForm"
-                      onChange={handleSocialInput}
+                      onChange={(e) =>
+                        setSocialMedia({
+                          ...socialMedia,
+                          website: e.target.value,
+                        })
+                      }
                     />
                   </div>
+                  <div className="col-md-6" key="instagram">
+                    <label className="labels">Instagram</label>
+                    <input
+                      type="text"
+                      id="instagram"
+                      placeholder="www.instagram.com"
+                      className="form-control fromControlCompanyForm"
+                      onChange={(e) =>
+                        setSocialMedia({
+                          ...socialMedia,
+                          instagram: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
 
-                 
-
-                  <div className="col-md-3" key="youtube">
-                    <label className="labels">Youtube</label>
+                <div className="row mt-2">
+                  <div className="col-md-6" key="facebook">
+                    <label className="labels">Facebook</label>
+                    <input
+                      type="text"
+                      id="facebook"
+                      placeholder="www.facebook.com"
+                      className="form-control fromControlCompanyForm"
+                      onChange={(e) =>
+                        setSocialMedia({
+                          ...socialMedia,
+                          facebook: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="col-md-6" key="youtube">
+                    <label className="labels">YouTube</label>
                     <input
                       type="text"
                       id="youtube"
-                      className="form-control fromControlCompanyForm"
                       placeholder="www.youtube.com"
-                      onChange={handleSocialInput}
+                      className="form-control fromControlCompanyForm"
+                      onChange={(e) =>
+                        setSocialMedia({
+                          ...socialMedia,
+                          youtube: e.target.value,
+                        })
+                      }
                     />
                   </div>
                 </div>
-
-<br/>
-<br/>
-<hr className="divLine"/>
-
-
-                <h6 className="formTitle">Åpningstider</h6>
-
-              
-                <div hidden={openingHoursError} className="bord">
-                  <h4 className="errorTitle">Anbefaling!</h4>
-                  <p className="recommendedBody">
-                    {" "}
-                    Feltene for alle dagene må være fylt inn. Mandag-Søndag. 
-                  </p>
-                </div>
-
-     
-<br/>
-<br/>
-                
-                  
-              
-{days.map((field, index) => (
-  <div className="row mt-2 " key={index}>
-
-<div className="col-md-1">
-
-</div>
-
-          <div className="col-md-3" key="day">
-          <label className="labels customLabel text-center">Dag</label>
-          <select name="day" className="form-control text-center fromControlCompanyForm" value={field.day || ''} onChange={e => handleChangeBusnissHours(e, index)}>
-            <option value="">Velg dag...</option>
-            {weekDays.map(day => <option key={day} value={day}>{day}</option>)}
-          </select>
-          </div>
-
-          <div className="col-md-3" key="open">
-          <label className="labels customLabel text-center">Åpningstid</label>
-          <select  name="open" className="form-control text-center fromControlCompanyForm" value={field.open || ''} onChange={e => handleChangeBusnissHours(e, index)}>
-            <option value="">Velg tid...</option>
-            {hours_list.map(open => <option key={open} value={open}>{open}</option>)}
-          </select>
-          </div>
-
-          <div className="col-md-3" key="close">
-          <label className="labels customLabel text-center">Åpningstid</label>
-          <select name="close" className="form-control text-center fromControlCompanyForm" value={field.close || ''} onChange={e => handleChangeBusnissHours(e, index)}>
-            <option value="">Velg tid...</option>
-            {hours_list.map(close => <option key={close} value={close}>{close}</option>)}
-          </select>
-          </div>
-
-          {/* <div className="col-md-3" key="open">
-          <label className="labels customLabel text-center">Åpningstid</label>
-          <input type="text" className="form-control text-center fromControlCompanyForm"  name="open" value={field.open || ''} onChange={e => handleChangeBusnissHours(e, index) } />
-          </div> 
-
-          <div className="col-md-3" key='close'>
-          <label className="labels customLabel text-center ">Stengetid</label>
-          <input type="text"  pattern="[0-9]+:[0-9]$" className="form-control text-center fromControlCompanyForm"  name="close" value={field.close || ''} onChange={e => handleChangeBusnissHours(e, index)} />
-   
-        </div>
-*/}
-        <div className="col-md-1">
-          {days.length !== 1 && 
-        <DeleteIcon onClick={handleRemoveClick} style={{color:'#ae0000'}} className=' mx-auto  mt-4'/>
-          }   {days.length - 1 === index && <AddBoxIcon className=' mx-auto  mt-4' style={{color:'#0068C3'}} onClick={handleAddDay} hidden={addFieldIcon}/>}
-          
-        </div>
-        </div>
-
-      ))}
-  
-              </Modal.Body>
-              <br/>
-              <br/>
-              <Modal.Footer className="modalFotterCompanyForm" style={{paddingTop:'20px'}}>
-                <div className="row">
-
-
-
-                  <div className="col">
-                    <Button variant="secondary" onClick={handlePrevPage}>
-                      Tilbake
-                    </Button>
-                  </div>
-
-
-                  <div className="col" >
-                    <Button
-                      variant="primary"
-                      style={{ height: "auto", width: "100px" }}
-                      type={"submit"}
-                    >
-                      Gå videre
-                    </Button>
-                  </div>
-                </div>
-              </Modal.Footer>
               </form>
-            </>
-          )}
-          {page === 5 && (
-             
-            
-            <>
-            
-              <Modal.Header >
-                <Modal.Title className="formMainLable">Register bedriftsinformasjon 3/3 
-                
-                <span >
-                <OverlayTrigger
-                    key={'right'}
-                    placement={'right'}
-                    overlay={popPageThreeInfo}
-            >  
-                  <ErrorOutlineTwoToneIcon className="formMainLableInfo" style={{left: '95%',  position: 'absolute'}}/>
-                  </OverlayTrigger>
-                </span>
-                
-                </Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <ProgressBar
-                  now={80}
-                  variant="success"
-                  animated
-                  style={{ margin: "10px" }}
-                  label={`100%`}
-                />
-
+            </Modal.Body>
+            <Modal.Footer className="modalFooterCompanyForm">
+              <div className="row ">
+                <div className="col">
+                  <Button variant="secondary" onClick={handlePrevPage}>
+                    Tilbake
+                  </Button>
+                </div>
+                <div className="col">
+                  <Button
+                    variant="primary"
+                    style={{ height: "auto", width: "100px" }}
+                    onClick={handleNextPage}
+                  >
+                    Neste
+                  </Button>
+                </div>
+              </div>
+            </Modal.Footer>
+          </>
+        )}
+        {page === 5 && (
+          <>
+            <Modal.Header>
+              <Modal.Title className="formMainLabel">
+                Registrer bedriftsinformasjon 3/4
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ProgressBar
+                now={progress}
+                variant="success"
+                style={{ margin: "10px" }}
+                label={`${progress}%`}
+              />
+              <form>
+                <h6 className="formTitle">Om oss</h6>
                 <div className="row mt-3">
                   <div className="col-md" key="about">
-                    
-                    <label className="labels">Om oss 
-                    </label>
-                    
+                    <label className="labels">Om oss</label>
                     <textarea
                       type="text"
                       className="form-control"
                       style={{ height: "200px" }}
                       placeholder="Om oss ...."
                       id="about"
-                      onChange={handleAboutUsInput}
+                      onChange={(e) => setAboutUs(e.target.value)}
                     />
                   </div>
                 </div>
-
-                <RMIUploader
-                  id
-                  isOpen={visible}
-                  hideModal={hideModal}
-                  onSelect={handleImagesInput}
-                  onUpload={handleImagesInput}
-                  onRemove={onRemove}
-                  dataSources={dataSources}
-                  onChange={handleImagesInput}
-                />
-              </Modal.Body>
-              <div className="row mt-2">
-              <Modal.Footer className="modalFotterCompanyForm">
-                  <div className="row ">
-                    <div className="col">
-                      <Button variant="secondary" onClick={handlePrevPage}>
-                        Tilbake
-                      </Button>
-                    </div>
-                    <div className="col">
-                      <Button
-                        onClick={handleNextPageAboutUs}
-                        variant="primary"
-                        style={{ height: "auto", width: "100px" }}
-                      >
-                        Gå videre
-                      </Button>
-                    </div>
-                  </div>
-                </Modal.Footer>
-              </div>
-            </>
-          )}
-          {page === 6 && (
-            <>
-              <Modal.Header >
-                <Modal.Title className="formMainLable">Register bedriftsinformasjon 3/3</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <ProgressBar
-                  now={100}
-                  variant="success"
-                  style={{ margin: "10px" }}
-                  label={`100%`}
-                />
-
-                <div className="row mt-2">
-                  <div className="col-md-3"></div>
-                  <div className="col-md-6">
-                    <img
-                      src={
-                        file
-                          ? data.companyLogo
-                          : "https://icon-library.com/images/no-image-icon/no-image-icon-0.jpg"
-                      }
-                      alt=""
-                      className="rounded companyLogoSummery mx-auto d-block rounded-circle mt-5"
-                      width="200px"
-                    />
-                  </div>
-
-                  <div className="col-md-3"></div>
-                </div>
-
-                <div className="row mt-2">
-                  <div className="col-md-4">
-                    <label className="labels">Organisasjonsnummer</label>
-                    <input
-                      type="text"
-                      id="orgNumber"
-                      className="form-control"
-                      readOnly
-                      value={data.orgNumber}
-                    />
-                  </div>
-                  <div className="col-md-4">
-                    <label className="labels">Bedriftsnavn</label>
-                    <input
-                      type="text"
-                      id="companyName"
-                      className="form-control"
-                      readOnly
-                      value={data.companyName}
-                    />
-                  </div>
-
-                  <div className="col-md-4">
-                    <label className="labels">Dagligleder</label>
-                    <input
-                      type="text"
-                      id="CEO"
-                      className="form-control"
-                      readOnly
-                      value={data.CEO}
-                    />
-                  </div>
-                </div>
-
-                <div className="row mt-2">
-                  <div className="col-md-3">
-                    <label className="labels">Adresse</label>
-                    <input
-                      type="text"
-                      id="streetAddress"
-                      className="form-control"
-                      readOnly
-                      value={data.streetAddress}
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label className="labels">Sted</label>
-                    <input
-                      type="text"
-                      id="region"
-                      className="form-control"
-                      readOnly
-                      value={data.region}
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label className="labels">Postnummer</label>
-                    <input
-                      type="text"
-                      id="zipCode"
-                      className="form-control"
-                      readOnly
-                      value={data.zipCode}
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label className="labels">Land</label>
-                    <input
-                      type="text"
-                      id="country"
-                      className="form-control"
-                      readOnly
-                      value={country.country}
-                    />
-                  </div>
-                </div>
-
-                <div className="row mt-2">
-                  <div className="col-md-3">
-                    <label className="labels">E-post</label>
-                    <input
-                      type="text"
-                      id="email"
-                      className="form-control"
-                      readOnly
-                      value={data.email}
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label className="labels">Telefon nummer</label>
-                    <input
-                      type="text"
-                      id="phoneNumber"
-                      className="form-control"
-                      readOnly
-                      value={phoneNumber.phoneNumber}
-                    />
-                  </div>
-                  <div className="col-md-6">
-                    <label className="labels">Bransje</label>
-                    <input
-                      type="text"
-                      id="industry"
-                      className="form-control"
-                      readOnly
-                      placeholder="IKKE LAGT TIL"
-                      // value={industryData.industry.map((e) => e) ?? ''}
-                    />
-                  </div>
-                </div>
-
-                <div className="row mt-2" style={{ paddingTop: "20px" }}>
-                  <div className="col-md-1"></div>
-
-                  <div className="col-md-5">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="companiesAgreements"
-                      readOnly
-                      checked={companiesAgreements}
-                      value={companiesAgreements}
-                    />
-                    <label key="performsTrucks" htmlFor="exampleCheck1">
-                      Utfører arbeid for lastebiler?
-                    </label>
-                  </div>
-                  <div className="col-md-5">
-                    <input
-                      type="checkbox"
-                      className="form-check-input"
-                      id="performsTrucks"
-                      readOnly
-                      checked={performsTrucks}
-                      value={performsTrucks}
-                    />
-                    <label key="companiesAgreements" htmlFor="exampleCheck1">
-                      Leverer du faste avtaler for bedrifter?
-                    </label>
-                  </div>
-                  <div className="" style={{ margin: "10px" }}>
-                    <div className="col-md-1"></div>
-                  </div>
-
-                  {/* 
-                      <div className="col-md-3" >
-                      <label className="labels">performsTrucks</label>
-                         <input
-                        type="checkbox"
-                        className="form-check-input"
-                        id="performsTrucks"
-                        readOnly
-                        checked={performsTrucks}
-                        value={performsTrucks}
-                       
-                      />
-
-                 
-                      </div> */}
-                </div>
-
-                <br />
-                <br />
-                <hr className="divLine" />
-                <br />
-                <br />
-                <h6 className="formTitle">Sosiale medier</h6>
-                <div hidden={recommendedSocialMedia} className="bord">
-                  <h4 className="recommendedTitle">Anbefaling!</h4>
-                  <p className="recommendedBody">
-                    {" "}
-                    Vi anbefaler at du fyller inn dataen for dine sosiale medier
-                    og nettside. <br /> Det vil øker intressen hos dine kunder.
-                  </p>
-                </div>
-                <div className="row mt-2">
-                  <div className="col-md-3">
-                    <label className="labels">Nettside</label>
-                    <input
-                      type="text"
-                      id="website"
-                      className="form-control"
-                      style={{color:recommendedColor}}
-                      readOnly
-                      placeholder="IKKE LAGT TIL"
-                      value={socialMedia.website || "IKKE LAGT TIL"}
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label className="labels">Instagram</label>
-                    <input
-                      type="text"
-                      id="instagram"
-                      className="form-control"
-                      style={{color:recommendedColor}}
-                      readOnly
-                      placeholder="IKKE LAGT TIL"
-                      value={socialMedia.instagram || "IKKE LAGT TIL"}
-                    />
-                  </div>
-                  <div className="col-md-3">
-                    <label className="labels">Facebook</label>
-                    <input
-                      type="text"
-                      id="facebook"
-                      className="form-control"
-                      style={{color:recommendedColor}}
-                      readOnly
-                      value={socialMedia.facebook || "IKKE LAGT TIL"}
-                    />
-                  </div>
-
-                  <div className="col-md-3">
-                    <label className="labels">Youtube</label>
-                    <input
-                      type="text"
-                      id="youtube"
-                      className="form-control"
-                      style={{color:recommendedColor}}
-                      readOnly
-                      placeholder="IKKE LAGT TIL"
-                      value={socialMedia.youtube || "IKKE LAGT TIL"}
-                    />
-                  </div>
-                </div>
-                <div hidden={recommendedOpeningDays} className="bord">
-                  <h4
-                    className="recommendedTitle"
-                    style={{ paddingTop: "30px" }}
-                  >
-                    Anbefaling!
-                  </h4>
-                  <p className="recommendedBody">
-           
-                    Vi anbefaler at du fyller inn dataen for åpningstid og
-                    stengetid. <br /> Det vil øker intressen hos dine kunder.
-                  </p>
-                </div>
-                
-           
-                <br />
-                
-                <br />
-                <h6 className="formTitle">Åpningstider</h6>
-                       
-                  <div className="row mt-2">
-
-                   {days.map(e => (
-                      <div className="col-md-3">
-                      <label className="labels">{e.day}</label>
-                      <input
-                        type="text"
-                        id="Mandag"
-                        className="form-control"
-                        readOnly
-                        placeholder="IKKE LAGT TIL"
-                        value={e.open + '-' + e.close || "IKKE LAGT TIL"}
-
-                      />
-                    </div>
-                    ))}
-
-                   
-
-                   
-                    
-                  </div>
-
-
-                <br />
-                <hr className="divLine" />
-                <br />
-                <br />
-                <div hidden={recommendedAboutUs} className="bord">
-                  <h4 className="recommendedTitle">Anbefaling!</h4>
-                  <p className="recommendedBody">
-                    {" "}
-                    Vi anbefaler at du fyller inn informasjon om oss. Denne
-                    informasjon vil være synlig for dine kunder. <br /> Det vil
-                    øker intressen hos dine kunder.
-                  </p>
-                </div>
-                <div className="row mt-2">
-                  <div className="col-md-12">
-                    <h5 className="labels text-center">Om oss</h5>
-                    <div hidden={!recommendedAboutUs} className="aboutUsBord">
-                      <p className="aboutUsBordBody">{aboutUs.about}</p>
-                    </div>
-                  </div>
-                </div>
-                <br />
-                <br />
-                <hr className="divLine" />
-                <br />
-                <br />
-                <div className="row mt-2"></div>
-                <br />
-                <h3 className="text-center">Bilder</h3>
+              </form>
+            </Modal.Body>
+            <Modal.Footer className="modalFooterCompanyForm">
+              <div className="row ">
                 <div className="col">
-                  {imagesData.map((imgSrc, index) => (
-                    <img
-                      src={imgSrc}
-                      key={index}
-                      alt=""
-                      className="sumCompanyLogoSummery"
-                      height={"100px"}
-                      width={"100px"}
-                    />
-                  ))}
+                  <Button variant="secondary" onClick={handlePrevPage}>
+                    Tilbake
+                  </Button>
                 </div>
-              </Modal.Body>
-              <div className="row mt-2">
-                <Modal.Footer>
-                  <div className="row ">
-                    <div className="col">
-                      <Button variant="secondary" onClick={handlePrevPage}>
-                        Tilbake
-                      </Button>
-                    </div>
-                    <div
-                      className="col"
-                      style={{ marginLeft: "50px", marginRight: "50px" }}
-                    >
-                      <Button
-                        onClick={startOver}
-                        variant="primary"
-                        style={{ height: "auto", width: "130px" }}
-                      >
-                        Start på nytt
-                      </Button>
-                    </div>
-                    <div className="col">
-                      <Button onClick={handleAddToDatabase} variant="success">
+                <div className="col">
+                  <Button
+                    variant="primary"
+                    style={{ height: "auto", width: "100px" }}
+                    onClick={handleNextPage}
+                  >
+                    Neste
+                  </Button>
+                </div>
+              </div>
+            </Modal.Footer>
+          </>
+        )}
+        {page === 6 && (
+          <>
+            <Modal.Header>
+              <Modal.Title className="formMainLabel">
+                Registrer bedriftsinformasjon 4/4
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <ProgressBar
+                now={progress}
+                variant="success"
+                style={{ margin: "10px" }}
+                label={`${progress}%`}
+              />
+              <h6 className="formTitle">Bekreft informasjon</h6>
+              {/* Her kan du legge til en oversikt over all informasjon brukeren har fylt inn */}
+              <p>Vennligst bekreft at informasjonen er korrekt før du lagrer.</p>
+            </Modal.Body>
+            <Modal.Footer className="modalFooterCompanyForm">
+              <div className="row ">
+                <div className="col">
+                  <Button variant="secondary" onClick={handlePrevPage}>
+                    Tilbake
+                  </Button>
+                </div>
+                <div className="col">
+                <Button onClick={handleAddToDatabase} variant="success">
                         Lager
                       </Button>
-                    </div>
-                  </div>
-                </Modal.Footer>
+                </div>
               </div>
-            </>
-          )}
-           {page === 7 && (
-
-      
-            <>
-              
-
-              <div>
-             <SuccessMessages/>
-</div>
-            </>
-          )}
-        </Modal>
-      </div>
+            </Modal.Footer>
+          </>
+        )}
+      </Modal>
     </>
   );
 }
+
 export default RegistrationForm;

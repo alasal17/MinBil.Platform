@@ -83,84 +83,84 @@ export const AccountOpeningHoursDetails = (props) => {
   const userID = currentUser.uid;
 
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
    
-    const unsub = onSnapshot(
-      collection(db, "userTheme"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "userTheme"),
+  //     (snapShot) => {
+  //       let list = [];
   
-        snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
+  //       snapShot.docs.forEach((doc) => {
+  //         list.push({ id: doc.id, ...doc.data() });
+  //         //   if(doc.id === userID){
+  //         //     list.push({id: doc.id, ...doc.data()});
+  //         // }
           
   
-          if (doc.id === userID) {
-            setColorTheme(list)
+  //         if (doc.id === userID) {
+  //           setColorTheme(list)
   
-            console.log(colorTheme)
+  //           console.log(colorTheme)
         
-          } else {
+  //         } else {
   
-            console.log('Faild')
-          }
-        });
+  //           console.log('Faild')
+  //         }
+  //       });
   
-       console.log()
-      },
+  //      console.log()
+  //     },
   
-      (error) => {
-        console.log(error);
-      }
-    );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
   
-    return () => {
-      unsub();
-    };
-  }, []);
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
 
-    const unsub = onSnapshot(
-      collection(db, "company"),
-      (snapShot) => {
-        let list = [];
-        let openingsData_list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "company"),
+  //     (snapShot) => {
+  //       let list = [];
+  //       let openingsData_list = [];
 
-        snapShot.docs.forEach((doc) => {
-          // list.push({ id: doc.id, ...doc.data() });
-          if (doc.id === currentUser.uid) {
-            list.push({ id: doc.id, ...doc.data() });
-            industry_list.push(doc.data().industryType)
-            openingsData_list.push(doc.data().openingHours)
-          }
-        });
-
-        
-        setCompanyData(list);
-        setIndustryType(...industry_list)
-        setCompaniesAgreements(companyData[0].companiesAgreements)
-        setPerformsTrucks(companyData[0].performsTrucks)
-        setOpeningsData(openingsData_list)
+  //       snapShot.docs.forEach((doc) => {
+  //         // list.push({ id: doc.id, ...doc.data() });
+  //         if (doc.id === currentUser.uid) {
+  //           list.push({ id: doc.id, ...doc.data() });
+  //           industry_list.push(doc.data().industryType)
+  //           openingsData_list.push(doc.data().openingHours)
+  //         }
+  //       });
 
         
+  //       setCompanyData(list);
+  //       setIndustryType(...industry_list)
+  //       setCompaniesAgreements(companyData[0].companiesAgreements)
+  //       setPerformsTrucks(companyData[0].performsTrucks)
+  //       setOpeningsData(openingsData_list)
 
         
-      },
 
-      (error) => {
-        console.log(error);
-      }
-    );
+        
+  //     },
 
-    return () => {
-      unsub();
-    };
-  }, );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
+
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, );
 
   const handleCompaniesAgreementsChange = () => {
     setCompaniesAgreements(!companiesAgreements);
