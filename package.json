@@ -37,7 +37,7 @@
     "express": "^4.17.3",
     "firebase": "^9.6.10",
     "formik": "^2.2.9",
-    "fs": "^0.0.1-security",
+    "fs": "^0.0.2",
     "googleapis": "^100.0.0",
     "jake": "^10.8.2",
     "jquery": "^3.6.1",
