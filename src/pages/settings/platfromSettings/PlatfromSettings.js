@@ -1,5 +1,5 @@
 
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container} from '@mui/material';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { SettingsNotifications } from './settings-notifications';
@@ -7,7 +7,7 @@ import { SettingsPassword } from './settings-password';
 import { ThemeSwitch } from './settings-themes-switch';
 import Sidebar from "../../../components/sidebar/Sidebar";
 import Navbar from "../../../components/navbar/Navbar";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState} from "react";
 
 function PlatfromSettings() {
   const [key, setKey] = useState('Varsleringer');

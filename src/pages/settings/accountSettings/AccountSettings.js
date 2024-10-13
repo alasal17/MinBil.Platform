@@ -9,7 +9,7 @@ import Tabs from 'react-bootstrap/Tabs';
 
 import './account.scss'
 
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext} from "react";
 import {
   Box,
   Button,

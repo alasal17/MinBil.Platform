@@ -49,7 +49,7 @@ const Login = () => {
 			</div> */}
 			<form className="form-detail" onSubmit={handleLogin} autoComplete="off">
 			
-            
+      
             <Modal.Body>
         <div className="row mt-2">
                 <div className="col-md-6" key='email'><label className="labels">E-post</label>
@@ -67,7 +67,8 @@ const Login = () => {
 				
 			
 					
-            </Modal.Body>    
+            </Modal.Body>   
+            {/* <div class="g-recaptcha" data-sitekey="6LfP018qAAAAAN6GWXWuVklZjbqa_ez3TqAfp4kz"></div>  */}
             <Modal.Footer>
   <div className="row mt-2">
             <div className="col-md-12 d-flex justify-content-between align-items-left ">

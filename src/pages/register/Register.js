@@ -3,7 +3,7 @@
 import {useState} from 'react'
 
 import {auth} from "../../firebase";
-import {useNavigate, Link} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth'
 import './register.css'
 import { Modal } from 'react-bootstrap';
@@ -65,15 +65,15 @@ function Register() {
 </div> */}
 <form className="form-detail" onSubmit={register} autoComplete="off">
 
-       <div class="g-recaptcha" data-sitekey="6LcW2K0nAAAAAMTZ-jAo2b6l7tEMWQ-7wZ-w40_D"></div>
+  
       <Modal.Body>
   <div className="row mt-2">
           <div className="col-md-12" key='email'><label className="labels">E-post</label>
-          <input type="text" name="your-email" id="your-email" autoComplete="off" className="form-control " placeholder="Email Address"  value={email} onChange={e => setEmail(e.target.value)}/>          </div>
+          <input type="text"  name="your-email" id="your-email" required className="form-control " placeholder="Email Address"  value={email} onChange={e => setEmail(e.target.value)}/>          </div>
           </div>
           <div className="row mt-2">
           <div className="col-md-12" key='password'><label className="labels">Passord</label>
-					<input type="password" name="password" id="password" autoComplete="off" className="form-control" placeholder="Password"  value={password} onChange={e => setPassword(e.target.value)}/>
+					<input type="password" required name="password" id="password" autoComplete="off" className="form-control" placeholder="Password"  value={password} onChange={e => setPassword(e.target.value)}/>
           </div></div>
 
           <div className="row mt-2">
@@ -92,6 +92,7 @@ function Register() {
 
     
       </Modal.Body>    
+      <div className="g-recaptcha col-md-12 d-flex justify-content-between align-items-left" data-sitekey="6LfP018qAAAAAN6GWXWuVklZjbqa_ez3TqAfp4kz"></div>
       <Modal.Footer>
 <div className="row mt-2">
       <div className="col-md-12 d-flex justify-content-between align-items-left ">
@@ -102,6 +103,7 @@ function Register() {
 
   
       </Modal.Footer>
+      
 </form>
 
 

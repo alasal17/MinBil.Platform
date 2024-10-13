@@ -37,32 +37,33 @@ export default function ServiceCard({ logo}) {
   const [data, setData] = useState([]);
   const user = currentUser.uid
   const [expanded, setExpanded] = React.useState(false);
-  useEffect(() => {
-    // LISTEN (REALTIME)
-    const unsub = onSnapshot(
-      collection(db, "services"),
-      (snapShot) => {
-        let list = [];
-        snapShot.docs.forEach((doc) => {
+
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
+  //   const unsub = onSnapshot(
+  //     collection(db, "services"),
+  //     (snapShot) => {
+  //       let list = [];
+  //       snapShot.docs.forEach((doc) => {
        
-          if (doc.data().uid === user){
+  //         if (doc.data().uid === user){
           
-          list.push({ id: doc.id, ...doc.data() });
-          }
+  //         list.push({ id: doc.id, ...doc.data() });
+  //         }
           
-        })
-        setData(list);
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+  //       })
+  //       setData(list);
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   )
 
 
-    return () => {
-      unsub();
-    };
-  }, []);
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);

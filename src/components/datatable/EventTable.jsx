@@ -21,39 +21,39 @@ const EventTable = ({pageTitle}) => {
   const [registerButton, setRegisterButton] = useState(false)
   
     
-  useEffect(() => {
-    // LISTEN (REALTIME)
-    const unsub = onSnapshot(
-      collection(db, "offer"),
-      (snapShot) => {
-        const user = auth.currentUser.uid;
-        const timer = setTimeout(() => console.log('Initial timeout!'), 1000);
-        let list = [];
-        snapShot.docs.forEach((doc) => {
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
+  //   const unsub = onSnapshot(
+  //     collection(db, "offer"),
+  //     (snapShot) => {
+  //       const user = auth.currentUser.uid;
+  //       const timer = setTimeout(() => console.log('Initial timeout!'), 1000);
+  //       let list = [];
+  //       snapShot.docs.forEach((doc) => {
        
-          if (doc.data().uid === user){
+  //         if (doc.data().uid === user){
           
-          list.push({ id: doc.id, ...doc.data() });
-          }
+  //         list.push({ id: doc.id, ...doc.data() });
+  //         }
           
-        })
-        setData(list);
-        clearTimeout(timer)
+  //       })
+  //       setData(list);
+  //       clearTimeout(timer)
        
-      },
-      (error) => {
-        console.log(error);
-      }
-    ) 
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   ) 
     
    
 
 
-    return () => {
-      unsub();
+  //   return () => {
+  //     unsub();
       
-    };
-  }, []);
+  //   };
+  // }, []);
 
   const handleUpdate = async (id) => {
    

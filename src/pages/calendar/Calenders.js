@@ -35,32 +35,32 @@ const Calendars = () => {
   const myButtonRef = useRef(null);
 
   const [sidebarOpen, setSidebarOpen] = useState(false); // Add sidebar state
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
    
-    const unsub = onSnapshot(
-      collection(db, "company"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "company"),
+  //     (snapShot) => {
+  //       let list = [];
 
-        snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-            if(doc.id === userID){
-              list.push({id: doc.id, ...doc.data()});
-          }
+  //       snapShot.docs.forEach((doc) => {
+  //         list.push({ id: doc.id, ...doc.data() });
+  //           if(doc.id === userID){
+  //             list.push({id: doc.id, ...doc.data()});
+  //         }
 
          
-        });
+  //       });
 
-        setData(list);
-      },
+  //       setData(list);
+  //     },
 
-      (error) => {
-        console.log(error);
-      }
-    );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
 
-  }, []);
+  // }, []);
 
 
 

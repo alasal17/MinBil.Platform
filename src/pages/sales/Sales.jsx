@@ -4,7 +4,7 @@ import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import ServiceTable from "../../components/datatable/ServiceTable";
 import React  from 'react';
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import {useLocation} from 'react-router-dom';
 const Sales = () => {
   const location = useLocation();

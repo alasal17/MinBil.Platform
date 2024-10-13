@@ -40,37 +40,37 @@ const Chart = ({ aspect, title }) => {
   const userID = currentUser.uid;
 
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
    
-    const unsub = onSnapshot(
-      collection(db, "userTheme"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "userTheme"),
+  //     (snapShot) => {
+  //       let list = [];
   
-        snapShot.docs.forEach((doc) => {
-            if(doc.id === userID){
-              list.push({id: doc.id, ...doc.data()});
-          }
-          setColorTheme(list)
+  //       snapShot.docs.forEach((doc) => {
+  //           if(doc.id === userID){
+  //             list.push({id: doc.id, ...doc.data()});
+  //         }
+  //         setColorTheme(list)
 
-          setCTheme(...colorTheme)
+  //         setCTheme(...colorTheme)
   
          
-        });
+  //       });
   
-       console.log()
-      },
+  //      console.log()
+  //     },
   
-      (error) => {
-        console.log(error);
-      }
-    );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
   
-    return () => {
-      unsub();
-    };
-  }, );
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, );
 
   return (
     <div className="chart">

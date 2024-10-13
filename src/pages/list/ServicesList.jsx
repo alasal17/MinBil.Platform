@@ -2,7 +2,7 @@ import "./list.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
 import ServiceTable from "../../components/datatable/ServiceTable"
-import React,{useState, useEffect, useContext, useRef} from 'react';
+import React,{useState, useContext, useRef} from 'react';
 import {
   collection,
   onSnapshot,

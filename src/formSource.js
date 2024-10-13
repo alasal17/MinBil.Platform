@@ -21,45 +21,45 @@ export const ProductsData = () => {
   const [search, setSearch] = useState("");
   const [filteredContacts, setFilteredContacts] = useState([]);
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
-    const unsub = onSnapshot(
-      collection(db, "services"),
-      (snapShot) => {
-        let list = [];
-        snapShot.docs.forEach((doc) => {
+//   useEffect(() => {
+//     // LISTEN (REALTIME)
+//     const unsub = onSnapshot(
+//       collection(db, "services"),
+//       (snapShot) => {
+//         let list = [];
+//         snapShot.docs.forEach((doc) => {
        
-          if (doc.data().uid == user){
+//           if (doc.data().uid == user){
           
-          list.push({ id: doc.id, ...doc.data() });
-          }
+//           list.push({ id: doc.id, ...doc.data() });
+//           }
           
-        })
-        setData(list);
-        console.log(data)
+//         })
+//         setData(list);
+//         console.log(data)
         
         
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+//       },
+//       (error) => {
+//         console.log(error);
+//       }
+//     )
 
 
-    return () => {
-      unsub();
+//     return () => {
+//       unsub();
       
-    };
-  }, []);
+//     };
+//   }, []);
 
-  useEffect(() => {
-    setFilteredContacts(
-      services.filter(
-        (service) =>
-        service.title.toLowerCase().includes(search.toLowerCase()) 
-      )
-    );
-  }, [search, services]);
+//   useEffect(() => {
+//     setFilteredContacts(
+//       services.filter(
+//         (service) =>
+//         service.title.toLowerCase().includes(search.toLowerCase()) 
+//       )
+//     );
+//   }, [search, services]);
 
 
 

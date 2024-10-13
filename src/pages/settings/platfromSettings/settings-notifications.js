@@ -10,10 +10,6 @@ import {
   Grid,
   Typography
 } from '@mui/material';
-import { useContext, useState,useEffect } from "react";
-import { DarkModeContext } from "../../../context/darkModeContext";
-import Switch from '@mui/material/Switch';
-import { styled } from '@mui/material/styles';
 
 
 

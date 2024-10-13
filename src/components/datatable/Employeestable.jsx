@@ -32,82 +32,82 @@ const Employeestable = () => {
   const [per, setPerc] = useState(null);
 
   const postsCollectionRef = collection(db, "employees");
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
  
   
-    const unsub = onSnapshot(
+  //   const unsub = onSnapshot(
       
-      collection(db, "employees"),
-      (snapShot) => {
-        let list = [];
+  //     collection(db, "employees"),
+  //     (snapShot) => {
+  //       let list = [];
         
         
-          snapShot.docs.forEach((doc) => {
+  //         snapShot.docs.forEach((doc) => {
            
            
-            if(doc.data().uid === auth.currentUser.uid){
+  //           if(doc.data().uid === auth.currentUser.uid){
               
-              // let hiredDate = Moment(doc.data().hiredDate.toDate).format('DD-MM-YYYY')
+  //             // let hiredDate = Moment(doc.data().hiredDate.toDate).format('DD-MM-YYYY')
             
-              list.push({ id: doc.id,  'fulName': doc.data().fulName, 'hiredDate': doc.data().hiredDate, 'imageUrl': doc.data().imageUrl, 'email': doc.data().email, 'address': doc.data().address, 'phoneNumber': doc.data().phoneNumber, 'role': doc.data().role , 'status': doc.data().status   });
+  //             list.push({ id: doc.id,  'fulName': doc.data().fulName, 'hiredDate': doc.data().hiredDate, 'imageUrl': doc.data().imageUrl, 'email': doc.data().email, 'address': doc.data().address, 'phoneNumber': doc.data().phoneNumber, 'role': doc.data().role , 'status': doc.data().status   });
               
-          }
+  //         }
          
-          });
-        setData(list);
+  //         });
+  //       setData(list);
         
-      },
+  //     },
 
-      (error) => {
-        console.log(error);
+  //     (error) => {
+  //       console.log(error);
         
-      }
-    );
+  //     }
+  //   );
 
-    return () => {
-      unsub();
-    }
-  },[]);
+  //   return () => {
+  //     unsub();
+  //   }
+  // },[]);
 
-  useEffect(() => {
-    const uploadFile = () => {
-      const name = new Date().getTime() + file.name;
+  // useEffect(() => {
+  //   const uploadFile = () => {
+  //     const name = new Date().getTime() + file.name;
 
-      console.log(name);
-      const storageRef = ref(storage, file.name);
-      const uploadTask = uploadBytesResumable(storageRef, file);
+  //     console.log(name);
+  //     const storageRef = ref(storage, file.name);
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          setPerc(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-            default:
-              break;
-          }
-        },
-        (error) => {
-          console.log(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setAddData((prev) => ({ ...prev, imageUrl: downloadURL }));
-          });
-        }
-      );
-    };
-    file && uploadFile();
-  }, [file]);
+  //     uploadTask.on(
+  //       "state_changed",
+  //       (snapshot) => {
+  //         const progress =
+  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //         console.log("Upload is " + progress + "% done");
+  //         setPerc(progress);
+  //         switch (snapshot.state) {
+  //           case "paused":
+  //             console.log("Upload is paused");
+  //             break;
+  //           case "running":
+  //             console.log("Upload is running");
+  //             break;
+  //           default:
+  //             break;
+  //         }
+  //       },
+  //       (error) => {
+  //         console.log(error);
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  //           setAddData((prev) => ({ ...prev, imageUrl: downloadURL }));
+  //         });
+  //       }
+  //     );
+  //   };
+  //   file && uploadFile();
+  // }, [file]);
 
   
   const handleDelete = async (id) => {

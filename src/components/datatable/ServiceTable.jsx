@@ -23,41 +23,41 @@ const ServiceTable = ({pageTitle}) => {
   const {currentUser} = useContext(AuthContext)
   const user = currentUser.uid;
   const [pricesData, setPricesData] = useState([])
-  useEffect(() => {
-    // LISTEN (REALTIME)
-    const unsub = onSnapshot(
-      collection(db, "services"),
-      (snapShot) => {
-        let list = [];
-        snapShot.docs.forEach((doc) => {
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
+  //   const unsub = onSnapshot(
+  //     collection(db, "services"),
+  //     (snapShot) => {
+  //       let list = [];
+  //       snapShot.docs.forEach((doc) => {
        
-          if (doc.data().uid === user){
+  //         if (doc.data().uid === user){
           
-          list.push({ 
-            id: doc.id,
-            smallCar: doc.data().price.smallCar,
-            normalCar: doc.data().price.normalCar,
-            bigCar: doc.data().price.bigCar,
-            calculatedEstimatedTime:doc.data().calculatedEstimatedTime,
-            ...doc.data() });
-          setPricesData({price: doc.data().price})
-          }
+  //         list.push({ 
+  //           id: doc.id,
+  //           smallCar: doc.data().price.smallCar,
+  //           normalCar: doc.data().price.normalCar,
+  //           bigCar: doc.data().price.bigCar,
+  //           calculatedEstimatedTime:doc.data().calculatedEstimatedTime,
+  //           ...doc.data() });
+  //         setPricesData({price: doc.data().price})
+  //         }
 
           
-        })
-        setData(list);
+  //       })
+  //       setData(list);
         
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   )
 
 
-    return () => {
-      unsub();
-    };
-  }, []);
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
 
   const handleUpdate = async (id) => {
     console.log()

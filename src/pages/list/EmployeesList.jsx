@@ -2,7 +2,7 @@ import "./list.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
 import Employeestable from "../../components/datatable/Employeestable"
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 
 const EmployeesList = () => {

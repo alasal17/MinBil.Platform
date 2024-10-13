@@ -3,7 +3,7 @@
   // background-color: #f2f3f9;
 
 
-  border-right: 0.5px solid rgb(230, 227, 227);
+
   height: auto !important;
   max-height: 100% !important;
   background-color: #f2f5fd;
@@ -15,8 +15,9 @@
   }
 
   &.sidebar-closed {
-    transform: translateX(-100%);
+    transform: translateX(-110%);
     flex:0;
+    margin-right: -100px;
     
 
   }

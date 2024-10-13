@@ -21,37 +21,37 @@ const Featured = () => {
   const [cTheme, setCTheme] = useState('');
 
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
    
-    const unsub = onSnapshot(
-      collection(db, "userTheme"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "userTheme"),
+  //     (snapShot) => {
+  //       let list = [];
   
-        snapShot.docs.forEach((doc) => {
-          list.push({ id: doc.id, ...doc.data() });
-          //   if(doc.id === userID){
-          //     list.push({id: doc.id, ...doc.data()});
-          // }
-          setColorTheme(list)
-          setCTheme(...colorTheme)
+  //       snapShot.docs.forEach((doc) => {
+  //         list.push({ id: doc.id, ...doc.data() });
+  //         //   if(doc.id === userID){
+  //         //     list.push({id: doc.id, ...doc.data()});
+  //         // }
+  //         setColorTheme(list)
+  //         setCTheme(...colorTheme)
   
         
-        });
+  //       });
   
-       console.log()
-      },
+  //      console.log()
+  //     },
   
-      (error) => {
-        console.log(error);
-      }
-    );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
   
-    return () => {
-      unsub();
-    };
-  }, );
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, );
   return (
     <div className={`featured`}>
       <div className="top">

@@ -57,30 +57,30 @@ const Sidebar = ({ sidebarOpen }) => {
   const postsCollectionRef = collection(db, "company");
   const myButtonRef = useRef(null);
 
-  useEffect(() => {
-    // LISTEN (REALTIME)
+  // useEffect(() => {
+  //   // LISTEN (REALTIME)
    
-    const unsub = onSnapshot(
-      collection(db, "company"),
-      (snapShot) => {
-        let list = [];
+  //   const unsub = onSnapshot(
+  //     collection(db, "company"),
+  //     (snapShot) => {
+  //       let list = [];
        
-        snapShot.docs.forEach((doc) => {
-          if(doc.data().uid === userID){
-            setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo});
-          }
-        });
-      },
+  //       snapShot.docs.forEach((doc) => {
+  //         if(doc.data().uid === userID){
+  //           setData({companyName:doc.data().companyName, companyLogo:doc.data().companyLogo});
+  //         }
+  //       });
+  //     },
 
-      (error) => {
-        console.log(error);
-      }
-    );
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   );
 
-    return () => {
-      unsub();
-    };
-  }, []);
+  //   return () => {
+  //     unsub();
+  //   };
+  // }, []);
 
 
   

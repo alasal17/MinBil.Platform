@@ -30,7 +30,7 @@ const Home = () => {
 
 
   return (
-    <div className={`home `}>
+    <div className={`home`}>
       <Sidebar sidebarOpen={sidebarOpen} /> {/* Pass the sidebarOpen state */}
       <div className="homeContainer">
         <Navbar onClick={() => setSidebarOpen(!sidebarOpen)} /> {/* Pass the toggle function */}
@@ -42,6 +42,7 @@ const Home = () => {
         </div>
         <div hidden={true}>
         <RegistrationForm  buttonName='Register deg' ref_reg={myButtonRef} />
+        
         </div>
         
         

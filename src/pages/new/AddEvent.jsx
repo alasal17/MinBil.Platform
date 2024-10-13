@@ -26,30 +26,30 @@ const AddEvent = ({ inputs, title}) => {
   const [filteredContacts, setFilteredContacts] = useState([]);
   const {currentUser} = useContext(AuthContext)
 
-  useEffect(() => {
-    const user = currentUser.uid;
-    const serviceData = onSnapshot(
-      collection(db, "services"),
-      (snapShot) => {
-        let list = [];
-        snapShot.docs.forEach((doc) => {
+  // useEffect(() => {
+  //   const user = currentUser.uid;
+  //   const serviceData = onSnapshot(
+  //     collection(db, "services"),
+  //     (snapShot) => {
+  //       let list = [];
+  //       snapShot.docs.forEach((doc) => {
        
-          if (doc.data().uid === user){
+  //         if (doc.data().uid === user){
           
-          list.push({ id: doc.id, ...doc.data() });
-          }
+  //         list.push({ id: doc.id, ...doc.data() });
+  //         }
           
-        })
-        setService(list);
+  //       })
+  //       setService(list);
       
-      },
-      (error) => {
-        console.log(error);
-      }
-    )
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     }
+  //   )
 
    
-  });
+  // });
 
 
   

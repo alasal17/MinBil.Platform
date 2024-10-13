@@ -3,7 +3,7 @@ import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import Chart from "../../components/chart/Chart";
 import List from "../../components/table/Table";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {useLocation} from 'react-router-dom';
 
